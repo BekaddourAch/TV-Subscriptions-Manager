@@ -66,40 +66,40 @@
                 <table class="table table-bordered">
                     <thead class="text-white bg-gradient-secondary">
                         <tr class="text-center">
-                            <th scope="col">#</th>
-                            <th style="width: 10%">
+                            <th class="align-middle" scope="col">#</th>
+                            <th class="align-middle" style="width: 10%">
                                 {{ trans('user.name') }}
                                 <span wire:click="sortBy('name')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th style="width: 15px">
+                            <th class="align-middle" style="width: 15px">
                                 {{ trans('user.username') }}
                                 <span wire:click="sortBy('username')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'username' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'username' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th scope="col">{{ trans('messages.photo') }}</th>
-                            <th style="width: 10%;">
+                            <th class="align-middle" scope="col">{{ trans('messages.photo') }}</th>
+                            <th class="align-middle" style="width: 10%;">
                                 {{ trans('user.email') }}
                                 <span wire:click="sortBy('email')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'email' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'email' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th style="width: 10px">
+                            <th class="align-middle" style="width: 10px">
                                 {{ trans('user.mobile') }}
                             </th>
-                            <th>
+                            <th class="align-middle">
                                 {{ trans('messages.status') }}
                                 <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th  class="pl-5 pr-5">
+                            <th class="pl-5 pr-5 align-middle">
                                 {{ trans('Role') }}
                             </th>
                             {{-- <th>
@@ -115,21 +115,21 @@
                     <tbody>
                         @forelse($users as $index => $user)
                         <tr class="text-center">
-                            <th scope="row">{{ $users->firstItem() + $index }}</th>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->username }}</td>
-                            <td>
+                            <th class="align-middle" scope="row">{{ $users->firstItem() + $index }}</th>
+                            <td class="align-middle">{{ $user->name }}</td>
+                            <td class="align-middle">{{ $user->username }}</td>
+                            <td class="align-middle">
                                 <img src="{{ $user->profile_photo_path ? $user->profile_url : $user->profile_photo_url }}" style="width: 50px;" class="img img-circle" alt="">
                             </td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->mobile }}</td>
-                            <td>
+                            <td class="align-middle">{{ $user->email }}</td>
+                            <td class="align-middle">{{ $user->mobile }}</td>
+                            <td class="align-middle">
                                 <span
                                     class="font-weight-bold badge text-white {{ $user->status == 1 ? 'bg-success' : 'bg-secondary' }}">{{
                                     $user->status() }}
                                 </span>
                             </td>
-                            <td>
+                            <td class="align-middle">
                                 <select class="form-control form-control-sm" wire:change='updateUserRole({{ $user }}, $event.target.value)'>
                                     <option hidden>@lang('message.roles')</option>
                                     @foreach ($roles as $role)
@@ -138,7 +138,7 @@
                                 </select>
                             </td>
                             {{-- <td>{{ $user->created_at->format('d-m-Y') }}</td> --}}
-                            <td>
+                            <td class="align-middle">
                                 <div class="btn-group btn-group-sm">
                                     <a href="#" wire:click.prevent="edit({{ $user }})" class="btn btn-primary">
                                         <i class="fa fa-edit"></i>
@@ -293,7 +293,15 @@
                                 <img src="{{ $state['profile_url'] ?? '' }}" class="mb-2 d-block img img-circle" width="100px" alt="">
                             @endif
                             <div class="mb-3 custom-file">
-                                <input tabindex="8" wire:model="photo" type="file" class="custom-file-input" id="validatedCustomFile">
+                                <div x-data="{ isUploading: false, progress: 5 }" x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false; progress = 5" x-on:livewire-upload-error="isUploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
+                                    <input tabindex="8" wire:model="photo" type="file" class="custom-file-input" id="validatedCustomFile">
+                                    {{-- progres bar --}}
+                                    <div x-show.transition="isUploading" class="mt-2 rounded progress progress-sm">
+                                        <div class="progress-bar bg-primary progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" x-bind:style="`width: ${progress}%`">
+                                            <span class="sr-only">40% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <label class="custom-file-label" for="customFile">
                                     @if ($photo)
                                         {{ $photo->getClientOriginalName() }}
@@ -312,14 +320,14 @@
                                 <label class="text-center text-white bg-secondary form-control" for="permissions">Permissions</label>
 
                                 @php
-                                    $PermissionName = ['Users', 'Profile'];
+                                    $PermissionName = array_keys(config('laratrust_seeder.roles_structure.superadmin'));
                                 @endphp
 
                                 @foreach ( $permissions->chunk(4) as $index => $chunk )
 
                                     <div class="mb-2 card d-flex justify-content-center">
                                         <div class="card-header">
-                                            {{ $PermissionName[$index] }} Permissions
+                                            {{ ucfirst($PermissionName[$index] . ' Permissions') }}
                                         </div>
                                         <div class="card-body">
                                             <p class="card-text">
@@ -385,6 +393,8 @@
             </div>
         </div>
     </div>
+
+    {{-- JS Code --}}
 
     @section('script')
         <script src="{{ asset('backend/js/backend.js') }}"></script>
