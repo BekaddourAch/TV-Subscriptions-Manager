@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class ListUsers extends Component
 {
@@ -46,6 +47,107 @@ class ListUsers extends Component
     public $user_permissions = [];
 
     public $showPermissions = true;
+
+    public $selectedRows = [];
+
+	public $selectPageRows = false;
+
+    protected $listeners = ['deleteConfirmed' => 'deleteUsers'];
+
+    // Updated Select Page Rows
+
+    public function updatedSelectPageRows($value)
+	{
+		if ($value) {
+			$this->selectedRows = $this->users->pluck('id')->map(function ($id) {
+				return (string) $id;
+			});
+		} else {
+			$this->reset(['selectedRows', 'selectPageRows']);
+		}
+	}
+
+    // Get Users Data
+
+    public function getUsersProperty()
+	{
+		if ($this->roleFilter) {
+            $users = User::whereRelation('roles', 'name',$this->roleFilter )
+            ->where('name', 'like', '%'.$this->searchTerm.'%')
+            ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->paginate(15);
+        } else {
+            $users = User::query()
+            ->where('name', 'like', '%'.$this->searchTerm.'%')
+            ->orWhere('username', 'like', '%'.$this->searchTerm.'%')
+            ->orWhere('email', 'like', '%'.$this->searchTerm.'%')
+            ->orWhere('mobile', 'like', '%'.$this->searchTerm.'%')
+            ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->paginate(15);
+        }
+
+        return $users;
+	}
+
+    // set All selected User As Active
+
+    public function setAllAsActive()
+	{
+		User::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+
+        $this->dispatchBrowserEvent('swal', [
+            'title'             => 'Users set As Active successfully.',
+            'icon'              =>'success',
+            'iconColor'         => 'green',
+            'position'          => 'center',
+            'timer'             => '1700',
+        ]);
+
+		$this->reset(['selectPageRows', 'selectedRows']);
+	}
+
+    // set All selected User As InActive
+
+	public function setAllAsInActive()
+	{
+		User::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+
+		$this->dispatchBrowserEvent('swal', [
+            'title'             => 'Users set As Inactive successfully.',
+            'icon'              =>'success',
+            'iconColor'         => 'green',
+            'position'          => 'center',
+            'timer'             => '1700',
+        ]);
+
+		$this->reset(['selectPageRows', 'selectedRows']);
+	}
+
+    // show Sweetalert Confirmation for Delete
+
+	public function deleteSelectedRows()
+	{
+        $this->dispatchBrowserEvent('show-delete-alert-confirmation');
+	}
+
+    // Delete Selected User with relationship roles And permission
+
+    public function deleteUsers()
+    {
+        DB::table('role_user')->whereIn('user_id', $this->selectedRows)->delete();
+        DB::table('permission_user')->whereIn('user_id', $this->selectedRows)->delete();
+		User::whereIn('id', $this->selectedRows)->delete();
+
+        $this->dispatchBrowserEvent('swal', [
+            'title'             => 'All selected users got deleted.',
+            'icon'              =>'success',
+            'iconColor'         => 'green',
+            'position'          => 'center',
+            'timer'             => '1700',
+        ]);
+
+		$this->reset(['selectPageRows', 'selectedRows']);
+    }
 
     // Update User Role
 
@@ -277,20 +379,7 @@ class ListUsers extends Component
         $roles = Role::all();
         $permissions = Permission::all();
 
-        if ($this->roleFilter) {
-            $users = User::whereRelation('roles', 'name',$this->roleFilter )
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(15);
-        } else {
-            $users = User::query()
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
-            ->orWhere('username', 'like', '%'.$this->searchTerm.'%')
-            ->orWhere('email', 'like', '%'.$this->searchTerm.'%')
-            ->orWhere('mobile', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(15);
-        }
+        $users = $this->users;
 
         return view('livewire.backend.admin.users.list-users',[
             'users' => $users,

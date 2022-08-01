@@ -21,51 +21,78 @@
             </div>
         </div>
 
-        <div class="flex-wrap mb-2 d-flex justify-content-between">
-            <div class="pt-3 my-2 ml-3 mr-auto d-sm-inline-block form-inline ml-md-3 my-md-0 mw-100 navbar-search">
+        <div class="flex-wrap d-flex justify-content-between">
+            <div class="pt-3 my-2 ml-3 ml-md-3 my-md-0 mw-80 navbar-search">
                 <div class="input-group">
                     <input wire:model="searchTerm" type="text" class="border-0 form-control bg-light small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" spellcheck="false" data-ms-editor="true">
                     <div class="input-group-append">
-                        <button class="btn btn-primary" type="button">
+                        <button class="btn btn-primary btn-sm" type="button">
                             <i class="fas fa-search fa-sm"></i>
+                        </button>
+                    </div>
+                    @if ($selectedRows)
+                        <div class="ml-3 dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Action
+                            </button>
+                            <div class="dropdown-menu animated--fade-in bg-gray-100" aria-labelledby="dropdownMenuButton" style="">
+                                <a class="dropdown-item" wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
+                                <a class="dropdown-item" wire:click.prevent="setAllAsInActive" href="#">Set as InActive</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" wire:click.prevent="export" href="#">Export</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+            <div class="m-3 mw-100 justify-content-end">
+                <div class="btn-group">
+                    <div data-toggle="buttons">
+                        <button wire:click="filterUsersByRoles" class="btn btn-sm btn-warning btn-icon-split">
+                            <span class="icon text-white-20">
+                                {{ $userCount }}
+                            </span>
+                            <span class="text">All</span>
+                        </button>
+                        <button wire:click="filterUsersByRoles('user')" class="btn btn-sm btn-info btn-icon-split">
+                            <span class="icon text-white-20">
+                                {{ $roleUserCount }}
+                            </span>
+                            <span class="text">User</span>
+                        </button>
+                        <button wire:click="filterUsersByRoles('admin')" class="btn btn-sm btn-primary btn-icon-split">
+                            <span class="icon text-white-20">
+                                {{ $roleAdminCount }}
+                            </span>
+                            <span class="text">Admin</span>
+                        </button>
+                        <button wire:click="filterUsersByRoles('superadmin')" class="btn btn-sm btn-success btn-icon-split">
+                            <span class="icon text-white-20">
+                                {{ $roleSuperadminCount }}
+                            </span>
+                            <span class="text">SuperAdmin</span>
                         </button>
                     </div>
                 </div>
             </div>
-
-            <div class="flex-wrap mt-3 ml-3 mr-3 btn-group btn-group-toggle btn-sm" data-toggle="buttons">
-                <button wire:click="filterUsersByRoles" class="btn btn-sm btn-warning btn-icon-split">
-                    <span class="icon text-white-50">
-                        {{ $userCount }}
-                    </span>
-                    <span class="text">All</span>
-                </button>
-                <button wire:click="filterUsersByRoles('user')" class="btn btn-sm btn-info btn-icon-split">
-                    <span class="icon text-white-50">
-                        {{ $roleUserCount }}
-                    </span>
-                    <span class="text">User</span>
-                </button>
-                <button wire:click="filterUsersByRoles('admin')" class="btn btn-sm btn-primary btn-icon-split">
-                    <span class="icon text-white-50">
-                        {{ $roleAdminCount }}
-                    </span>
-                    <span class="text">Admin</span>
-                </button>
-                <button wire:click="filterUsersByRoles('superadmin')" class="btn btn-sm btn-success btn-icon-split">
-                    <span class="icon text-white-50">
-                        {{ $roleSuperadminCount }}
-                    </span>
-                    <span class="text">SuperAdmin</span>
-                </button>
-              </div>
         </div>
 
-        <div class="card-body">
+        <div class="card-body p-3">
+            @if ($selectedRows)
+                <span class="text-success">selected <span class="text-gray-900 font-weight-bold">{{ count($selectedRows) }}</span> {{ Str::plural('user', count($selectedRows)) }}</span>
+            @endif
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead class="text-white bg-gradient-secondary">
                         <tr class="text-center">
+                            <th class="align-middle" scope="col">
+                                <div class="custom-control custom-checkbox small">
+                                    <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
+                                    <label class="custom-control-label" for="customCheck"></label>
+                                </div>
+                            </th>
                             <th class="align-middle" scope="col">#</th>
                             <th class="align-middle" style="width: 10%">
                                 {{ trans('user.name') }}
@@ -115,7 +142,13 @@
                     <tbody>
                         @forelse($users as $index => $user)
                         <tr class="text-center">
-                            <th class="align-middle" scope="row">{{ $users->firstItem() + $index }}</th>
+                            <td class="align-middle" scope="col">
+                                <div class="custom-control custom-checkbox small">
+                                    <input type="checkbox" wire:model="selectedRows" value="{{ $user->id }}" class="custom-control-input" id="{{ $user->id }}">
+                                    <label class="custom-control-label" for="{{ $user->id }}"></label>
+                                </div>
+                            </td>
+                            <td class="align-middle" scope="row">{{ $users->firstItem() + $index }}</td>
                             <td class="align-middle">{{ $user->name }}</td>
                             <td class="align-middle">{{ $user->username }}</td>
                             <td class="align-middle">
@@ -169,6 +202,7 @@
                         </tr>
                     </tfoot>
                 </table>
+               {{-- @dump($selectedRows) --}}
             </div>
         </div>
     </div>
@@ -399,6 +433,8 @@
     @section('script')
         <script src="{{ asset('backend/js/backend.js') }}"></script>
 
+        {{-- show or hide Permissions section on Modal --}}
+
         <script>
             $(document).ready( function() {
                 $('#roles select').change(function(){
@@ -410,6 +446,26 @@
                     $('#permissions').show();
                 });
             });
+        </script>
+
+        {{-- show-delete-alert-confirmation --}}
+
+        <script>
+            window.addEventListener('show-delete-alert-confirmation', event =>{
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        Livewire.emit('deleteConfirmed')
+                    }
+                })
+            })
         </script>
     @endsection
 </div>
