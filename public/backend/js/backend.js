@@ -21,13 +21,5 @@
       $('#confirmationModal').modal('hide');
     });
 
-    // $('[x-ref="profileLink"]').on('click', function () {
-    //   localStorage.setItem('_x_currentTab', '"profile"');
-    // });
-
-    // $('[x-ref="changePasswordLink"]').on('click', function () {
-    //   localStorage.setItem('_x_currentTab', '"changePassword"');
-    // });
-
     /******/ })()
     ;

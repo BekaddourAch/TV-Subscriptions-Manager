@@ -11,9 +11,20 @@
                 <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
                 <li class="breadcrumb-item active">Users</li>
             </ol>
-            <div class="m-2 d-flex justify-content-end">
-                <button wire:click.prevent='addNewUser' class="mr-1 btn btn-primary">
-                    <i class="mr-1 fa fa-plus-circle"
+            <div class="mt-2 d-flex justify-content-end">
+                <div class="ml-3 dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Services
+                    </button>
+                    <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton2" style="">
+                        <a class="dropdown-item" wire:click.prevent="exportExcel" href="#">Export to Excel</a>
+                        <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Import from Excel</a>
+                        <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
+                        {{-- <a class="dropdown-item" href="{{ route('admin.make_pdf',$users) }}">Export to PDF</a> --}}
+                    </div>
+                </div>
+                <button wire:click.prevent='addNewUser' class="ml-1 btn btn-primary">
+                    <i class="mr-2 fa fa-plus-circle"
                         aria-hidden="true">
                         <span>Add New User</span>
                     </i>
@@ -30,21 +41,6 @@
                             <i class="fas fa-search fa-sm"></i>
                         </button>
                     </div>
-                    @if ($selectedRows)
-                        <div class="ml-3 dropdown">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Action
-                            </button>
-                            <div class="dropdown-menu animated--fade-in bg-gray-100" aria-labelledby="dropdownMenuButton" style="">
-                                <a class="dropdown-item" wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
-                                <a class="dropdown-item" wire:click.prevent="setAllAsInActive" href="#">Set as InActive</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" wire:click.prevent="export" href="#">Export</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-danger delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
-                            </div>
-                        </div>
-                    @endif
                 </div>
             </div>
             <div class="m-3 mw-100 justify-content-end">
@@ -79,9 +75,27 @@
             </div>
         </div>
 
-        <div class="card-body p-3">
+        <div class="p-3 card-body">
             @if ($selectedRows)
-                <span class="text-success">selected <span class="text-gray-900 font-weight-bold">{{ count($selectedRows) }}</span> {{ Str::plural('user', count($selectedRows)) }}</span>
+                <div class="d-flex mb-3">
+                    <span class="text-success pt-1">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                         selected
+                         <span class="text-gray-900 font-weight-bold">{{ count($selectedRows) }}</span> {{ Str::plural('user', count($selectedRows)) }}
+                    </span>
+
+                    <div class="ml-3 dropdown">
+                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Action
+                        </button>
+                        <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
+                            <a class="dropdown-item" wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
+                            <a class="dropdown-item" wire:click.prevent="setAllAsInActive" href="#">Set as InActive</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
+                        </div>
+                    </div>
+                </div>
             @endif
             <div class="table-responsive">
                 <table class="table table-bordered">
@@ -226,6 +240,15 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        {{-- @if ($errors->hasAny(['image', 'image.*']))
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif --}}
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-6">
 
@@ -328,7 +351,7 @@
                             @endif
                             <div class="mb-3 custom-file">
                                 <div x-data="{ isUploading: false, progress: 5 }" x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false; progress = 5" x-on:livewire-upload-error="isUploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
-                                    <input tabindex="8" wire:model="photo" type="file" class="custom-file-input" id="validatedCustomFile">
+                                    <input tabindex="8" wire:model="photo" type="file" class="custom-file-input @error('photo') is-invalid @enderror" id="validatedCustomFile">
                                     {{-- progres bar --}}
                                     <div x-show.transition="isUploading" class="mt-2 rounded progress progress-sm">
                                         <div class="progress-bar bg-primary progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" x-bind:style="`width: ${progress}%`">
@@ -351,44 +374,47 @@
 
                         @if ($showPermissions)
                             <div id="permissions" class="form-group">
-                                <label class="text-center text-white bg-secondary form-control" for="permissions">Permissions</label>
+                                {{--<label class="text-center text-white bg-secondary form-control" for="permissions">Permissions</label>
 
                                 @php
                                     $PermissionName = array_keys(config('laratrust_seeder.roles_structure.superadmin'));
-                                @endphp
+                                @endphp --}}
 
-                                @foreach ( $permissions->chunk(4) as $index => $chunk )
-
-                                    <div class="mb-2 card d-flex justify-content-center">
-                                        <div class="card-header">
-                                            {{ ucfirst($PermissionName[$index] . ' Permissions') }}
-                                        </div>
-                                        <div class="card-body">
-                                            <p class="card-text">
-                                                <div class="row">
-                                                    @foreach ($chunk as $permission)
-                                                        <div class="col-6">
-                                                            <div class="form-group">
-                                                                <div class="custom-control form-checkbox small">
-                                                                    <label class="items-center" :key="{{ $permission->id }}">
-                                                                        <input
-                                                                            type="checkbox"
-                                                                            name="user_permissions.{{ $permission->id }}"
-                                                                            wire:model.defer="user_permissions.{{ $permission->id }}"
-                                                                            value="{{ $permission->id }}"
-                                                                            class="form-checkbox"
-                                                                        />
-                                                                        <span class="mr-1">{{ $permission->display_name }}</span>
-                                                                    </label>
-                                                                </div>
+                                {{-- @foreach ( $permissions->chunk(4) as $index => $chunk ) --}}
+                                    {{-- @dump($permissions->chunk(4)) --}}
+                                <div class="mb-2 card d-flex justify-content-center">
+                                    {{-- <div class="card-header">
+                                        {{ ucfirst($PermissionName[$index] . ' Permissions') }}
+                                    </div> --}}
+                                    <div class="card-header">
+                                        <h4 class="text-center">Permissions</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">
+                                            <div class="row">
+                                                @foreach ($permissions as $index => $permission)
+                                                    <div class="col-4">
+                                                        <div class="form-group">
+                                                            <div class="custom-control form-checkbox small">
+                                                                <label class="items-center" :key="{{ $permission->id }}">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        name="user_permissions.{{ $permission->id }}"
+                                                                        wire:model.defer="user_permissions.{{ $permission->id }}"
+                                                                        value="{{ $permission->id }}"
+                                                                        class="form-checkbox"
+                                                                    />
+                                                                    <span class="mr-1">{{ $permission->display_name }}</span>
+                                                                </label>
                                                             </div>
                                                         </div>
-                                                    @endforeach
-                                                </div>
-                                            </p>
-                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </p>
                                     </div>
-                                @endforeach
+                                </div>
+                                {{-- @endforeach --}}
                             </div>
                         @endif
                     </div>
@@ -428,6 +454,67 @@
         </div>
     </div>
 
+    <!-- Modal Import Excel File -->
+    <div class="modal fade" id="importExcelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog" role="document">
+            <form autocomplete="off" wire:submit.prevent="importExcel">
+                <div class="modal-content">
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Import Excel File
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <!-- Modal Excel File -->
+
+                        <div class="form-group">
+                            <label for="custom-file">Choose Excel File</label>
+                            <div class="mb-3 custom-file">
+                                <div x-data="{ isUploading: false, progress: 5 }" x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false; progress = 5" x-on:livewire-upload-error="isUploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
+                                    <input wire:model.defer="excelFile" type="file" class="custom-file-input @error('excelFile') is-invalid @enderror" id="validatedCustomFile" required>
+                                    {{-- progres bar --}}
+                                    <div x-show.transition="isUploading" class="mt-2 rounded progress progress-sm">
+                                        <div class="progress-bar bg-primary progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" x-bind:style="`width: ${progress}%`"></div>
+                                    </div>
+                                </div>
+                                @error('excelFile')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                                <label class="custom-file-label" for="customFile">
+                                    @if ($excelFile)
+                                        {{ $excelFile->getClientOriginalName() }}
+                                    @else
+                                        Choose Excel file
+                                    @endif
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-0 form-group">
+                            <label>Import As :</label>
+                            <label class="ml-3 radio-inline">
+                                <input type="radio" wire:click="importType('addNew')" name="optionsRadiosInline" id="optionsRadiosInline1" value="addNew" checked="">Add New
+                            </label>
+                            <label class="ml-3 radio-inline">
+                                <input type="radio" wire:click="importType('Update')" name="optionsRadiosInline" id="optionsRadiosInline2" value="Update">Update
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Cancel</button>
+                        <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-open"></i> Open</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     {{-- JS Code --}}
 
     @section('script')
@@ -444,6 +531,14 @@
                     }
 
                     $('#permissions').show();
+                });
+
+                window.addEventListener('show-import-excel-modal', function (event) {
+                    $('#importExcelModal').modal('show');
+                });
+
+                window.addEventListener('hide-import-excel-modal', function (event) {
+                    $('#importExcelModal').modal('hide');
                 });
             });
         </script>

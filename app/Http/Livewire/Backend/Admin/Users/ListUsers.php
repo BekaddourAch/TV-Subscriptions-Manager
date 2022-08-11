@@ -11,6 +11,10 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
+use App\Exports\UsersExport;
+use App\Imports\UsersImport;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class ListUsers extends Component
 {
@@ -53,6 +57,10 @@ class ListUsers extends Component
 	public $selectPageRows = false;
 
     protected $listeners = ['deleteConfirmed' => 'deleteUsers'];
+
+    public $excelFile = Null;
+
+    public $importTypevalue = Null;
 
     // Updated Select Page Rows
 
@@ -257,51 +265,53 @@ class ListUsers extends Component
 
     public function updateUser()
 	{
-        //dd($this->user_permissions,$this->user->permissions());
+        try {
+            $validatedData = Validator::make($this->state, [
+                'name'                  => 'required',
+                'username'              => 'required|unique:users,username,'.$this->user->id,
+                'email'                 => 'required|email|unique:users,email,'.$this->user->id,
+                'mobile'                => 'required|numeric|unique:users,mobile,'.$this->user->id,
+                'role_id'               => 'required',
+                'password'              => 'sometimes|confirmed',
+                'photo'    => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            ])->validate();
 
-		$validatedData = Validator::make($this->state, [
-			'name'      => 'required',
-            'username'  => 'required|unique:users,username,'.$this->user->id,
-			'email'     => 'required|email|unique:users,email,'.$this->user->id,
-			'mobile'    => 'required|numeric|unique:users,mobile,'.$this->user->id,
-            'role_id'   => 'required',
-			'password'  => 'sometimes|confirmed',
-		])->validate();
-
-		if(!empty($validatedData['password'])) {
-			$validatedData['password'] = bcrypt($validatedData['password']);
-		}
-
-		if ($this->photo) {
-            if($this->user->profile_photo_path){
-                Storage::disk('profile_photos')->delete($this->user->profile_photo_path);
+            if(!empty($validatedData['password'])) {
+                $validatedData['password'] = bcrypt($validatedData['password']);
             }
-			$validatedData['profile_photo_path'] = $this->photo->store('/', 'profile_photos');
-		}
 
-        $user_permissions = [];
-        for ($i=0; $i <  count($this->user_permissions); $i++) {
-            $permission_value = array_values($this->user_permissions);
-            if ($permission_value[$i] != false) {
-                array_push($user_permissions, $permission_value[$i]);
+            if ($this->photo) {
+                if($this->user->profile_photo_path){
+                    Storage::disk('profile_photos')->delete($this->user->profile_photo_path);
+                }
+                $validatedData['profile_photo_path'] = $this->photo->store('/', 'profile_photos');
             }
+
+            $user_permissions = [];
+            for ($i=0; $i <  count($this->user_permissions); $i++) {
+                $permission_value = array_values($this->user_permissions);
+                if ($permission_value[$i] != false) {
+                    array_push($user_permissions, $permission_value[$i]);
+                }
+            }
+
+            $this->user->update($validatedData);
+            $this->user->roles()->sync($this->state['role_id']);
+            $this->user->permissions()->sync($user_permissions);
+
+            $this->dispatchBrowserEvent('hide-form');
+
+            $this->dispatchBrowserEvent('swal', [
+                'title'         => 'User updated Successfully.',
+                'icon'          =>'success',
+                'iconColor'     => 'green',
+                'position'      => 'center',
+                'timer'         => '1700',
+            ]);
+
+        } catch (\Throwable $th) {
+            return $th->getMessage();
         }
-
-        //dd($this->state['role_id'],$user_permissions);
-
-		$this->user->update($validatedData);
-        $this->user->roles()->sync($this->state['role_id']);
-        $this->user->permissions()->sync($user_permissions);
-
-		$this->dispatchBrowserEvent('hide-form');
-
-        $this->dispatchBrowserEvent('swal', [
-            'title'         => 'User updated Successfully.',
-            'icon'          =>'success',
-            'iconColor'     => 'green',
-            'position'      => 'center',
-            'timer'         => '1700',
-        ]);
 	}
 
     // Show Modal Form to Confirm User Removal
@@ -365,6 +375,109 @@ class ListUsers extends Component
     public function filterUsersByRoles($roleFilter = null)
     {
         $this->roleFilter = $roleFilter;
+    }
+
+    // Export Excel File
+
+    public function exportExcel()
+    {
+        return Excel::download(new UsersExport($this->searchTerm,$this->selectedRows), 'users.xlsx');
+    }
+
+    // Show Import Excel Form
+
+    public function importExcelForm()
+    {
+        $this->reset();
+		$this->dispatchBrowserEvent('show-import-excel-modal');
+    }
+
+    public function importType($value)
+    {
+        $this->importTypevalue = $value;
+    }
+
+    public function importExcel()
+    {
+        try {
+
+            $this->validate([
+                'excelFile' => 'mimes:xls,xlsx'
+            ]);
+
+            if ($this->importTypevalue == 'addNew') {
+                // for add new data
+                Excel::import(new UsersImport, $this->excelFile);
+            } else {
+                // for update data
+                $this->importTypevalue = 'Update';
+                $usersData = Excel::toCollection(new UsersImport(), $this->excelFile);
+                foreach ($usersData[0] as $user) {
+                    User::where('id', $user['id'])->update([
+                        'name' => $user['name'],
+                        'username' => $user['username'],
+                        'mobile' => $user['mobile'],
+                        'email' => $user['email'],
+                        'password' => bcrypt($user['password']),
+                    ]);
+                }
+            }
+
+            // method for add Roles to nwe users added
+
+            $usersDoesntHaveRole = User::whereDoesntHave('roles')->get();
+
+            foreach ($usersDoesntHaveRole as $user) {
+                DB::table('role_user')->insert([
+                    'role_id' => 3,
+                    'user_id' => $user->id,
+                    'user_type' => 'App\Models\User'
+                ]);
+            }
+
+            // end method
+
+            $this->dispatchBrowserEvent('swal', [
+                'title' => 'Users Added Successfully.',
+                'icon'=>'success',
+                'iconColor' => 'green',
+                'position' => 'center',
+                'timer' => '1700',
+            ]);
+
+            $this->dispatchBrowserEvent('hide-import-excel-modal');
+
+
+        } catch (\Exception $e) {
+            //return $e->getMessage();
+            $this->dispatchBrowserEvent('swal', [
+                'title' =>  'ملف الإكسل غير مطابق !!',
+                'icon'=>'error',
+                'iconColor' => 'red',
+                'position' => 'center',
+                'timer' => '3000',
+            ]);
+
+            $this->reset();
+            $this->dispatchBrowserEvent('hide-import-excel-modal');
+        }
+    }
+
+    // Export PDF File
+
+    public function exportPDF()
+    {
+        return response()->streamDownload(function(){
+            if ($this->selectedRows) {
+                $users = User::whereIn('id', $this->selectedRows)->orderBy('name', 'asc')->get();
+            } else {
+                $users = $this->users;
+            }
+
+            $pdf = PDF::loadView('livewire.backend.admin.users.pdf',['users' => $users]);
+            return $pdf->stream('users');
+
+        },'users.pdf');
     }
 
     // Render date to list-users Blade
