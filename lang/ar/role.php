@@ -23,6 +23,8 @@ return [
     'force delete question'     => 'هل أنت متاكد انك تريد حذف الدور بشكل نهائي ؟!',
     'delete result'             => 'هذا الإجراء يتسسب بحذف الدور بشكل نهائي',
     'restore role'              => 'تم إستعادة دور بنجاح',
-    'force delete role'         => 'تم حذف الدور بشكل نهائي بنجاح'
+    'force delete role'         => 'تم حذف الدور بشكل نهائي بنجاح',
+    'display_name'              => 'الاسم المعروض',
+    'description'               => 'الوصف',
 
 ];

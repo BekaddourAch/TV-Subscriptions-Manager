@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Backend\UsersController;
 use App\Http\Controllers\Backend\BackendController;
 use App\Http\Livewire\Backend\Admin\Dashboard\Dashboard;
+use App\Http\Livewire\Backend\Admin\Users\ListPermissions;
+use App\Http\Livewire\Backend\Admin\Users\ListRoles;
 use App\Http\Livewire\Backend\Admin\Users\ListUsers;
 
 /*
@@ -35,6 +36,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::group(['middleware' => ['auth', 'role:admin|superadmin']], function (){
         Route::get('/', Dashboard::class)->name('index');
         Route::get('users', ListUsers::class)->name('users');
+        Route::get('roles', ListRoles::class)->name('roles');
+        Route::get('permissions', ListPermissions::class)->name('permissions');
     });
 });
 

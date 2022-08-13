@@ -31,11 +31,25 @@
         Users Management
     </div>
 
-    <!-- Nav Item - Charts -->
+    <!-- Nav Item - Users -->
     <li class="nav-item {{ request()->is('admin/users') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.users') }}">
             <i class="fas fa-fw fa-users"></i>
             <span>Users</span>
+        </a>
+    </li>
+    <!-- Nav Item - Roles -->
+    <li class="nav-item {{ request()->is('admin/roles') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.roles') }}">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Roles</span>
+        </a>
+    </li>
+    <!-- Nav Item - Permissions -->
+    <li class="nav-item {{ request()->is('admin/permissions') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.permissions') }}">
+            <i class="fas fa-fw fa-cogs"></i>
+            <span>Permissions</span>
         </a>
     </li>
 
