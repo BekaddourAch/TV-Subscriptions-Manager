@@ -60,7 +60,7 @@ class ListUsers extends Component
 
     public $excelFile = Null;
 
-    public $importTypevalue = Null;
+    public $importTypevalue = 'addNew';
 
     // Updated Select Page Rows
 
@@ -142,8 +142,20 @@ class ListUsers extends Component
 
     public function deleteUsers()
     {
+        // delete images for users if exists from Storage folder
+        $profileImages =User::whereIn('id', $this->selectedRows)->get(['profile_photo_path']);
+        foreach($profileImages as $profileImage){
+            $imageFileName = $profileImage->profile_photo_path;
+            if($imageFileName){
+                Storage::disk('profile_photos')->delete($imageFileName);
+            }
+        }
+
+        // delete roles and permissions for selected users from database
         DB::table('role_user')->whereIn('user_id', $this->selectedRows)->delete();
         DB::table('permission_user')->whereIn('user_id', $this->selectedRows)->delete();
+
+        // delete selected users from database
 		User::whereIn('id', $this->selectedRows)->delete();
 
         $this->dispatchBrowserEvent('swal', [
@@ -154,7 +166,7 @@ class ListUsers extends Component
             'timer'             => '1700',
         ]);
 
-		$this->reset(['selectPageRows', 'selectedRows']);
+		$this->reset();
     }
 
     // Update User Role
@@ -455,7 +467,7 @@ class ListUsers extends Component
                 'icon'=>'error',
                 'iconColor' => 'red',
                 'position' => 'center',
-                'timer' => '3000',
+                'timer' => '1700',
             ]);
 
             $this->reset();

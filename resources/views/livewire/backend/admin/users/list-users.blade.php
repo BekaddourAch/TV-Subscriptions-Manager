@@ -20,7 +20,6 @@
                         <a class="dropdown-item" wire:click.prevent="exportExcel" href="#">Export to Excel</a>
                         <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Import from Excel</a>
                         <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
-                        {{-- <a class="dropdown-item" href="{{ route('admin.make_pdf',$users) }}">Export to PDF</a> --}}
                     </div>
                 </div>
                 <button wire:click.prevent='addNewUser' class="ml-1 btn btn-primary">

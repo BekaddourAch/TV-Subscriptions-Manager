@@ -1,0 +1,29 @@
+حل مشكلة عمل storage:link  لمواقع ;aravel :
+الشرح :
+الشرح بالتفصيل ( https://stackoverflow.com/questions/45825889/how-to-create-laravel-storage-symbolic-link-for-production-or-sub-domain-system )
+"
+I have an account on Hostinger.
+
+I had a big problem with Laravel File Manager, but now I know what was the problem :)
+
+It`s was an issue with a link to storage. My folder public_html had no link but the copy of storage!
+
+Delete this storage or rename it if you want backup :)
+
+Log in to ssh and use command pwd to get the current folder that will help you build a full path.
+
+Use this command:
+
+ln -s <target_path> <link_path>
+
+In my case this was like:
+
+ln -s /home/u16345434/domains/website.name/storage/app/public /home/u16345434/domains/website.name/public_html/storage
+
+Good Luck :)
+
+"
+مثال عملي :
+
+ln -s /home/u16345434/domains/website.name/lara9trust/storage/app/public /home/u16345434/domains/website.name/public_html/lara9trust/storage
+

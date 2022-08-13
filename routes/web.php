@@ -35,8 +35,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::group(['middleware' => ['auth', 'role:admin|superadmin']], function (){
         Route::get('/', Dashboard::class)->name('index');
         Route::get('users', ListUsers::class)->name('users');
-        Route::get('users/pdf', [BackendController::class, 'pdf'])->name('pdf');
-        Route::get('users/make_pdf', [BackendController::class, 'make_pdf'])->name('make_pdf');
     });
 });
 
