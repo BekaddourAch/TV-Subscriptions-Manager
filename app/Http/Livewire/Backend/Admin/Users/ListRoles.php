@@ -115,34 +115,33 @@ class ListRoles extends Component
         }
 	}
 
-// Show Modal Form to Confirm Role Removal
+    // Show Modal Form to Confirm Role Removal
 
-public function confirmRoleRemoval($roleId)
-{
-    $this->roleIdBeingRemoved = $roleId;
+    public function confirmRoleRemoval($roleId)
+    {
+        $this->roleIdBeingRemoved = $roleId;
 
-    $this->dispatchBrowserEvent('show-delete-modal');
-}
+        $this->dispatchBrowserEvent('show-delete-modal');
+    }
 
-// Delete Role
+    // Delete Role
 
-public function deleteRole()
-{
-    $role = Role::findOrFail($this->roleIdBeingRemoved);
+    public function deleteRole()
+    {
+        $role = Role::findOrFail($this->roleIdBeingRemoved);
 
-    $role->delete();
+        $role->delete();
 
-    $this->dispatchBrowserEvent('hide-delete-modal');
+        $this->dispatchBrowserEvent('hide-delete-modal');
 
-    $this->dispatchBrowserEvent('swal', [
-        'title' => 'Role Deleted Successfully.',
-        'icon'=>'success',
-        'iconColor' => 'green',
-        'position' => 'center',
-        'timer' => '1700',
-    ]);
-}
-
+        $this->dispatchBrowserEvent('swal', [
+            'title' => 'Role Deleted Successfully.',
+            'icon'=>'success',
+            'iconColor' => 'green',
+            'position' => 'center',
+            'timer' => '1700',
+        ]);
+    }
 
     public function render()
     {

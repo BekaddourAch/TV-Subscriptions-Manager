@@ -76,8 +76,8 @@
 
         <div class="p-3 card-body">
             @if ($selectedRows)
-                <div class="d-flex mb-3">
-                    <span class="text-success pt-1">
+                <div class="mb-3 d-flex">
+                    <span class="pt-1 text-success">
                         <i class="fa fa-user" aria-hidden="true"></i>
                          selected
                          <span class="text-gray-900 font-weight-bold">{{ count($selectedRows) }}</span> {{ Str::plural('user', count($selectedRows)) }}
@@ -327,7 +327,7 @@
                         <div id="roles" class="form-group">
                             <label for="role_id">@lang('roles')</label>
                             <select id="roles" tabindex="7" class="form-control form-control @error('role_id') is-invalid @enderror" wire:model.defer="state.role_id" wire:change="permissions_form($event.target.value)">
-                                <option hidden>@lang('roles')</option>
+                                <option hidden>@lang('Select role ..')</option>
                                 @foreach ($roles as $role)
                                     <option class="bg-red" value="{{ $role->id }}">{{ $role->name }}</option>
                                 @endforeach
@@ -497,7 +497,7 @@
                         <div class="mb-0 form-group">
                             <label>Import As :</label>
                             <label class="ml-3 radio-inline">
-                                <input type="radio" wire:click="importType('addNew')" name="optionsRadiosInline" id="optionsRadiosInline1" value="addNew" checked="">Add New
+                                <input type="radio" wire:click="importType('addNew')" name="optionsRadiosInline" id="optionsRadiosInline1" value="addNew" checked="checked">Add New
                             </label>
                             <label class="ml-3 radio-inline">
                                 <input type="radio" wire:click="importType('Update')" name="optionsRadiosInline" id="optionsRadiosInline2" value="Update">Update
@@ -523,14 +523,14 @@
 
         <script>
             $(document).ready( function() {
-                $('#roles select').change(function(){
-                    if($('#roles select').find("option:selected").text() == 'user'){ //'.val()'
-                        $('#permissions').hide();
-                        return true;
-                    }
+                // $('#roles select').change(function(){
+                //     if($('#roles select').find("option:selected").text() == 'user'){ //'.val()'
+                //         $('#permissions').hide();
+                //         return true;
+                //     }
 
-                    $('#permissions').show();
-                });
+                //     $('#permissions').show();
+                // });
 
                 window.addEventListener('show-import-excel-modal', function (event) {
                     $('#importExcelModal').modal('show');

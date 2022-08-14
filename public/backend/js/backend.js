@@ -7,6 +7,7 @@
       window.addEventListener('hide-form', function (event) {
         $('#form').modal('hide');
       });
+
     });
 
     window.addEventListener('show-form', function (event) {

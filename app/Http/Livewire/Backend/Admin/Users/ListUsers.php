@@ -243,7 +243,7 @@ class ListUsers extends Component
 
     public function permissions_form($role)
     {
-        if ($role == 1 or $role == 2) {
+        if ($role <> 3) {
             $this->showPermissions = true;
         } else {
             $this->showPermissions = false;

@@ -22,6 +22,8 @@ return [
     'force delete question'     => 'هل أنت متاكد انك تريد حذف الصلاحية بشكل نهائي ؟!',
     'delete result'             => 'هذا الإجراء يتسسب بحذف الصلاحية بشكل نهائي',
     'restore permission'        => 'تم إستعادة صلاحية بنجاح',
-    'force delete permission'   => 'تم حذف الصلاحية بشكل نهائي بنجاح'
+    'force delete permission'   => 'تم حذف الصلاحية بشكل نهائي بنجاح',
+    'display_name'              => 'الاسم المعروض',
+    'description'               => 'الوصف',
 
 ];
