@@ -174,7 +174,8 @@ class ListUsers extends Component
     public function updateUserRole(User $user ,$role)
     {
         Validator::make(['role' => $role],[
-            'role' => 'required|in:1,2,3',
+            //'role' => 'required|in:1,2,3',
+            'role' => 'required',
         ])->validate();
 
         $user->roles()->sync($role);
