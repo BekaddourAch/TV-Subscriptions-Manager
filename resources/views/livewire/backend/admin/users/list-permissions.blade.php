@@ -12,10 +12,10 @@
                 <li class="breadcrumb-item active">Permissions</li>
             </ol>
             <div class="mt-2 d-flex justify-content-end">
-                <button wire:click.prevent='addNewPermission' class="ml-1 btn btn-primary">
+                <button wire:click.prevent='addNewPermission' class="ml-1 btn btn-sm btn-primary">
                     <i class="mr-2 fa fa-plus-circle"
                         aria-hidden="true">
-                        <span>Add New Permission</span>
+                        <span>Add Permission</span>
                     </i>
                 </button>
             </div>
@@ -23,20 +23,20 @@
 
         <div class="p-3 card-body">
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table">
                     <thead class="text-white bg-gradient-secondary">
                         <tr class="text-center">
                             <th class="align-middle" scope="col">#</th>
-                            <th class="align-middle" style="width: 15px">
+                            <th class="align-middle">
                                 {{ trans('permission.name') }}
                             </th>
-                            <th class="align-middle" style="width: 10%">
+                            <th class="align-middle">
                                 {{ trans('permission.display_name') }}
                             </th>
-                            <th class="align-middle" style="width: 15px">
+                            <th class="align-middle">
                                 {{ trans('permission.description') }}
                             </th>
-                            <th colspan="2">{{ trans('messages.actions') }}</th>
+                            <th class="align-middle" style="width: 10%" colspan="2">{{ trans('messages.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>

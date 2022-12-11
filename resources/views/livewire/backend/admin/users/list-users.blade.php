@@ -22,10 +22,10 @@
                         <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
                     </div>
                 </div>
-                <button wire:click.prevent='addNewUser' class="ml-1 btn btn-primary">
+                <button wire:click.prevent='addNewUser' class="ml-1 btn btn-sm btn-primary">
                     <i class="mr-2 fa fa-plus-circle"
                         aria-hidden="true">
-                        <span>Add New User</span>
+                        <span>Add User</span>
                     </i>
                 </button>
             </div>
@@ -97,7 +97,7 @@
                 </div>
             @endif
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table">
                     <thead class="text-white bg-gradient-secondary">
                         <tr class="text-center">
                             <th class="align-middle" scope="col">
@@ -107,14 +107,14 @@
                                 </div>
                             </th>
                             <th class="align-middle" scope="col">#</th>
-                            <th class="align-middle" style="width: 10%">
+                            <th class="align-middle">
                                 {{ trans('user.name') }}
                                 <span wire:click="sortBy('name')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle" style="width: 15px">
+                            <th class="align-middle">
                                 {{ trans('user.username') }}
                                 <span wire:click="sortBy('username')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'username' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
@@ -122,14 +122,14 @@
                                 </span>
                             </th>
                             <th class="align-middle" scope="col">{{ trans('messages.photo') }}</th>
-                            <th class="align-middle" style="width: 10%;">
+                            <th class="align-middle">
                                 {{ trans('user.email') }}
                                 <span wire:click="sortBy('email')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'email' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'email' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle" style="width: 10px">
+                            <th class="align-middle">
                                 {{ trans('user.mobile') }}
                             </th>
                             <th class="align-middle">
@@ -149,7 +149,7 @@
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th> --}}
-                            <th colspan="2">{{ trans('messages.actions') }}</th>
+                            <th class="align-middle" style="width: 10px" colspan="2">{{ trans('messages.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
