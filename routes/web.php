@@ -38,6 +38,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('users', ListUsers::class)->name('users');
         Route::get('roles', ListRoles::class)->name('roles');
         Route::get('permissions', ListPermissions::class)->name('permissions');
+
+        Route::get('/wow', function () {
+            // This route can be accessed only if the user has the "some-permission" permission.
+        })->middleware('permission:profile-read');
     });
 });
+
 

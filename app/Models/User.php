@@ -83,4 +83,23 @@ class User extends Authenticatable
         }
         //return asset('noimage.png');
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function hasPermission($permissions)
+    {
+        foreach ($this->roles as $role) {
+            foreach ($permissions as $permission) {
+                if ($role->permissions->contains('name', $permission)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 }
