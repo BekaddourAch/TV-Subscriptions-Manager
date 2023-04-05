@@ -17,7 +17,7 @@ use App\Http\Livewire\Backend\Admin\Users\ListUsers;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+App::setLocale('fr');
 Route::get('/', function () {
     return view('welcome');
 });

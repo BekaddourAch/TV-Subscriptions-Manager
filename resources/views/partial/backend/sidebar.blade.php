@@ -10,7 +10,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="mx-3 sidebar-brand-text">Admin Dashboard</div>
+        <div class="mx-3 sidebar-brand-text">Tableau de bord Admin </div>
     </a>
 
     <!-- Divider -->
@@ -20,80 +20,7 @@
     <li class="nav-item {{ request()->is('admin') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.index') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
-    </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Users Management
-    </div>
-
-    <!-- Nav Item - Users -->
-    <li class="nav-item {{ request()->is('admin/users') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.users') }}">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Users</span>
-        </a>
-    </li>
-    <!-- Nav Item - Roles -->
-    <li class="nav-item {{ request()->is('admin/roles') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.roles') }}">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Roles</span>
-        </a>
-    </li>
-    <!-- Nav Item - Permissions -->
-    <li class="nav-item {{ request()->is('admin/permissions') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.permissions') }}">
-            <i class="fas fa-fw fa-cogs"></i>
-            <span>Permissions</span>
-        </a>
-    </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Interface
-    </div>
-
-    <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-            aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Components</span>
-        </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="py-2 bg-white rounded collapse-inner">
-                <h6 class="collapse-header">Custom Components:</h6>
-                <a class="collapse-item" href="{{ route('admin.index') }}">Buttons</a>
-                <a class="collapse-item" href="cards.html">Cards</a>
-            </div>
-        </div>
-    </li>
-
-    <!-- Nav Item - Utilities Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-            aria-expanded="true" aria-controls="collapseUtilities">
-            <i class="fas fa-fw fa-wrench"></i>
-            <span>Utilities</span>
-        </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-            data-parent="#accordionSidebar">
-            <div class="py-2 bg-white rounded collapse-inner">
-                <h6 class="collapse-header">Custom Utilities:</h6>
-                <a class="collapse-item" href="utilities-color.html">Colors</a>
-                <a class="collapse-item" href="utilities-border.html">Borders</a>
-                <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                <a class="collapse-item" href="utilities-other.html">Other</a>
-            </div>
-        </div>
+            <span>Tableau de bord</span></a>
     </li>
 
     <!-- Divider -->
@@ -141,18 +68,108 @@
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Users Management
+    </div>
+ <!-- Nav Item - Utilities Collapse Menu -->
+ <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#UsersUtilities"
+        aria-expanded="true" aria-controls="collapseUtilities">
+        <i class="fas fa-fw fa-users"></i>
+        <span>Users Management</span>
+    </a>
+    <div id="UsersUtilities" class="collapse" aria-labelledby="headingUtilities"
+        data-parent="#accordionSidebar">
+        <div class="py-2 bg-white rounded collapse-inner">
+            <h6 class="collapse-header">Custom Utilities:</h6>
+            <a class="collapse-item" href="{{ route('admin.users') }}">Users</a>
+            <a class="collapse-item" href="{{ route('admin.roles') }}">Roles</a>
+            <a class="collapse-item" href="{{ route('admin.permissions') }}">Permissions</a> 
+        </div>
+    </div>
+</li>
+
+    {{-- <!-- Nav Item - Users -->
+    <li class="nav-item {{ request()->is('admin/users') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.users') }}">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Users</span>
+        </a>
+    </li>
+    <!-- Nav Item - Roles -->
+    <li class="nav-item {{ request()->is('admin/roles') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.roles') }}">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Roles</span>
+        </a>
+    </li>
+    <!-- Nav Item - Permissions -->
+    <li class="nav-item {{ request()->is('admin/permissions') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.permissions') }}">
+            <i class="fas fa-fw fa-cogs"></i>
+            <span>Permissions</span>
+        </a>
+    </li> --}}
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Interface
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Components</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="py-2 bg-white rounded collapse-inner">
+                <h6 class="collapse-header">Custom Components:</h6>
+                <a class="collapse-item" href="{{ route('admin.index') }}">Buttons</a>
+                <a class="collapse-item" href="cards.html">Cards</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>Utilities</span>
+        </a>
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="py-2 bg-white rounded collapse-inner">
+                <h6 class="collapse-header">Custom Utilities:</h6>
+                <a class="collapse-item" href="utilities-color.html">Colors</a>
+                <a class="collapse-item" href="utilities-border.html">Borders</a>
+                <a class="collapse-item" href="utilities-animation.html">Animations</a>
+                <a class="collapse-item" href="utilities-other.html">Other</a>
+            </div>
+        </div>
+    </li>
+
 
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="border-0 rounded-circle" id="sidebarToggle"></button>
     </div>
 
-    <!-- Sidebar Message -->
+    {{-- <!-- Sidebar Message -->
     <div class="sidebar-card d-none d-lg-flex">
         <img class="mb-2 sidebar-card-illustration" src="{{ asset('backend/img/undraw_rocket.svg') }}" alt="...">
         <p class="mb-2 text-center"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
         <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-    </div>
+    </div> --}}
 
 </ul>
 <!-- End of Sidebar -->
