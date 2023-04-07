@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('lastname', 100);
             $table->integer('phone1');
             $table->integer('phone2')->nullable();;
-            $table->string('email');
+            $table->string('email')->nullable();;
             $table->string('address')->nullable();;
             $table->string('state')->nullable();;
             $table->string('city')->nullable();;
