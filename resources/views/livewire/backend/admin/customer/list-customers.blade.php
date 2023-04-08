@@ -291,9 +291,9 @@
                                     <!-- Modal customer address -->
                                     <div class="form-group">
                                         <label for="address">Adresse</label>
-                                        <textarea tabindex="1" wire:model.defer="data.address" class="form-control @error('address') is-invalid @enderror"
+                                        <input type="text" tabindex="1" wire:model.defer="data.address" class="form-control @error('address') is-invalid @enderror"
                                             id="address" aria-describedby="nameHelp" placeholder="Enter customer address">
-                                    </textarea>
+                                     
                                         @error('address')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -308,9 +308,70 @@
                                     <!-- Modal customer state -->
                                     <div class="form-group">
                                         <label for="state">Wilaya</label>
-                                        <input type="text" tabindex="1" wire:model.defer="data.state"
+                                        {{-- <input type="text" tabindex="1" wire:model.defer="data.state"
                                             class="form-control @error('state') is-invalid @enderror" id="state"
-                                            aria-describedby="nameHelp" placeholder="Enter customer state">
+                                            aria-describedby="nameHelp" placeholder="Enter customer state"> --}}
+                                            <select  wire:model.defer="data.state" class="form-control @error('state') is-invalid @enderror" id="state"
+                                                aria-describedby="nameHelp">
+                                                <option value="Adrar">Adrar</option>
+                                                <option value="Chlef">Chlef</option>
+                                                <option value="Laghouat">Laghouat</option>
+                                                <option value="Oum El Bouaghi">Oum El Bouaghi</option>
+                                                <option value="Batna">Batna</option>
+                                                <option value="Béjaïa">Béjaïa</option>
+                                                <option value="Biskra">Biskra</option>
+                                                <option value="Béchar">Béchar</option>
+                                                <option value="Blida">Blida</option>
+                                                <option value="Bouira">Bouira</option>
+                                                <option value="Tamanrasset">Tamanrasset</option>
+                                                <option value="Tébessa">Tébessa</option>
+                                                <option value="Tlemcen">Tlemcen</option>
+                                                <option value="Tiaret">Tiaret</option>
+                                                <option value="Tizi Ouzou">Tizi Ouzou</option>
+                                                <option value="Alger">Alger</option>
+                                                <option value="Djelfa">Djelfa</option>
+                                                <option value="Jijel">Jijel</option>
+                                                <option value="Sétif">Sétif</option>
+                                                <option value="Saïda">Saïda</option>
+                                                <option value="Skikda">Skikda</option> 
+                                                <option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
+                                                <option value="Annaba">Annaba</option>
+                                                <option value="Guelma">Guelma</option>
+                                                <option value="Constantine">Constantine</option>
+                                                <option value="Médéa">Médéa</option>
+                                                <option value="Mostaganem">Mostaganem</option>
+                                                <option value="M'Sila">M'Sila</option>
+                                                <option value="Mascara">Mascara</option>
+                                                <option value="Ouargla">Ouargla</option>
+                                                <option value="Oran">Oran</option>
+                                                <option value="El Bayadh">El Bayadh</option>
+                                                <option value="Illizi">Illizi</option>
+                                                <option value="Bordj Bou Arreridj">Bordj Bou Arreridj</option>
+                                                <option value="Boumerdès">Boumerdès</option>
+                                                <option value="El Tarf">El Tarf</option>
+                                                <option value="Tindouf">Tindouf</option>
+                                                <option value="Tissemsilt">Tissemsilt</option>
+                                                <option value="El Oued">El Oued</option>
+                                                <option value="Khenchela">Khenchela</option>
+                                                <option value="Souk Ahras">Souk Ahras</option>
+                                                <option value="Tipaza">Tipaza</option>
+                                                <option value="Mila">Mila</option>
+                                                <option value="ain-defla">Aïn Defla</option>
+                                                <option value="naama">Naâma</option>
+                                                <option value="Aïn Témouchent">Aïn Témouchent</option>
+                                                <option value="ghardaia">Ghardaia</option> 
+                                                <option value="Relizane">Relizane</option>
+                                                <option value="Timimoun">Timimoun </option>
+                                                <option value="Bordj Badji Mokhtar">Bordj Badji Mokhtar</option>
+                                                <option value="Ouled Djellal">Ouled Djellal</option>
+                                                <option value="Béni Abbès">Béni Abbès</option>
+                                                <option value="Ain Salah">Aïn Salah</option>
+                                                <option value="Ain Guezzam">Aïn Guezzam</option>
+                                                <option value="Touggourt">Touggourt</option>
+                                                <option value="Djanet">Djanet </option>
+                                                <option value="El M'Ghair">El M'Ghair</option>
+                                                <option value="El Meniaa">El Meniaa</option>
+                                            </select>
                                         @error('state')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -324,7 +385,7 @@
                                     <!-- Modal customer notes -->
                                     <div class="form-group"> 
                                         <label for="customSwitch1">Rendre le client actif</label>
-                                        <div class="custom-control custom-switch">
+                                        <div class="custom-control custom-switch" style="min-width: 180px;margin-right: 80px;">
                                             <input type="checkbox" class="custom-control-input" id="customSwitch1" checked="" wire:model.defer="data.active">
                                             <label class="custom-control-label" for="customSwitch1"></label>
                                           </div>
@@ -338,7 +399,7 @@
 
                                 </div>
                             </div>
-                            <div class="row h-100 justify-content-center align-items-center" style="width:300%">
+                            <div class="row h-100 justify-content-center align-items-center" style="width:110%">
 
                                 <div class="col-12">
                                     <!-- Modal customer notes -->

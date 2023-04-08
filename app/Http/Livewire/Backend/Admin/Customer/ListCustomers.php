@@ -132,9 +132,9 @@ class ListCustomers extends Component
         $validatedData = Validator::make($this->data, [ 
 			'firstname' => 'required',
 			'lastname' => 'required',
-			'phone1' => 'required',
-            'phone2' => '', 
-            'email' => '', 
+			'phone1' => 'required|regex:/[0-9]{10}/',
+            'phone2' => 'regex:/(01)[0-9]{9}/', 
+            'email' => 'email', 
             'address' => '', 
             'state' => '', 
             'city' => '',
