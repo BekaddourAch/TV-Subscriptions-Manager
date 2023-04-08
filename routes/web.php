@@ -7,6 +7,7 @@ use App\Http\Livewire\Backend\Admin\Dashboard\Dashboard;
 use App\Http\Livewire\Backend\Admin\Users\ListPermissions;
 use App\Http\Livewire\Backend\Admin\Users\ListRoles;
 use App\Http\Livewire\Backend\Admin\Users\ListUsers;
+use App\Http\Livewire\Backend\Admin\Services\ListServices;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('permissions', ListPermissions::class)->name('permissions');
 
         Route::get('customer', ListCustomers::class)->name('customers');
+        Route::get('services', ListServices::class)->name('services');
 
         Route::get('/wow', function () {
             // This route can be accessed only if the user has the "some-permission" permission.
