@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\Backend\Admin\Customer\ListCustomers;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\BackendController;
 use App\Http\Livewire\Backend\Admin\Dashboard\Dashboard;
@@ -17,7 +18,7 @@ use App\Http\Livewire\Backend\Admin\Users\ListUsers;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+App::setLocale('fr');
 Route::get('/', function () {
     return view('welcome');
 });
@@ -27,7 +28,6 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
-
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::group(['middleware' => 'guest'], function () {
         Route::get('login', [BackendController::class, 'login'])->name('login');
@@ -38,6 +38,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('users', ListUsers::class)->name('users');
         Route::get('roles', ListRoles::class)->name('roles');
         Route::get('permissions', ListPermissions::class)->name('permissions');
+
+        Route::get('customer', ListCustomers::class)->name('customers');
 
         Route::get('/wow', function () {
             // This route can be accessed only if the user has the "some-permission" permission.

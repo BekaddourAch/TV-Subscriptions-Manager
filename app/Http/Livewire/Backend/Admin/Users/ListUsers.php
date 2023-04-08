@@ -2,20 +2,20 @@
 
 namespace App\Http\Livewire\Backend\Admin\Users;
 
+use App\Exports\UsersExport;
+use App\Imports\UsersImport;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
-use Livewire\Component;
-use Illuminate\Support\Facades\Validator;
-use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
-use Livewire\WithPagination;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-use App\Exports\UsersExport;
-use App\Imports\UsersImport;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
-use PDF;
-
+use Meneses\LaravelMpdf\Facades\LaravelMpdf;
 class ListUsers extends Component
 {
     use WithFileUploads;
@@ -487,7 +487,7 @@ class ListUsers extends Component
                 $users = $this->users;
             }
 
-            $pdf = PDF::loadView('livewire.backend.admin.users.pdf',['users' => $users]);
+            $pdf = \Mccarlosen\LaravelMpdf\LaravelMpdf::loadView('livewire.backend.admin.users.pdf',['users' => $users]);
             return $pdf->stream('users');
 
         },'users.pdf');

@@ -17,9 +17,8 @@
                         Services
                     </button>
                     <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton2" style="">
-                        <a class="dropdown-item" wire:click.prevent="exportExcel" href="#">Export to Excel</a>
-                        <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Import from Excel</a>
-                        <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
+                        <a class="dropdown-item" wire:click.prevent="exportExcel" href="#">Exporter vers Excel</a>
+                        <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Importer depuis Excel</a>
                     </div>
                 </div>
                 <button wire:click.prevent='addNewUser' class="ml-1 btn btn-sm btn-primary">
@@ -140,7 +139,7 @@
                                 </span>
                             </th>
                             <th class="pl-5 pr-5 align-middle">
-                                {{ trans('Role') }}
+                                {{ trans('user.Role') }}  
                             </th>
                             {{-- <th>
                                 {{ trans('messages.created_at') }}

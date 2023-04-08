@@ -15,7 +15,7 @@
                 <button wire:click.prevent='addNewPermission' class="ml-1 btn btn-sm btn-primary">
                     <i class="mr-2 fa fa-plus-circle"
                         aria-hidden="true">
-                        <span>Add Permission</span>
+                        <span> {{ trans('app.créer') }} une Permission</span>
                     </i>
                 </button>
             </div>
