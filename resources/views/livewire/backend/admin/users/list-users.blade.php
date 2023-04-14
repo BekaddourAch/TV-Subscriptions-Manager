@@ -9,10 +9,11 @@
         <div class="py-3 card-header">
             <ol class="m-0 breadcrumb float-sm-left font-weight-bold text-primary">
                 <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
-                <li class="breadcrumb-item active">Users</li>
+                <li class="breadcrumb-item active">Utilisateurs</li>
             </ol>
             <div class="mt-2 d-flex justify-content-end">
-                <div class="ml-3 dropdown">
+                @if(1==0)
+                {{-- <div class="ml-3 dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Services
                     </button>
@@ -20,20 +21,25 @@
                         <a class="dropdown-item" wire:click.prevent="exportExcel" href="#">Exporter vers Excel</a>
                         <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Importer depuis Excel</a>
                     </div>
-                </div>
-                <button wire:click.prevent='addNewUser' class="ml-1 btn btn-sm btn-primary">
-                    <i class="mr-2 fa fa-plus-circle"
-                        aria-hidden="true">
-                        <span>Add User</span>
-                    </i>
-                </button>
+                </div> --}}
+                
+                @endif
+                
+                @if(Auth::user()->hasPermission('users-create'))
+                    <button wire:click.prevent='addNewUser' class="ml-1 btn btn-sm btn-primary">
+                        <i class="mr-2 fa fa-plus-circle"
+                            aria-hidden="true">
+                            <span>Ajouter un Utilisateur</span>
+                        </i>
+                    </button>
+                @endif
             </div>
         </div>
 
         <div class="flex-wrap d-flex justify-content-between">
             <div class="pt-3 my-2 ml-3 ml-md-3 my-md-0 mw-80 navbar-search">
                 <div class="input-group">
-                    <input wire:model="searchTerm" type="text" class="border-0 form-control bg-light small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" spellcheck="false" data-ms-editor="true">
+                    <input wire:model="searchTerm" type="text" class="border-0 form-control bg-light small" placeholder="Rechercher..." aria-label="Search" aria-describedby="basic-addon2" spellcheck="false" data-ms-editor="true">
                     <div class="input-group-append">
                         <button class="btn btn-primary btn-sm" type="button">
                             <i class="fas fa-search fa-sm"></i>
@@ -41,7 +47,8 @@
                     </div>
                 </div>
             </div>
-            <div class="m-3 mw-100 justify-content-end">
+            @if(1==0)
+            {{-- <div class="m-3 mw-100 justify-content-end">
                 <div class="btn-group">
                     <div data-toggle="buttons">
                         <button wire:click="filterUsersByRoles" class="btn btn-sm btn-warning btn-icon-split">
@@ -70,27 +77,29 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> --}}
+            @endif
         </div>
 
         <div class="p-3 card-body">
             @if ($selectedRows)
                 <div class="mb-3 d-flex">
                     <span class="pt-1 text-success">
+                         <span class="text-gray-900 font-weight-bold">{{ count($selectedRows) }}</span> {{ Str::plural('Utilisateure', count($selectedRows)) }}
+                         
+                        sélectionné
                         <i class="fa fa-user" aria-hidden="true"></i>
-                         selected
-                         <span class="text-gray-900 font-weight-bold">{{ count($selectedRows) }}</span> {{ Str::plural('user', count($selectedRows)) }}
                     </span>
 
                     <div class="ml-3 dropdown">
                         <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Action
+                            Actions
                         </button>
                         <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
-                            <a class="dropdown-item" wire:click.prevent="setAllAsActive" href="#">Set as Acive</a>
-                            <a class="dropdown-item" wire:click.prevent="setAllAsInActive" href="#">Set as InActive</a>
+                            <a class="dropdown-item" wire:click.prevent="setAllAsActive" href="#">Définir comme actif</a>
+                            <a class="dropdown-item" wire:click.prevent="setAllAsInActive" href="#">Définir comme inactif</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Delete Selected</a>
+                            <a class="dropdown-item text-danger delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Supprimer les Utilisateurs sélectionnée</a>
                         </div>
                     </div>
                 </div>
@@ -99,116 +108,136 @@
                 <table class="table">
                     <thead class="text-white bg-gradient-secondary">
                         <tr class="text-center">
-                            <th class="align-middle" scope="col">
-                                <div class="custom-control custom-checkbox small">
-                                    <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
-                                    <label class="custom-control-label" for="customCheck"></label>
-                                </div>
-                            </th>
+
+                            @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
+                                <th class="align-middle" scope="col">
+                                    <div class="custom-control custom-checkbox small">
+                                        <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
+                                        <label class="custom-control-label" for="customCheck"></label>
+                                    </div>
+                                </th>
+                            @endif              
+
                             <th class="align-middle" scope="col">#</th>
                             <th class="align-middle">
-                                {{ trans('user.name') }}
+                                Nom
                                 <span wire:click="sortBy('name')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
                             <th class="align-middle">
-                                {{ trans('user.username') }}
+                                Pseudo
                                 <span wire:click="sortBy('username')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'username' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'username' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle" scope="col">{{ trans('messages.photo') }}</th>
+                            <th class="align-middle" scope="col">Photo</th>
                             <th class="align-middle">
-                                {{ trans('user.email') }}
+                                Email
                                 <span wire:click="sortBy('email')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'email' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'email' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
                             <th class="align-middle">
-                                {{ trans('user.mobile') }}
+                                Tèlèphone
                             </th>
                             <th class="align-middle">
-                                {{ trans('messages.status') }}
+                                Status
                                 <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
                             <th class="pl-5 pr-5 align-middle">
-                                {{ trans('user.Role') }}  
+                                Role
                             </th>
-                            {{-- <th>
-                                {{ trans('messages.created_at') }}
+                            <th>
+                                créé à
                                 <span wire:click="sortBy('created_at')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
-                            </th> --}}
-                            <th class="align-middle" style="width: 10px" colspan="2">{{ trans('messages.actions') }}</th>
+                            </th>
+                            
+                            @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
+                                <th class="align-middle" style="width: 10px" colspan="2">Actions</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($users as $index => $user)
-                        <tr class="text-center">
-                            <td class="align-middle" scope="col">
-                                <div class="custom-control custom-checkbox small">
-                                    <input type="checkbox" wire:model="selectedRows" value="{{ $user->id }}" class="custom-control-input" id="{{ $user->id }}">
-                                    <label class="custom-control-label" for="{{ $user->id }}"></label>
-                                </div>
-                            </td>
-                            <td class="align-middle" scope="row">{{ $users->firstItem() + $index }}</td>
-                            <td class="align-middle">{{ $user->name }}</td>
-                            <td class="align-middle">{{ $user->username }}</td>
-                            <td class="align-middle">
-                                <img src="{{ $user->profile_photo_path ? $user->profile_url : $user->profile_photo_url }}" style="width: 50px;" class="img img-circle" alt="">
-                            </td>
-                            <td class="align-middle">{{ $user->email }}</td>
-                            <td class="align-middle">{{ $user->mobile }}</td>
-                            <td class="align-middle">
-                                <span
-                                    class="font-weight-bold badge text-white {{ $user->status == 1 ? 'bg-success' : 'bg-secondary' }}">{{
-                                    $user->status() }}
-                                </span>
-                            </td>
-                            <td class="align-middle">
-                                <select class="form-control form-control-sm" wire:change='updateUserRole({{ $user }}, $event.target.value)'>
-                                    <option hidden>@lang('message.roles')</option>
-                                    @foreach ($roles as $role)
-                                        <option class="bg-red" value="{{ $role->id }}" {{ $user->roles[0]->name == $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            {{-- <td>{{ $user->created_at->format('d-m-Y') }}</td> --}}
-                            <td class="align-middle">
-                                <div class="btn-group btn-group-sm">
-                                    <a href="#" wire:click.prevent="edit({{ $user }})" class="btn btn-primary">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
+                            @if($user->id!=1)
+                            <tr class="text-center">
+                                @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
+                                    <td class="align-middle" scope="col">
+                                        <div class="custom-control custom-checkbox small">
+                                            <input type="checkbox" wire:model="selectedRows" value="{{ $user->id }}" class="custom-control-input" id="{{ $user->id }}">
+                                            <label class="custom-control-label" for="{{ $user->id }}"></label>
+                                        </div>
+                                    </td>
+                                @endif
+                                <td class="align-middle" scope="row">{{ $users->firstItem() + $index }}</td>
+                                <td class="align-middle">{{ $user->name }}</td>
+                                <td class="align-middle">{{ $user->username }}</td>
+                                <td class="align-middle">
+                                    <img src="{{ $user->profile_photo_path ? $user->profile_url : $user->profile_photo_url }}" style="width: 50px;" class="img img-circle" alt="">
+                                </td>
+                                <td class="align-middle">{{ $user->email }}</td>
+                                <td class="align-middle">{{ $user->mobile }}</td>
+                                <td class="align-middle">
+                                    <span
+                                        class="font-weight-bold badge text-white {{ $user->status == 1 ? 'bg-success' : 'bg-secondary' }}">{{
+                                        $user->status() }}
+                                    </span>
+                                </td>
+                                <td class="align-middle">
+                                    <select class="form-control form-control-sm" wire:change='updateUserRole({{ $user }}, $event.target.value)'>
+                                        <option hidden>@lang('message.roles')</option>
+                                        @foreach ($roles as $role) 
+                                            @if($role->id!=1)
+                                            <option class="bg-red" value="{{ $role->id }}" {{ $user->roles[0]->name == $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>{{ $user->created_at->format('d-m-Y') }}</td>
+                                
+                                @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
+                                    <td class="align-middle">
+                                        <div class="btn-group btn-group-sm">
+                                            
+                                            @if(Auth::user()->hasPermission('users-update'))
+                                                <a href="#" wire:click.prevent="edit({{ $user }})" class="btn btn-primary">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            @endif
+                                            @if(Auth::user()->hasPermission('users-delete'))
+                                                <a class="btn btn-danger" href="#" wire:click.prevent="confirmUserRemoval({{ $user->id }})">
+                                                    <i class="fa fa-trash bg-danger"></i>
+                                                </a>
+                                            @endif
 
-                                    <a class="btn btn-danger" href="#" wire:click.prevent="confirmUserRemoval({{ $user->id }})">
-                                        <i class="fa fa-trash bg-danger"></i>
-                                    </a>
-
-                                </div>
-                                <form action="" method="post" id="delete-user-{{ $user->id }}" class="d-none">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            </td>
-                        </tr>
+                                        </div>
+                                        <form action="" method="post" id="delete-user-{{ $user->id }}" class="d-none">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    </td>
+                                @endif
+                            </tr>
+                            @endif
                         @empty
                         <tr>
-                            <td colspan="10" class="text-center">No Users found</td>
+                            <td colspan="10" class="text-center">Aucun Utilisateur trouvé</td>
                         </tr>
                         @endforelse
                     </tbody>
                     <tfoot>
                         <tr class="bg-light">
-                            <td colspan="10">
+                            <td colspan="11">
                                 {!! $users->appends(request()->all())->links() !!}
                             </td>
                         </tr>
@@ -228,9 +257,9 @@
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                                <span>Edit User</span>
+                                <span>Modifier l'utilisateur</span>
                             @else
-                            <span>Add New User</span>
+                            <span>Ajouter un nouvel utilisateur</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -253,8 +282,8 @@
                                 <!-- Modal User Full Name -->
 
                                 <div class="form-group">
-                                    <label for="name">Full Name</label>
-                                    <input type="text" tabindex="1" wire:model.defer="state.name" class="form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" placeholder="Enter full name">
+                                    <label for="name">Nom</label>
+                                    <input type="text" tabindex="1" wire:model.defer="state.name" class="form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" placeholder="Entrez le nom">
                                     @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -265,8 +294,8 @@
                                 <!-- Modal User Email -->
 
                                 <div class="form-group">
-                                    <label for="email">Email address</label>
-                                    <input type="email" tabindex="3" wire:model.defer="state.email" class="form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                                    <label for="email">Email</label>
+                                    <input type="email" tabindex="3" wire:model.defer="state.email" class="form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp" placeholder="Entrez L'email">
                                     @error('email')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -277,8 +306,8 @@
                                 <!-- Modal User Password -->
 
                                 <div class="form-group">
-                                    <label for="password">Password</label>
-                                    <input type="password" tabindex="5" wire:model.defer="state.password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Password">
+                                    <label for="password">Mot de passe</label>
+                                    <input type="password" tabindex="5" wire:model.defer="state.password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Entrez le Mot de passe">
                                     @error('password')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -291,8 +320,8 @@
                                 <!-- Modal User Username -->
 
                                 <div class="form-group">
-                                    <label for="username">UserName</label>
-                                    <input type="text" tabindex="2" wire:model.defer="state.username" class="form-control @error('username') is-invalid @enderror" id="username" aria-describedby="nameHelp" placeholder="Enter username">
+                                    <label for="username">Pseudo</label>
+                                    <input type="text" tabindex="2" wire:model.defer="state.username" class="form-control @error('username') is-invalid @enderror" id="username" aria-describedby="nameHelp" placeholder="Entrez le Pseudo">
                                     @error('username')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -304,7 +333,7 @@
 
                                 <div class="form-group">
                                     <label for="mobile">Mobile</label>
-                                    <input type="text" tabindex="4" wire:model.defer="state.mobile" class="form-control @error('mobile') is-invalid @enderror" id="mobile" aria-describedby="nameHelp" placeholder="Enter Mobile">
+                                    <input type="text" tabindex="4" wire:model.defer="state.mobile" class="form-control @error('mobile') is-invalid @enderror" id="mobile" aria-describedby="nameHelp" placeholder="Entrez Le Numéro de téléphone">
                                     @error('mobile')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -316,7 +345,7 @@
 
                                 <div class="form-group">
                                     <label for="passwordConfirmation">Confirm Password</label>
-                                    <input type="password" tabindex="6" wire:model.defer="state.password_confirmation" class="form-control" id="passwordConfirmation" placeholder="Confirm Password">
+                                    <input type="password" tabindex="6" wire:model.defer="state.password_confirmation" class="form-control" id="passwordConfirmation" placeholder="Confirmez le mot de passe">
                                 </div>
                             </div>
                         </div>
@@ -324,11 +353,13 @@
                         <!-- Modal User Roles -->
 
                         <div id="roles" class="form-group">
-                            <label for="role_id">@lang('roles')</label>
+                            <label for="role_id">Role</label>
                             <select id="roles" tabindex="7" class="form-control form-control @error('role_id') is-invalid @enderror" wire:model.defer="state.role_id" wire:change="permissions_form($event.target.value)">
-                                <option hidden>@lang('Select role ..')</option>
+                                <option hidden>@lang('Sélectionnez les rôles ..')</option>
                                 @foreach ($roles as $role)
-                                    <option class="bg-red" value="{{ $role->id }}">{{ $role->name }}</option>
+                                    @if($role->id!=1)
+                                        <option class="bg-red" value="{{ $role->id }}">{{ $role->name }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             @error('role_id')
@@ -341,7 +372,7 @@
                         <!-- Modal User Photo -->
 
                         <div class="form-group">
-                            <label for="custom-file">User Photo</label>
+                            <label for="custom-file">Photo d'utilisteur</label>
                             @if ($photo)
                                 <img src="{{ $photo->temporaryUrl() }}" class="mb-2 d-block img img-circle" width="100px" alt="">
                             @else
@@ -353,7 +384,7 @@
                                     {{-- progres bar --}}
                                     <div x-show.transition="isUploading" class="mt-2 rounded progress progress-sm">
                                         <div class="progress-bar bg-primary progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" x-bind:style="`width: ${progress}%`">
-                                            <span class="sr-only">40% Complete (success)</span>
+                                            <span class="sr-only">40% Terminé (succès)</span>
                                         </div>
                                     </div>
                                 </div>
@@ -362,7 +393,7 @@
                                         {{ $photo->getClientOriginalName() }}
                                         <img src="{{ $photo }}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt="">
                                     @else
-                                        Choose Image
+                                    Choisissez une image
                                     @endif
                                 </label>
                             </div>
@@ -370,60 +401,15 @@
 
                         <!-- Modal User Permissions -->
 
-                        @if ($showPermissions)
-                            <div id="permissions" class="form-group">
-                                {{--<label class="text-center text-white bg-secondary form-control" for="permissions">Permissions</label>
-
-                                @php
-                                    $PermissionName = array_keys(config('laratrust_seeder.roles_structure.superadmin'));
-                                @endphp --}}
-
-                                {{-- @foreach ( $permissions->chunk(4) as $index => $chunk ) --}}
-                                    {{-- @dump($permissions->chunk(4)) --}}
-                                <div class="mb-2 card d-flex justify-content-center">
-                                    {{-- <div class="card-header">
-                                        {{ ucfirst($PermissionName[$index] . ' Permissions') }}
-                                    </div> --}}
-                                    <div class="card-header">
-                                        <h4 class="text-center">Permissions</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="card-text">
-                                            <div class="row">
-                                                @foreach ($permissions as $index => $permission)
-                                                    <div class="col-4">
-                                                        <div class="form-group">
-                                                            <div class="custom-control form-checkbox small">
-                                                                <label class="items-center" :key="{{ $permission->id }}">
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        name="user_permissions.{{ $permission->id }}"
-                                                                        wire:model.defer="user_permissions.{{ $permission->id }}"
-                                                                        value="{{ $permission->id }}"
-                                                                        class="form-checkbox"
-                                                                    />
-                                                                    <span class="mr-1">{{ $permission->display_name }}</span>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </p>
-                                    </div>
-                                </div>
-                                {{-- @endforeach --}}
-                            </div>
-                        @endif
                     </div>
 
                     <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Annuler</button>
                         <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-save"></i>
                             @if ($showEditModal)
-                                <span>Save Changes</span>
+                                <span>Sauvegarder les modifications</span>
                             @else
-                            <span>Save</span>
+                            <span>Sauvegarder</span>
                             @endif
                         </button>
                     </div>
@@ -437,16 +423,16 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-light">
-                    <h5>Delete User</h5>
+                    <h5>Supprimer l'utilisateur</h5>
                 </div>
 
                 <div class="modal-body">
-                    <h4>Are you sure you want to delete this user?</h4>
+                    <h4>Voulez-vous vraiment supprimer cet utilisateur ?</h4>
                 </div>
 
                 <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Cancel</button>
-                    <button type="button" wire:click.prevent="deleteUser" class="btn btn-danger"><i class="mr-1 fa fa-trash"></i>Delete User</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Annuler</button>
+                    <button type="button" wire:click.prevent="deleteUser" class="btn btn-danger"><i class="mr-1 fa fa-trash"></i>Supprimer </button>
                 </div>
             </div>
         </div>
@@ -459,7 +445,7 @@
                 <div class="modal-content">
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
-                            Import Excel File
+                            Importer un fichier Excel
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -470,7 +456,7 @@
                         <!-- Modal Excel File -->
 
                         <div class="form-group">
-                            <label for="custom-file">Choose Excel File</label>
+                            <label for="custom-file">Choisissez le fichier Excel</label>
                             <div class="mb-3 custom-file">
                                 <div x-data="{ isUploading: false, progress: 5 }" x-on:livewire-upload-start="isUploading = true" x-on:livewire-upload-finish="isUploading = false; progress = 5" x-on:livewire-upload-error="isUploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
                                     <input wire:model.defer="excelFile" type="file" class="custom-file-input @error('excelFile') is-invalid @enderror" id="validatedCustomFile" required>
@@ -488,25 +474,25 @@
                                     @if ($excelFile)
                                         {{ $excelFile->getClientOriginalName() }}
                                     @else
-                                        Choose Excel file
+                                    Choisissez le fichier Excel
                                     @endif
                                 </label>
                             </div>
                         </div>
                         <div class="mb-0 form-group">
-                            <label>Import As :</label>
+                            <label>Importer sous :</label>
                             <label class="ml-3 radio-inline">
-                                <input type="radio" wire:click="importType('addNew')" name="optionsRadiosInline" id="optionsRadiosInline1" value="addNew" checked="checked">Add New
+                                <input type="radio" wire:click="importType('addNew')" name="optionsRadiosInline" id="optionsRadiosInline1" value="addNew" checked="checked">Ajouter nouveau
                             </label>
                             <label class="ml-3 radio-inline">
-                                <input type="radio" wire:click="importType('Update')" name="optionsRadiosInline" id="optionsRadiosInline2" value="Update">Update
+                                <input type="radio" wire:click="importType('Update')" name="optionsRadiosInline" id="optionsRadiosInline2" value="Update">Mise à jour
                             </label>
                         </div>
                     </div>
 
                     <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-open"></i> Open</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Annuler</button>
+                        <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-open"></i> Ouvrir</button>
                     </div>
                 </div>
             </form>
@@ -546,13 +532,13 @@
         <script>
             window.addEventListener('show-delete-alert-confirmation', event =>{
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
+                    title: 'Es-tu sûr?',
+                    text: "Vous ne pourrez pas revenir en arrière !",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Oui, supprimez-le !'
                     }).then((result) => {
                     if (result.isConfirmed) {
                         Livewire.emit('deleteConfirmed')

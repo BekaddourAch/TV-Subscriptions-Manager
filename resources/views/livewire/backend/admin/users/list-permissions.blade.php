@@ -11,14 +11,9 @@
                 <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
                 <li class="breadcrumb-item active">Permissions</li>
             </ol>
-            <div class="mt-2 d-flex justify-content-end">
-                <button wire:click.prevent='addNewPermission' class="ml-1 btn btn-sm btn-primary">
-                    <i class="mr-2 fa fa-plus-circle"
-                        aria-hidden="true">
-                        <span> {{ trans('app.créer') }} une Permission</span>
-                    </i>
-                </button>
-            </div>
+            
+                 
+             
         </div>
 
         <div class="p-3 card-body">
@@ -27,16 +22,22 @@
                     <thead class="text-white bg-gradient-secondary">
                         <tr class="text-center">
                             <th class="align-middle" scope="col">#</th>
-                            <th class="align-middle">
-                                {{ trans('permission.name') }}
+                            <th class="align-middle"> 
+                                Nom
                             </th>
-                            <th class="align-middle">
-                                {{ trans('permission.display_name') }}
+                            <th class="align-middle"> 
+                                Titre d'affichage
                             </th>
-                            <th class="align-middle">
-                                {{ trans('permission.description') }}
+                            <th class="align-middle"> 
+                                Déscription
                             </th>
-                            <th class="align-middle" style="width: 10%" colspan="2">{{ trans('messages.actions') }}</th>
+                            <th class="align-middle"> 
+                                Groupe
+                            </th>
+                            
+                            @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
+                                <th class="align-middle" style="width: 10%" colspan="2">Actions</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -46,26 +47,21 @@
                             <td class="align-middle">{{ $permission->name }}</td>
                             <td class="align-middle">{{ $permission->display_name }}</td>
                             <td class="align-middle">{{ $permission->description }}</td>
+                            <td class="align-middle">{{ $permission->groupe }}</td>
                             <td class="align-middle">
-                                <div class="btn-group btn-group-sm">
-                                    <a href="#" wire:click.prevent="edit({{ $permission }})" class="btn btn-primary">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
 
-                                    <a class="btn btn-danger" href="#" wire:click.prevent="confirmPermissionRemoval({{ $permission->id }})">
-                                        <i class="fa fa-trash bg-danger"></i>
-                                    </a>
-
-                                </div>
-                                <form action="" method="post" id="delete-permission-{{ $permission->id }}" class="d-none">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
+                                @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="#" wire:click.prevent="edit({{ $permission }})" class="btn btn-primary">
+                                            <i class="fa fa-edit"></i>
+                                        </a> 
+                                    </div> 
+                                @endif
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="text-center">No Permission found</td>
+                            <td colspan="6" class="text-center">Aucun service trouvé</td>
                         </tr>
                         @endforelse
                     </tbody>
