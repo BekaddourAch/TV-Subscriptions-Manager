@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Backend\Admin\Customer;
 use App\Exports\CustomerExport;
 use App\Imports\CustomerImport;
 use App\Models\Customer;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +20,7 @@ class ListCustomers extends Component
 
     use WithPagination;
 
-    public $sortColumnName = 'id';
+    public $sortColumnName = 'id_customer';
   
 	public $selectPageRows = false;
 
@@ -53,13 +54,15 @@ class ListCustomers extends Component
 
     public function updatedSelectPageRows($value)
 	{
+        if (Auth::user()->hasPermission('customers-update')) {
 		if ($value) {
-			$this->selectedRows = $this->customers->pluck('id')->map(function ($id) {
+			$this->selectedRows = $this->customers->pluck('id_customer')->map(function ($id) {
 				return (string) $id;
 			});
 		} else {
 			$this->reset(['selectedRows', 'selectPageRows']);
 		}
+    }
 	}
 
 
@@ -67,7 +70,8 @@ class ListCustomers extends Component
 
     public function setAllAsActive()
 	{
-		Customer::whereIn('id', $this->selectedRows)->update(['active' => 1]);
+        if (Auth::user()->hasPermission('customers-update')) {
+		Customer::whereIn('id_customer', $this->selectedRows)->update(['active' => 1]);
 
         $this->dispatchBrowserEvent('swal', [
             'title'             => 'Les utilisateurs ont défini comme actif avec succès.',
@@ -78,13 +82,15 @@ class ListCustomers extends Component
         ]);
 
 		$this->reset(['selectPageRows', 'selectedRows']);
+    }
 	}
 
     // set All selected User As InActive
 
 	public function setAllAsInActive()
 	{
-		Customer::whereIn('id', $this->selectedRows)->update(['active' => 0]);
+        if (Auth::user()->hasPermission('customers-update')) {
+		Customer::whereIn('id_customer', $this->selectedRows)->update(['active' => 0]);
 
 		$this->dispatchBrowserEvent('swal', [
             'title'             => 'Les utilisateurs ont défini comme inactif avec succès.',
@@ -95,19 +101,23 @@ class ListCustomers extends Component
         ]);
 
 		$this->reset(['selectPageRows', 'selectedRows']);
+        }
 	}
 
     // show Sweetalert Confirmation for Delete
 
 	public function deleteSelectedRows()
 	{
+        if (Auth::user()->hasPermission('customers-delete')) {
         $this->dispatchBrowserEvent('show-delete-alert-confirmation');
+        }
 	}
     public function deleteCustomers()
     {
-          
+         
+        if (Auth::user()->hasPermission('customers-delete')) {
         // delete selected users from database
-		Customer::whereIn('id', $this->selectedRows)->delete();
+		Customer::whereIn('id_customer', $this->selectedRows)->delete();
 
         $this->dispatchBrowserEvent('swal', [
             'title'             => 'All selected users got deleted.',
@@ -116,24 +126,31 @@ class ListCustomers extends Component
             'position'          => 'center',
             'timer'             => '1700',
         ]);
-
 		$this->reset();
+        }
     }
 
     public function addNewCustomer()
     {
-        $this->reset(); 
+        
+        if (Auth::user()->hasPermission('customers-create')) {
+              $this->reset(); 
         $this->showEditModal = false; 
         $this->dispatchBrowserEvent('show-form');
+        }
+      
     }
 
     public function createCustomer()
     { 
+        
+        if (Auth::user()->hasPermission('customers-create')) {
+        
         $validatedData = Validator::make($this->data, [ 
 			'firstname' => 'required',
 			'lastname' => 'required',
 			'phone1' => 'required|regex:/[0-9]{10}/',
-            'phone2' => 'regex:/(01)[0-9]{9}/', 
+            'phone2' => '', 
             'email' => 'email', 
             'address' => '', 
             'state' => '', 
@@ -156,9 +173,11 @@ class ListCustomers extends Component
             'timer' => '1700',
         ]);
     }
+    }
 
     public function edit(Customer $customer)
     {
+        if (Auth::user()->hasPermission('customers-update')) {
         $this->reset();
 
 		$this->showEditModal = true;
@@ -168,9 +187,12 @@ class ListCustomers extends Component
 		$this->customer = $customer;
 
 		$this->dispatchBrowserEvent('show-form');
+        }
     }
+    
     public function updateCustomer()
 	{
+        if (Auth::user()->hasPermission('customers-update')) {
         try {
             $validatedData = Validator::make($this->data, [
                 'firstname' => 'required',
@@ -201,6 +223,7 @@ class ListCustomers extends Component
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
+    }
 	}
 
 
@@ -208,15 +231,18 @@ class ListCustomers extends Component
 
     public function confirmCustomerRemoval($customerId)
     {
+        if (Auth::user()->hasPermission('customers-delete')) {
         $this->customerIdBeingRemoved = $customerId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
+        }
     }
 
     // Delete Permission
 
     public function deleteCustomer()
     {
+        if (Auth::user()->hasPermission('customers-delete')) {
         $customer = Customer::findOrFail($this->customerIdBeingRemoved);
 
         $customer->delete();
@@ -230,6 +256,7 @@ class ListCustomers extends Component
             'position' => 'center',
             'timer' => '1700',
         ]);
+    }
     }
     public function getCustomersProperty()
 	{
@@ -281,7 +308,7 @@ class ListCustomers extends Component
                 $this->importTypevalue = 'Update';
                 $customerData = Excel::toCollection(new CustomerImport(), $this->excelFile);
                 foreach ($customerData[0] as $customer) {
-                    Customer::where('id', $customer['id'])->update([
+                    Customer::where('id_customer', $customer['id_customer'])->update([
                         'firstname' => $customer['firstname'],
                         'lastname' => $customer['lastname'],
                         'phone1' => $customer['phone1'],
@@ -341,7 +368,7 @@ class ListCustomers extends Component
     {
         return response()->streamDownload(function(){
             if ($this->selectedRows) {
-                $customer = Customer::whereIn('id', $this->selectedRows)->orderBy('id', 'asc')->get();
+                $customer = Customer::whereIn('id_customer', $this->selectedRows)->orderBy('id_customer', 'asc')->get();
             } else {
                 $customer = $this->customer;
             }

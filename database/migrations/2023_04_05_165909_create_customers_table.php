@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('customers', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_customer');
             $table->string('firstname', 100);
             $table->string('lastname', 100);
             $table->integer('phone1');
@@ -27,6 +27,8 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
         });
+        
+       
     }
 
     /**

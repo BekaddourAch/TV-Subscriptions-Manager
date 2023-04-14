@@ -85,16 +85,25 @@ class User extends Authenticatable
     }
 
     public function hasPermission($permissions)
-    {
+        {if($this->hasRole('superadmin')){
+            return true;
+        }
         foreach ($this->roles as $role) {
-            foreach ($permissions as $permission) {
-                if ($role->permissions->contains('name', $permission)) {
-                    return true;
+            if(is_array($permissions)){
+                foreach ($permissions as $permission) {
+                    if ($role->permissions->contains('name', $permission)) {
+                        return true;
+                    }   
                 }
             }
+            else{
+                if ($role->permissions->contains('name', $permissions)) {
+                    return true;
+                } 
+            }
+            
         }
 
         return false;
     }
-
 }

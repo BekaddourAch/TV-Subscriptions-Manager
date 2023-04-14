@@ -15,6 +15,8 @@ class UserTableSeeder extends Seeder
     public function run()
     {
         $user = \App\Models\User::create([
+            
+            'id' => '1',
             'name' => 'Super Admin',
             'username' => 'super_admin',
             'email' => 'super_admin@app.com',

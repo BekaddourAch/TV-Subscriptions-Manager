@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Backend\Admin\Services;
 use App\Exports\ServiceExport;
 use App\Imports\ServiceImport;
 use App\Models\Service;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -19,7 +20,7 @@ class ListServices extends Component
 
     use WithPagination;
 
-    public $sortColumnName = 'id';
+    public $sortColumnName = 'id_service';
 
     public $selectPageRows = false;
 
@@ -53,13 +54,15 @@ class ListServices extends Component
 
     public function updatedSelectPageRows($value)
     {
+        if (Auth::user()->hasPermission('services-update')) {
         if ($value) {
-            $this->selectedRows = $this->services->pluck('id')->map(function ($id) {
+            $this->selectedRows = $this->services->pluck('id_service')->map(function ($id) {
                 return (string) $id;
             });
         } else {
             $this->reset(['selectedRows', 'selectPageRows']);
         }
+    }
     }
 
 
@@ -67,7 +70,8 @@ class ListServices extends Component
 
     public function setAllAsActive()
     {
-        Service::whereIn('id', $this->selectedRows)->update(['active' => 1]);
+        if (Auth::user()->hasPermission('services-update')) {
+        Service::whereIn('id_service', $this->selectedRows)->update(['active' => 1]);
 
         $this->dispatchBrowserEvent('swal', [
             'title'             => 'Les services ont défini comme actif avec succès.',
@@ -79,12 +83,14 @@ class ListServices extends Component
 
         $this->reset(['selectPageRows', 'selectedRows']);
     }
+    }
 
     // set All selected Service As InActive
 
     public function setAllAsInActive()
     {
-        Service::whereIn('id', $this->selectedRows)->update(['active' => 0]);
+        if (Auth::user()->hasPermission('services-update')) {
+        Service::whereIn('id_service', $this->selectedRows)->update(['active' => 0]);
 
         $this->dispatchBrowserEvent('swal', [
             'title'             => 'Les services ont défini comme inactif avec succès.',
@@ -96,18 +102,22 @@ class ListServices extends Component
 
         $this->reset(['selectPageRows', 'selectedRows']);
     }
+    }
 
     // show Sweetalert Confirmation for Delete
 
     public function deleteSelectedRows()
     {
+        if (Auth::user()->hasPermission('services-delete')) {
         $this->dispatchBrowserEvent('show-delete-alert-confirmation');
+        }
     }
     public function deleteServices()
     {
 
+        if (Auth::user()->hasPermission('services-delete')) {
         // delete selected users from database
-        Service::whereIn('id', $this->selectedRows)->delete();
+        Service::whereIn('id_service', $this->selectedRows)->delete();
 
         $this->dispatchBrowserEvent('swal', [
             'title'             => 'All selected services got deleted.',
@@ -119,16 +129,20 @@ class ListServices extends Component
 
         $this->reset();
     }
+    }
 
     public function addNewService()
     {
+        if (Auth::user()->hasPermission('services-create')) {
         $this->reset();
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
+        }
     }
 
     public function createService()
     {
+        if (Auth::user()->hasPermission('services-create')) {
         $validatedData = Validator::make($this->data, [
             'name' => 'required',
             'description' => 'required',
@@ -153,9 +167,11 @@ class ListServices extends Component
             'timer' => '1700',
         ]);
     }
+    }
 
     public function edit(Service $service)
     {
+        if (Auth::user()->hasPermission('services-update')) {
         $this->reset();
 
         $this->showEditModal = true;
@@ -165,9 +181,11 @@ class ListServices extends Component
         $this->service = $service;
 
         $this->dispatchBrowserEvent('show-form');
+        }
     }
     public function updateService()
     {
+        if (Auth::user()->hasPermission('services-update')) {
         try {
             $validatedData = Validator::make($this->data, [
                 'name' => 'required',
@@ -197,21 +215,25 @@ class ListServices extends Component
             return $th->getMessage();
         }
     }
+    }
 
 
     // Show Modal Form to Confirm Service Removal
 
     public function confirmServiceRemoval($serviceId)
     {
+        if (Auth::user()->hasPermission('services-delete')) {
         $this->serviceIdBeingRemoved = $serviceId;
 
         $this->dispatchBrowserEvent('show-delete-modal');
+        }
     }
 
     // Delete Service
 
     public function deleteService()
     {
+        if (Auth::user()->hasPermission('services-delete')) {
         $service = Service::findOrFail($this->serviceIdBeingRemoved);
 
         $service->delete();
@@ -225,6 +247,7 @@ class ListServices extends Component
             'position' => 'center',
             'timer' => '1700',
         ]);
+    }
     }
     public function getServicesProperty()
     {
@@ -274,7 +297,7 @@ class ListServices extends Component
                 $this->importTypevalue = 'Update';
                 $serviceData = Excel::toCollection(new ServiceImport(), $this->excelFile);
                 foreach ($serviceData[0] as $service) {
-                    Service::where('id', $service['id'])->update([
+                    Service::where('id_service', $service['id_service'])->update([
                         'name' => $service['name'],
                         'description' => $service['description'],
                         'cost_price' => $service['cost_price'],
@@ -320,7 +343,7 @@ class ListServices extends Component
     {
         return response()->streamDownload(function(){
             if ($this->selectedRows) {
-                $service = Service::whereIn('id', $this->selectedRows)->orderBy('id', 'asc')->get();
+                $service = Service::whereIn('id_service', $this->selectedRows)->orderBy('id_service', 'asc')->get();
             } else {
                 $service = $this->service;
             }

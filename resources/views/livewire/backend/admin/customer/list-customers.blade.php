@@ -12,22 +12,27 @@
                 <li class="breadcrumb-item active">Les Clients</li>
             </ol>
             <div class="mt-2 d-flex justify-content-end">
-                <div class="ml-3 dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Services
-                    </button>
-                    <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton2" style="">
-                        <a class="dropdown-item" wire:click.prevent="exportExcel" href="#">Exporter vers Excel</a>
-                        <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Importer depuis Excel</a>
-                        {{-- <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a> --}}
-                    </div>
-                </div>
+                @if(0==1)
+                    {{-- <div class="ml-3 dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Services
+                        </button>
+                        <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton2" style="">
+                            <a class="dropdown-item" wire:click.prevent="exportExcel" href="#">Exporter vers Excel</a>
+                            <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Importer depuis Excel</a>
+                            <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
+                        </div>
+                    </div> --}}
+                @endif
+                @if(Auth::user()->hasPermission('customers-create'))
+                
                 <button wire:click.prevent='addNewCustomer' class="ml-1 btn btn-sm btn-primary">
                     <i class="mr-2 fa fa-plus-circle"
                         aria-hidden="true">
                         <span>Ajouter un Client</span>
                     </i>
                 </button>
+                @endif
             </div> 
         </div>
         <div class="flex-wrap d-flex justify-content-between">
@@ -50,6 +55,8 @@
                             </span>
                             <span class="text">Tous</span>
                         </button>
+                        
+                        @if(0==1)
                         {{-- <button wire:click="filterUsersByRoles('user')" class="btn btn-sm btn-info btn-icon-split">
                             <span class="icon text-white-20">
                                 {{ $roleUserCount }}
@@ -68,6 +75,7 @@
                             </span>
                             <span class="text">SuperAdmin</span>
                         </button> --}}
+                        @endif
                     </div>
                 </div>
             </div>
@@ -82,30 +90,40 @@
                        
                          <span class="text-gray-900 font-weight-bold">{{ count($selectedRows) }}</span> {{ Str::plural('Clients', count($selectedRows)) }} Sélectionné
                     </span>
-
-                    <div class="ml-3 dropdown">
-                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Actions
-                        </button>
-                        <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
-                            <a class="dropdown-item" wire:click.prevent="setAllAsActive" href="#">Définir comme actif</a>
-                            <a class="dropdown-item" wire:click.prevent="setAllAsInActive" href="#">Définir comme inactif</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Supprimer les clients sélectionnée</a>
-                        </div>
-                    </div>
+                   
+                
+                        <div class="ml-3 dropdown">
+                            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Actions
+                            </button>
+                            
+                            <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
+                                @if(Auth::user()->hasPermission('customers-update'))
+                                    <a class="dropdown-item" wire:click.prevent="setAllAsActive" href="#">Définir comme actif</a>
+                                    <a class="dropdown-item" wire:click.prevent="setAllAsInActive" href="#">Définir comme inactif</a>
+                                @endif
+                                <div class="dropdown-divider"></div>
+                                @if(Auth::user()->hasPermission('customers-delete'))
+                                    <a class="dropdown-item text-danger delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Supprimer les clients sélectionnée</a>
+                                @endif
+                            </div>
+                        </div> 
                 </div>
             @endif
             <div class="table-responsive">
                 <table class="table">
                     <thead class="text-white bg-gradient-secondary">
                         <tr class="text-center">
-                            <th class="align-middle" scope="col">
-                                <div class="custom-control custom-checkbox small">
-                                    <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
-                                    <label class="custom-control-label" for="customCheck"></label>
-                                </div>
-                            </th>
+                            
+                            @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
+                                <th class="align-middle" scope="col">
+                                    <div class="custom-control custom-checkbox small">
+                                        <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
+                                        <label class="custom-control-label" for="customCheck"></label>
+                                    </div>
+                                </th> 
+                            @endif              
+
                             <th class="align-middle" scope="col">#</th>
                             <th class="align-middle">Nom </th>
                             <th class="align-middle"> Prénom </th>
@@ -117,8 +135,10 @@
                             <th class="align-middle"> Commune </th>
                             <th class="align-middle"> Actif </th>
                             <th class="align-middle"> Commentaires </th>
-                            <th class="align-middle" style="width: 10%" colspan="2">Actions
-                            </th>
+                            @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
+                                <th class="align-middle" style="width: 10%" colspan="2">Actions
+                                </th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -126,12 +146,15 @@
                         {{-- @forelse($customers as $customer) --}}
                             <tr class="text-center">
                                 {{-- <td class="align-middle" scope="row">{{ $loop->iteration }}</td> --}}
-                                <td class="align-middle" scope="col">
-                                    <div class="custom-control custom-checkbox small">
-                                        <input type="checkbox" wire:model="selectedRows" value="{{ $customer->id }}" class="custom-control-input" id="{{ $customer->id }}">
-                                        <label class="custom-control-label" for="{{ $customer->id }}"></label>
-                                    </div>
-                                </td>
+                                
+                                @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
+                                    <td class="align-middle" scope="col">
+                                        <div class="custom-control custom-checkbox small">
+                                            <input type="checkbox" wire:model="selectedRows" value="{{ $customer->id }}" class="custom-control-input" id="{{ $customer->id }}">
+                                            <label class="custom-control-label" for="{{ $customer->id }}"></label>
+                                        </div>
+                                    </td>
+                                @endif
                                 <td class="align-middle" scope="row">{{ $customer->id }}</td>
                                 <td class="align-middle">{{ $customer->firstname }}</td>
                                 <td class="align-middle">{{ $customer->lastname }}</td>
@@ -149,26 +172,32 @@
                                     @endif 
                             </td>
                                 <td class="align-middle">{{ $customer->notes }}</td>
-                                <td class="align-middle">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="#" wire:click.prevent="edit({{ $customer }})" class="btn btn-primary">
-                                        <i class="fa fa-edit"></i>
-                                    </a>  
+                                
+                            @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
+                                    <td class="align-middle">
+                                        <div class="btn-group btn-group-sm">
+                                            @if(Auth::user()->hasPermission('customers-update'))
+                                            <a href="#" wire:click.prevent="edit({{ $customer }})" class="btn btn-primary">
+                                                <i class="fa fa-edit"></i>
+                                            </a>  
+                                            @endif
+                                            @if(Auth::user()->hasPermission('customers-delete'))
+                                        <a class="btn btn-danger" href="#" wire:click.prevent="confirmCustomerRemoval({{ $customer->id }})">
+                                            <i class="fa fa-trash bg-danger"></i>
+                                        </a>
+                                        @endif
 
-                                      <a class="btn btn-danger" href="#" wire:click.prevent="confirmCustomerRemoval({{ $customer->id }})">
-                                        <i class="fa fa-trash bg-danger"></i>
-                                    </a>
-
-                                    </div>
-                                      <form action="" method="post" id="delete-customer-{{ $customer->id }}" class="d-none">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>  
-                                </td>
+                                        </div>
+                                        <form action="" method="post" id="delete-customer-{{ $customer->id }}" class="d-none">
+                                                @csrf
+                                            @method('DELETE')
+                                        </form>  
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">No customer found</td>
+                                <td colspan="6" class="text-center">Aucun client trouvé</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -209,11 +238,11 @@
 
                                 <!-- Modal customer lastname -->
                                 <div class="form-group">
-                                    <label for="lastname">Le Nom</label>
-                                    <input type="text" tabindex="1" wire:model.defer="data.lastname"
-                                        class="form-control @error('lastname') is-invalid @enderror" id="lastname"
-                                        aria-describedby="nameHelp" placeholder="Enter customer lastname">
-                                    @error('lastname')
+                                    <label for="firstname">Nom</label>
+                                    <input type="text" tabindex="1" wire:model.defer="data.firstname"
+                                        class="form-control @error('firstname') is-invalid @enderror" id="firstname"
+                                        aria-describedby="nameHelp" placeholder="Saisissez le nom du client">
+                                    @error('firstname')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -225,11 +254,11 @@
                             <div class="col-6">
                                 <!-- Modal customer firstname -->
                                 <div class="form-group">
-                                    <label for="firstname">Le Prénom</label>
-                                    <input type="text" tabindex="1" wire:model.defer="data.firstname"
-                                        class="form-control @error('firstname') is-invalid @enderror" id="firstname"
-                                        aria-describedby="nameHelp" placeholder="Enter customer firstname">
-                                    @error('firstname')
+                                    <label for="lastname">Prénom</label>
+                                    <input type="text" tabindex="1" wire:model.defer="data.lastname"
+                                        class="form-control @error('lastname') is-invalid @enderror" id="lastname"
+                                        aria-describedby="nameHelp" placeholder="Saisissez le prénom du client">
+                                    @error('lastname')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -237,14 +266,16 @@
                                 </div>
                                 {{-- ---------------------------------------------------- --}}
                             </div>
+                            
+                        </div>
                             <div class="row h-100 justify-content-center align-items-center">
                                 <div class="col-6">
                                     <!-- Modal customer phone1 -->
                                     <div class="form-group">
                                         <label for="phone1">Téléphone 1</label>
-                                        <input type="text" tabindex="1" wire:model.defer="data.phone1"
+                                        <input  type="tel" tabindex="1" placeholder="ex:0655112233" pattern="[0-9]{10}" required wire:model.defer="data.phone1"
                                             class="form-control @error('phone1') is-invalid @enderror" id="phone1"
-                                            aria-describedby="nameHelp" placeholder="Enter customer phone1">
+                                            aria-describedby="nameHelp" placeholder="Entrez le 1er téléphone  du client">
                                         @error('phone1')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -258,9 +289,9 @@
                                     <!-- Modal customer phone2 -->
                                     <div class="form-group">
                                         <label for="phone2">Téléphone 2</label>
-                                        <input type="text" tabindex="1" wire:model.defer="data.phone2"
+                                        <input  type="tel" tabindex="1" placeholder="ex:0655112233" pattern="[0-9]{10}"  wire:model.defer="data.phone2"
                                             class="form-control @error('phone2') is-invalid @enderror" id="phone2"
-                                            aria-describedby="nameHelp" placeholder="Enter customer phone2">
+                                            aria-describedby="nameHelp" placeholder="Entrez le 2ème téléphone  du client">
                                         @error('phone2')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -277,7 +308,7 @@
                                         <label for="email">Email</label>
                                         <input type="text" tabindex="1" wire:model.defer="data.email"
                                             class="form-control @error('email') is-invalid @enderror" id="email"
-                                            aria-describedby="nameHelp" placeholder="Enter customer email">
+                                            aria-describedby="nameHelp" placeholder="Entrez l'e-mail du client">
                                         @error('email')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -292,7 +323,7 @@
                                     <div class="form-group">
                                         <label for="address">Adresse</label>
                                         <input type="text" tabindex="1" wire:model.defer="data.address" class="form-control @error('address') is-invalid @enderror"
-                                            id="address" aria-describedby="nameHelp" placeholder="Enter customer address">
+                                            id="address" aria-describedby="nameHelp" placeholder="Entrez l'adresse du client">
                                      
                                         @error('address')
                                             <div class="invalid-feedback">
@@ -384,7 +415,7 @@
                                 <div class="col-6">
                                     <!-- Modal customer notes -->
                                     <div class="form-group"> 
-                                        <label for="customSwitch1">Rendre le client actif</label>
+                                        <label for="customSwitch1">Rendre le client Actif</label>
                                         <div class="custom-control custom-switch" style="min-width: 180px;margin-right: 80px;">
                                             <input type="checkbox" class="custom-control-input" id="customSwitch1" checked="" wire:model.defer="data.active">
                                             <label class="custom-control-label" for="customSwitch1"></label>
@@ -399,7 +430,7 @@
 
                                 </div>
                             </div>
-                            <div class="row h-100 justify-content-center align-items-center" style="width:110%">
+                            <div class="row h-100 justify-content-center align-items-center">
 
                                 <div class="col-12">
                                     <!-- Modal customer notes -->
@@ -407,7 +438,7 @@
                                         <label for="notes">Remarques</label>
                                         <textarea type="textarea" tabindex="1" wire:model.defer="data.notes"
                                             class="form-control @error('notes') is-invalid @enderror" id="notes" aria-describedby="nameHelp"
-                                            placeholder="Enter customer notes">
+                                            placeholder="Saisir les Remarques des clients">
                                     </textarea>
                                         @error('notes')
                                             <div class="invalid-feedback">
@@ -418,12 +449,7 @@
                                     {{-- ---------------------------------------------------- --}}
 
                                 </div>
-                            </div>
-                            <div class="row h-100 justify-content-center align-items-center"  >
-
-                                
-                            </div>
-                        </div>
+                            </div> 
                     </div>
 
                     <div class="modal-footer bg-light">

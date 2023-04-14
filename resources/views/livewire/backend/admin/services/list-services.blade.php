@@ -12,22 +12,28 @@
                 <li class="breadcrumb-item active">Les Services</li>
             </ol>
             <div class="mt-2 d-flex justify-content-end">
-                <div class="ml-3 dropdown">
+                
+                @if(0==1)
+                {{-- <div class="ml-3 dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Services
                     </button>
                     <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton2" style="">
                         <a class="dropdown-item" wire:click.prevent="exportExcel" href="#">Exporter vers Excel</a>
                         <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Importer depuis Excel</a>
-                        {{-- <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a> --}}
+                        <a class="dropdown-item" wire:click.prevent="exportPDF" href="#">Export to PDF</a>
                     </div>
-                </div>
-                <button wire:click.prevent='addNewService' class="ml-1 btn btn-sm btn-primary">
-                    <i class="mr-2 fa fa-plus-circle"
-                       aria-hidden="true">
-                        <span>Ajouter un Service</span>
-                    </i>
-                </button>
+                </div> --}}
+                @endif
+                
+                @if(Auth::user()->hasPermission('services-create'))
+                    <button wire:click.prevent='addNewService' class="ml-1 btn btn-sm btn-primary">
+                        <i class="mr-2 fa fa-plus-circle"
+                        aria-hidden="true">
+                            <span>Ajouter un Service</span>
+                        </i>
+                    </button>
+                @endif
             </div>
         </div>
         <div class="flex-wrap d-flex justify-content-between">
@@ -70,10 +76,14 @@
                             Actions
                         </button>
                         <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
-                            <a class="dropdown-item" wire:click.prevent="setAllAsActive" href="#">Définir comme actif</a>
-                            <a class="dropdown-item" wire:click.prevent="setAllAsInActive" href="#">Définir comme inactif</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Supprimer les services sélectionnée</a>
+                            @if(Auth::user()->hasPermission('services-update'))
+                                <a class="dropdown-item" wire:click.prevent="setAllAsActive" href="#">Définir comme actif</a>
+                                <a class="dropdown-item" wire:click.prevent="setAllAsInActive" href="#">Définir comme inactif</a>
+                            @endif
+                            @if(Auth::user()->hasPermission('services-delete'))
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Supprimer les services sélectionnée</a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -82,12 +92,15 @@
                 <table class="table">
                     <thead class="text-white bg-gradient-secondary">
                     <tr class="text-center">
-                        <th class="align-middle" scope="col">
-                            <div class="custom-control custom-checkbox small">
-                                <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
-                                <label class="custom-control-label" for="customCheck"></label>
-                            </div>
-                        </th>
+                        
+                        @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
+                            <th class="align-middle" scope="col">
+                                <div class="custom-control custom-checkbox small">
+                                    <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
+                                    <label class="custom-control-label" for="customCheck"></label>
+                                </div>
+                            </th>
+                        @endif
                         <th class="align-middle" scope="col">#</th>
                         <th class="align-middle"> Nom </th>
                         <th class="align-middle"> Description </th>
@@ -96,19 +109,24 @@
                         <th class="align-middle"> Durée </th>
                         <th class="align-middle"> Actif </th>
                         <th class="align-middle"> Remarques </th>
-                        <th class="align-middle" style="width: 10%" colspan="2">Actions
-                        </th>
+                        
+                        @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
+                            <th class="align-middle" style="width: 10%" colspan="2">Actions  </th>
+                        @endif
                     </tr>
                     </thead>
                     <tbody>
                     @forelse($services as $index => $service)
                         <tr class="text-center">
-                            <td class="align-middle" scope="col">
-                                <div class="custom-control custom-checkbox small">
-                                    <input type="checkbox" wire:model="selectedRows" value="{{ $service->id }}" class="custom-control-input" id="{{ $service->id }}">
-                                    <label class="custom-control-label" for="{{ $service->id }}"></label>
-                                </div>
-                            </td>
+                            
+                            @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
+                                <td class="align-middle" scope="col">
+                                    <div class="custom-control custom-checkbox small">
+                                        <input type="checkbox" wire:model="selectedRows" value="{{ $service->id }}" class="custom-control-input" id="{{ $service->id }}">
+                                        <label class="custom-control-label" for="{{ $service->id }}"></label>
+                                    </div>
+                                </td>
+                            @endif
                             <td class="align-middle" scope="row">{{ $service->id }}</td>
                             <td class="align-middle">{{ $service->name }}</td>
                             <td class="align-middle">{{ $service->description }}</td>
@@ -123,22 +141,29 @@
                                 @endif
                             </td>
                             <td class="align-middle">{{ $service->notes }}</td>
-                            <td class="align-middle">
-                                <div class="btn-group btn-group-sm">
-                                    <a href="#" wire:click.prevent="edit({{ $service }})" class="btn btn-primary">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-
-                                    <a class="btn btn-danger" href="#" wire:click.prevent="confirmServiceRemoval({{ $service->id }})">
-                                        <i class="fa fa-trash bg-danger"></i>
-                                    </a>
-
-                                </div>
-                                <form action="" method="post" id="delete-service-{{ $service->id }}" class="d-none">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            </td>
+                            
+                            @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
+                                <td class="align-middle">
+                                    <div class="btn-group btn-group-sm">
+                                        
+                                        @if(Auth::user()->hasPermission('services-update'))
+                                            <a href="#" wire:click.prevent="edit({{ $service }})" class="btn btn-primary">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        @endif
+                                        
+                                        @if(Auth::user()->hasPermission('services-delete'))
+                                            <a class="btn btn-danger" href="#" wire:click.prevent="confirmServiceRemoval({{ $service->id }})">
+                                                <i class="fa fa-trash bg-danger"></i>
+                                            </a>
+                                        @endif
+                                    </div>
+                                    <form action="" method="post" id="delete-service-{{ $service->id }}" class="d-none">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                </td>
+                            @endif
                         </tr>
                     @empty
                         <tr>

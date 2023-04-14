@@ -23,106 +23,78 @@
             <span>Tableau de bord</span></a>
     </li>
 
+
+    @if((Auth::user()->hasPermission('services-display')))
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Services
+            </div> 
+            <!-- Nav Item - Services -->
+        
+            <li class="nav-item">
+                @if(Auth::user()->hasPermission('services-display'))
+                <a class="nav-link" href="{{ route('admin.services') }}">
+                    <i class="fas fa-fw fa-tv"></i>
+                    <span>Services</span></a>
+                    @endif    
+            </li> 
+    @endif    
+
+    @if((Auth::user()->hasPermission('customers-display')))
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block"> 
+        <div class="sidebar-heading">
+            Clients
+        </div>
+        <!-- Nav Item - Clients -->
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.customers') }}">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Clients</span></a>
+        </li> 
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+    @endif    
+
     <!-- Divider -->
-    <hr class="sidebar-divider">
+    {{-- <hr class="sidebar-divider"> --}}
 
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Addons
-    </div>
-
-    <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-            aria-expanded="true" aria-controls="collapsePages">
-            <i class="fas fa-fw fa-folder"></i>
-            <span>Pages</span>
-        </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-            <div class="py-2 bg-white rounded collapse-inner">
-                <h6 class="collapse-header">Login Screens:</h6>
-                <a class="collapse-item" href="login.html">Login</a>
-                <a class="collapse-item" href="register.html">Register</a>
-                <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                <div class="collapse-divider"></div>
-                <h6 class="collapse-header">Other Pages:</h6>
-                <a class="collapse-item" href="404.html">404 Page</a>
-                <a class="collapse-item" href="blank.html">Blank Page</a>
+    @if((Auth::user()->hasPermission('users-display')))
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Utilisateurs 
             </div>
-        </div>
-    </li>
+        <!-- Nav Item - Utilities Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#UsersUtilities"
+                aria-expanded="true" aria-controls="collapseUtilities">
+                <i class="fas fa-fw fa-users"></i>
+                <span>gestion des Utilisateurs</span>
+            </a>
+            <div id="UsersUtilities" class="collapse" aria-labelledby="headingUtilities"
+                data-parent="#accordionSidebar">
+                <div class="py-2 bg-white rounded collapse-inner"> 
+                    <a class="collapse-item" href="{{ route('admin.users') }}">Utilisateurs</a>
+                    <a class="collapse-item" href="{{ route('admin.roles') }}">Roles</a>
+                    <a class="collapse-item" href="{{ route('admin.permissions') }}">Permissions</a> 
+                </div>
+            </div>
+        </li> 
+    @endif    
 
-    <!-- Nav Item - Charts -->
-    <li class="nav-item">
-        <a class="nav-link" href="charts.html">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Charts</span></a>
-    </li>
-
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('admin.customers') }}">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Clients</span></a>
-    </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider d-none d-md-block">
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Users Management
-    </div>
- <!-- Nav Item - Utilities Collapse Menu -->
- <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#UsersUtilities"
-        aria-expanded="true" aria-controls="collapseUtilities">
-        <i class="fas fa-fw fa-users"></i>
-        <span>Users Management</span>
-    </a>
-    <div id="UsersUtilities" class="collapse" aria-labelledby="headingUtilities"
-        data-parent="#accordionSidebar">
-        <div class="py-2 bg-white rounded collapse-inner">
-            <h6 class="collapse-header">Custom Utilities:</h6>
-            <a class="collapse-item" href="{{ route('admin.users') }}">Users</a>
-            <a class="collapse-item" href="{{ route('admin.roles') }}">Roles</a>
-            <a class="collapse-item" href="{{ route('admin.permissions') }}">Permissions</a> 
-        </div>
-    </div>
-</li>
-
-    {{-- <!-- Nav Item - Users -->
-    <li class="nav-item {{ request()->is('admin/users') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.users') }}">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Users</span>
-        </a>
-    </li>
-    <!-- Nav Item - Roles -->
-    <li class="nav-item {{ request()->is('admin/roles') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.roles') }}">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Roles</span>
-        </a>
-    </li>
-    <!-- Nav Item - Permissions -->
-    <li class="nav-item {{ request()->is('admin/permissions') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.permissions') }}">
-            <i class="fas fa-fw fa-cogs"></i>
-            <span>Permissions</span>
-        </a>
-    </li> --}}
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
+@if(1==0)
     <!-- Heading -->
     <div class="sidebar-heading">
         Interface
     </div>
-
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
@@ -158,7 +130,7 @@
         </div>
     </li>
 
-
+@endif
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="border-0 rounded-circle" id="sidebarToggle"></button>
