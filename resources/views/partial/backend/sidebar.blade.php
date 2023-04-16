@@ -22,7 +22,23 @@
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Tableau de bord</span></a>
     </li>
+    @if((Auth::user()->hasPermission('services-display')))
+        <!-- Divider -->
+        <hr class="sidebar-divider">
 
+        
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Abonnements
+            </div> 
+            <!-- Nav Item - Services -->
+        
+            <li class="nav-item"> 
+                <a class="nav-link" href="{{ route('admin.subscriptions') }}">
+                    <i class="fas fa-fw fa-tv"></i>
+                    <span>Abonnements</span></a> 
+            </li> 
+    @endif    
 
     @if((Auth::user()->hasPermission('services-display')))
         <!-- Divider -->
@@ -35,12 +51,10 @@
             </div> 
             <!-- Nav Item - Services -->
         
-            <li class="nav-item">
-                @if(Auth::user()->hasPermission('services-display'))
+            <li class="nav-item"> 
                 <a class="nav-link" href="{{ route('admin.services') }}">
                     <i class="fas fa-fw fa-tv"></i>
-                    <span>Services</span></a>
-                    @endif    
+                    <span>Services</span></a> 
             </li> 
     @endif    
 
