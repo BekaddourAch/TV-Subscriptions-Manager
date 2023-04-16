@@ -38,7 +38,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     });
 
     Route::group(['middleware' => ['auth']], function (){
-        Route::get('/', Dashboard::class)->name('index');
+        Route::get('/', Dashboard::class)->name('index')->middleware("permission:statistics-display");
         Route::get('users', ListUsers::class)->name('users');
         Route::get('roles', ListRoles::class)->name('roles');
         Route::get('permissions', ListPermissions::class)->name('permissions');
@@ -54,7 +54,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // Route::group(['middleware' => ['auth', 'role:user']], function (){
     //     Route::get('/', Dashboard::class)->name('index');
     //     Route::get('customer', ListCustomers::class)->name('customers');
-    //     Route::get('services', ListServices::class)->name('services'); 
+    //     Route::get('services', ListServices::class)->name('services');
     // });
 });
 

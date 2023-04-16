@@ -1,12 +1,12 @@
-@php
+<?php
     $current_page = \Route::currentRouteName();
-@endphp
+?>
 
 <!-- Sidebar -->
 <ul class="navbar-nav bg-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo e(route('dashboard')); ?>">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
@@ -17,12 +17,12 @@
     <hr class="my-0 sidebar-divider">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item {{ request()->is('admin') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.index') }}">
+    <li class="nav-item <?php echo e(request()->is('admin') ? 'active' : ''); ?>">
+        <a class="nav-link" href="<?php echo e(route('admin.index')); ?>">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Tableau de bord</span></a>
     </li>
-    @if((Auth::user()->hasPermission('services-display')))
+    <?php if((Auth::user()->hasPermission('services-display'))): ?>
         <!-- Divider -->
         <hr class="sidebar-divider">
 
@@ -34,13 +34,13 @@
             <!-- Nav Item - Services -->
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.subscriptions') }}">
+                <a class="nav-link" href="<?php echo e(route('admin.subscriptions')); ?>">
                     <i class="fas fa-fw fa-tv"></i>
                     <span>Abonnements</span></a>
             </li>
-    @endif
+    <?php endif; ?>
 
-    @if((Auth::user()->hasPermission('services-display')))
+    <?php if((Auth::user()->hasPermission('services-display'))): ?>
         <!-- Divider -->
         <hr class="sidebar-divider">
 
@@ -52,13 +52,13 @@
             <!-- Nav Item - Services -->
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.services') }}">
+                <a class="nav-link" href="<?php echo e(route('admin.services')); ?>">
                     <i class="fas fa-fw fa-tv"></i>
                     <span>Services</span></a>
             </li>
-    @endif
+    <?php endif; ?>
 
-    @if((Auth::user()->hasPermission('customers-display')))
+    <?php if((Auth::user()->hasPermission('customers-display'))): ?>
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
         <div class="sidebar-heading">
@@ -66,18 +66,18 @@
         </div>
         <!-- Nav Item - Clients -->
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.customers') }}">
+            <a class="nav-link" href="<?php echo e(route('admin.customers')); ?>">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Clients</span></a>
         </li>
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
-    @endif
+    <?php endif; ?>
 
     <!-- Divider -->
-    {{-- <hr class="sidebar-divider"> --}}
+    
 
-    @if((Auth::user()->hasPermission('users-display')))
+    <?php if((Auth::user()->hasPermission('users-display'))): ?>
             <!-- Heading -->
             <div class="sidebar-heading">
                 Utilisateurs
@@ -92,19 +92,19 @@
             <div id="UsersUtilities" class="collapse" aria-labelledby="headingUtilities"
                 data-parent="#accordionSidebar">
                 <div class="py-2 bg-white rounded collapse-inner">
-                    <a class="collapse-item" href="{{ route('admin.users') }}">Utilisateurs</a>
-                    <a class="collapse-item" href="{{ route('admin.roles') }}">Roles</a>
-                    <a class="collapse-item" href="{{ route('admin.permissions') }}">Permissions</a>
+                    <a class="collapse-item" href="<?php echo e(route('admin.users')); ?>">Utilisateurs</a>
+                    <a class="collapse-item" href="<?php echo e(route('admin.roles')); ?>">Roles</a>
+                    <a class="collapse-item" href="<?php echo e(route('admin.permissions')); ?>">Permissions</a>
                 </div>
             </div>
         </li>
-    @endif
+    <?php endif; ?>
 
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-@if(1==0)
+<?php if(1==0): ?>
     <!-- Heading -->
     <div class="sidebar-heading">
         Interface
@@ -119,7 +119,7 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="py-2 bg-white rounded collapse-inner">
                 <h6 class="collapse-header">Custom Components:</h6>
-                <a class="collapse-item" href="{{ route('admin.index') }}">Buttons</a>
+                <a class="collapse-item" href="<?php echo e(route('admin.index')); ?>">Buttons</a>
                 <a class="collapse-item" href="cards.html">Cards</a>
             </div>
         </div>
@@ -144,18 +144,14 @@
         </div>
     </li>
 
-@endif
+<?php endif; ?>
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="border-0 rounded-circle" id="sidebarToggle"></button>
     </div>
 
-    {{-- <!-- Sidebar Message -->
-    <div class="sidebar-card d-none d-lg-flex">
-        <img class="mb-2 sidebar-card-illustration" src="{{ asset('backend/img/undraw_rocket.svg') }}" alt="...">
-        <p class="mb-2 text-center"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
-        <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-    </div> --}}
+    
 
 </ul>
 <!-- End of Sidebar -->
+<?php /**PATH C:\xampp\htdocs\tv-subscriptions-management\resources\views/partial/backend/sidebar.blade.php ENDPATH**/ ?>

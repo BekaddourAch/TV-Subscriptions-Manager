@@ -22,6 +22,7 @@
         <!-- Styles -->
         {{-- <link rel="stylesheet" href="{{ mix('css/app.css') }}"> --}}
         <link href="{{ asset('backend/css/sb-admin-2.min.css') }}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
         <livewire:styles />
         @yield('style')
     </head>
@@ -62,7 +63,8 @@
 
         <script src="{{ asset('backend/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
         <script src="{{ asset('backend/js/sb-admin-2.js') }}"></script>
-
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         {{-- <script src="{{ asset('backend/js/custom.js') }}"></script>
         <script src="{{ asset('backend/vendor/bootstrap-fileinput/js/plugins/piexif.min.js') }}"></script>
         <script src="{{ asset('backend/vendor/bootstrap-fileinput/js/plugins/sortable.min.js') }}"></script>

@@ -40,109 +40,109 @@ class LaratrustSetupTables extends Migration
                 'display_name' => 'Créer',
                 'description' => '',
                 'groupe' => 'Utilisateurs',
-                ], 
+                ],
                 [
                 'name' => 'users-display',
                 'display_name' => 'Afficher',
                 'description' => '',
                 'groupe' => 'Utilisateurs',
-                ], 
+                ],
                 [
                 'name' => 'users-update',
                 'display_name' => 'Modifier',
                 'description' => '',
                 'groupe' => 'Utilisateurs',
-                ], 
+                ],
                 [
                 'name' => 'users-delete',
                 'display_name' => 'Supprimer',
                 'description' => '',
                 'groupe' => 'Utilisateurs',
-                ], 
+                ],
                 // ------------------------------------------------- CLIENTS
                 [
                 'name' => 'customers-create',
                 'display_name' => 'Créer',
                 'description' => '',
                 'groupe' => 'Clients',
-                ], 
+                ],
                 [
                 'name' => 'customers-display',
                 'display_name' => 'Afficher',
                 'description' => '',
                 'groupe' => 'Clients',
-                ], 
+                ],
                 [
                 'name' => 'customers-update',
                 'display_name' => 'Modifier',
                 'description' => '',
                 'groupe' => 'Clients',
-                ], 
+                ],
                 [
                 'name' => 'customers-delete',
                 'display_name' => 'Supprimer',
                 'description' => '',
                 'groupe' => 'Clients',
-                ], 
+                ],
                 // ------------------------------------------------- SERVICES
                 [
                 'name' => 'services-create',
                 'display_name' => 'Créer',
                 'description' => '',
                 'groupe' => 'Services',
-                ], 
+                ],
                 [
                 'name' => 'services-display',
                 'display_name' => 'Afficher',
                 'description' => '',
                 'groupe' => 'Services',
-                ], 
+                ],
                 [
                 'name' => 'services-update',
                 'display_name' => 'Modifier',
                 'description' => '',
                 'groupe' => 'Services',
-                ], 
+                ],
                 [
                 'name' => 'services-delete',
                 'display_name' => 'Supprimer',
                 'description' => '',
                 'groupe' => 'Services',
-                ], 
+                ],
                 // ------------------------------------------------- SUBSCRIPTION
                 [
                 'name' => 'subscription-create',
                 'display_name' => 'Créer',
                 'description' => '',
                 'groupe' => 'Abonnements',
-                ], 
+                ],
                 [
                 'name' => 'subscription-display',
                 'display_name' => 'Afficher',
                 'description' => '',
                 'groupe' => 'Abonnements',
-                ], 
+                ],
                 [
                 'name' => 'subscription-update',
                 'display_name' => 'Modifier',
                 'description' => '',
                 'groupe' => 'Abonnements',
-                ], 
+                ],
                 [
                 'name' => 'subscription-delete',
                 'display_name' => 'Supprimer',
                 'description' => '',
                 'groupe' => 'Abonnements',
-                ],  
+                ],
                 // ------------------------------------------------- Statistiques
                 [
-                'name' => 'statistiques-display',
+                'name' => 'statistics-display',
                 'display_name' => 'Afficher les Statistiques',
                 'description' => '',
                 'groupe' => 'Statistiques',
-                ],  
+                ],
             ]
-             
+
         );
 
         // Create table for associating roles to users and teams (Many To Many Polymorphic)
