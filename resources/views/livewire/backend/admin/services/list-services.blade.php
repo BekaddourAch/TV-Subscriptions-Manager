@@ -8,11 +8,11 @@
     <div class="shadow card">
         <div class="py-3 card-header">
             <ol class="m-0 breadcrumb float-sm-left font-weight-bold text-primary">
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Page Principale</a></li>
                 <li class="breadcrumb-item active">Les Services</li>
             </ol>
             <div class="mt-2 d-flex justify-content-end">
-                
+
                 @if(0==1)
                 {{-- <div class="ml-3 dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -25,7 +25,7 @@
                     </div>
                 </div> --}}
                 @endif
-                
+
                 @if(Auth::user()->hasPermission('services-create'))
                     <button wire:click.prevent='addNewService' class="ml-1 btn btn-sm btn-primary">
                         <i class="mr-2 fa fa-plus-circle"
@@ -89,10 +89,10 @@
                 </div>
             @endif
             <div class="table-responsive">
-                <table class="table">
-                    <thead class="text-white bg-gradient-secondary">
+                <table class="table table-striped">
+                    <thead class="text-white bg-primary">
                     <tr class="text-center">
-                        
+
                         @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
                             <th class="align-middle" scope="col">
                                 <div class="custom-control custom-checkbox small">
@@ -102,14 +102,14 @@
                             </th>
                         @endif
                         <th class="align-middle" scope="col">#</th>
-                        <th class="align-middle"> Nom </th>
-                        <th class="align-middle"> Description </th>
-                        <th class="align-middle"> Prix d'Achat </th>
-                        <th class="align-middle"> Prix de Vente </th>
+                        <th class="text-left align-middle "> Nom </th>
+                        <th class="text-left align-middle  d-none d-md-table-cell"> Description </th>
+                        <th class="align-middle  d-none d-md-table-cell"> Prix d'Achat </th>
+                        <th class="align-middle  d-none d-md-table-cell"> Prix de Vente </th>
                         <th class="align-middle"> Durée </th>
                         <th class="align-middle"> Actif </th>
-                        <th class="align-middle"> Remarques </th>
-                        
+                        <th class="text-left align-middle  d-none d-md-table-cell"> Remarques </th>
+
                         @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
                             <th class="align-middle" style="width: 10%" colspan="2">Actions  </th>
                         @endif
@@ -118,7 +118,7 @@
                     <tbody>
                     @forelse($services as $index => $service)
                         <tr class="text-center">
-                            
+
                             @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
                                 <td class="align-middle" scope="col">
                                     <div class="custom-control custom-checkbox small">
@@ -127,11 +127,11 @@
                                     </div>
                                 </td>
                             @endif
-                            <td class="align-middle" scope="row">{{ $service->id_service }}</td>
-                            <td class="align-middle">{{ $service->name }}</td>
-                            <td class="align-middle">{{ $service->description }}</td>
-                            <td class="align-middle">{{ $service->cost_price }}</td>
-                            <td class="align-middle">{{ $service->selling_price }}</td>
+                            <td class="align-middle" scope="row">#{{ $service->id_service }}</td>
+                            <td class="align-middle text-left">{{ $service->name }}</td>
+                            <td class="align-middle text-left d-none d-md-table-cell">{{ $service->description }}</td>
+                            <td class="align-middle d-none d-md-table-cell">{{ formatPrice($service->cost_price) }}</td>
+                            <td class="align-middle d-none d-md-table-cell">{{ formatPrice($service->selling_price) }}</td>
                             <td class="align-middle">{{ $service->getDurationWithUnit() }}</td>
                             <td class="align-middle">
                                 @if ($service->active ==1)
@@ -140,18 +140,18 @@
                                     <span class="font-weight-bold badge text-white bg-secondary">Non</span>
                                 @endif
                             </td>
-                            <td class="align-middle">{{ $service->notes }}</td>
-                            
+                            <td class="align-middle text-left d-none d-md-table-cell">{{ $service->notes }}</td>
+
                             @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
                                 <td class="align-middle">
                                     <div class="btn-group btn-group-sm">
-                                        
+
                                         @if(Auth::user()->hasPermission('services-update'))
                                             <a href="#" wire:click.prevent="edit({{ $service }})" class="btn btn-primary">
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                         @endif
-                                        
+
                                         @if(Auth::user()->hasPermission('services-delete'))
                                             <a class="btn btn-danger" href="#" wire:click.prevent="confirmServiceRemoval({{ $service->id_service }})">
                                                 <i class="fa fa-trash bg-danger"></i>

@@ -8,7 +8,7 @@
     <div class="shadow card">
         <div class="py-3 card-header">
             <ol class="m-0 breadcrumb float-sm-left font-weight-bold text-primary">
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Page Principale</a></li>
                 <li class="breadcrumb-item active">Utilisateurs</li>
             </ol>
             <div class="mt-2 d-flex justify-content-end">
@@ -22,9 +22,9 @@
                         <a class="dropdown-item" wire:click.prevent="importExcelForm" href="#">Importer depuis Excel</a>
                     </div>
                 </div> --}}
-                
+
                 @endif
-                
+
                 @if(Auth::user()->hasPermission('users-create'))
                     <button wire:click.prevent='addNewUser' class="ml-1 btn btn-sm btn-primary">
                         <i class="mr-2 fa fa-plus-circle"
@@ -86,7 +86,7 @@
                 <div class="mb-3 d-flex">
                     <span class="pt-1 text-success">
                          <span class="text-gray-900 font-weight-bold">{{ count($selectedRows) }}</span> {{ Str::plural('Utilisateure', count($selectedRows)) }}
-                         
+
                         sélectionné
                         <i class="fa fa-user" aria-hidden="true"></i>
                     </span>
@@ -106,7 +106,7 @@
             @endif
             <div class="table-responsive">
                 <table class="table">
-                    <thead class="text-white bg-gradient-secondary">
+                    <thead class="text-white  bg-primary">
                         <tr class="text-center">
 
                             @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
@@ -116,52 +116,52 @@
                                         <label class="custom-control-label" for="customCheck"></label>
                                     </div>
                                 </th>
-                            @endif              
+                            @endif
 
                             <th class="align-middle" scope="col">#</th>
-                            <th class="align-middle">
+                            <th class="text-left">
                                 Nom
                                 <span wire:click="sortBy('name')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle">
+                            <th class="text-left">
                                 Pseudo
                                 <span wire:click="sortBy('username')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'username' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'username' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle" scope="col">Photo</th>
-                            <th class="align-middle">
+                            <th class="align-middle d-none d-md-table-cell" scope="col">Photo</th>
+                            <th class="text-left d-none d-md-table-cell">
                                 Email
                                 <span wire:click="sortBy('email')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'email' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'email' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle">
+                            <th class="text-left d-none d-md-table-cell">
                                 Tèlèphone
                             </th>
-                            <th class="align-middle">
+                            <th class="align-middle d-none d-md-table-cell">
                                 Status
                                 <span wire:click="sortBy('status')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'status' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'status' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="pl-5 pr-5 align-middle">
+                            <th class="pl-5 pr-5 text-left">
                                 Role
                             </th>
-                            <th>
+                            <th class=" d-none d-md-table-cell">
                                 créé à
                                 <span wire:click="sortBy('created_at')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'created_at' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'created_at' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            
+
                             @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
                                 <th class="align-middle" style="width: 10px" colspan="2">Actions</th>
                             @endif
@@ -180,35 +180,35 @@
                                     </td>
                                 @endif
                                 <td class="align-middle" scope="row">{{ $users->firstItem() + $index }}</td>
-                                <td class="align-middle">{{ $user->name }}</td>
-                                <td class="align-middle">{{ $user->username }}</td>
-                                <td class="align-middle">
+                                <td class="align-middle text-left">{{ $user->name }}</td>
+                                <td class="align-middle text-left">{{ $user->username }}</td>
+                                <td class="align-middle d-none d-md-table-cell">
                                     <img src="{{ $user->profile_photo_path ? $user->profile_url : $user->profile_photo_url }}" style="width: 50px;" class="img img-circle" alt="">
                                 </td>
-                                <td class="align-middle">{{ $user->email }}</td>
-                                <td class="align-middle">{{ $user->mobile }}</td>
-                                <td class="align-middle">
+                                <td class="align-middle text-left d-none d-md-table-cell">{{ $user->email }}</td>
+                                <td class="align-middle text-left d-none d-md-table-cell">{{ $user->mobile }}</td>
+                                <td class="align-middle d-none d-md-table-cell">
                                     <span
                                         class="font-weight-bold badge text-white {{ $user->status == 1 ? 'bg-success' : 'bg-secondary' }}">{{
                                         $user->status() }}
                                     </span>
                                 </td>
-                                <td class="align-middle">
+                                <td class="align-middle text-left">
                                     <select class="form-control form-control-sm" wire:change='updateUserRole({{ $user }}, $event.target.value)'>
                                         <option hidden>@lang('message.roles')</option>
-                                        @foreach ($roles as $role) 
+                                        @foreach ($roles as $role)
                                             @if($role->id!=1)
                                             <option class="bg-red" value="{{ $role->id }}" {{ $user->roles[0]->name == $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
                                             @endif
                                         @endforeach
                                     </select>
                                 </td>
-                                <td>{{ $user->created_at->format('d-m-Y') }}</td>
-                                
+                                <td class="align-middle d-none d-md-table-cell">{{ $user->created_at->format('d-m-Y') }}</td>
+
                                 @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
                                     <td class="align-middle">
                                         <div class="btn-group btn-group-sm">
-                                            
+
                                             @if(Auth::user()->hasPermission('users-update'))
                                                 <a href="#" wire:click.prevent="edit({{ $user }})" class="btn btn-primary">
                                                     <i class="fa fa-edit"></i>
@@ -283,7 +283,7 @@
 
                                 <div class="form-group">
                                     <label for="name">Nom</label>
-                                    <input type="text" tabindex="1" wire:model.defer="state.name" class="form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" placeholder="Entrez le nom">
+                                    <input type="text" tabindex="1" wire:model.defer="state.name" class="form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" placeholder="Nom">
                                     @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -295,7 +295,7 @@
 
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="email" tabindex="3" wire:model.defer="state.email" class="form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp" placeholder="Entrez L'email">
+                                    <input type="email" tabindex="3" wire:model.defer="state.email" class="form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp" placeholder="Email">
                                     @error('email')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -307,7 +307,7 @@
 
                                 <div class="form-group">
                                     <label for="password">Mot de passe</label>
-                                    <input type="password" tabindex="5" wire:model.defer="state.password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Entrez le Mot de passe">
+                                    <input type="password" tabindex="5" wire:model.defer="state.password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Mot de passe">
                                     @error('password')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -321,7 +321,7 @@
 
                                 <div class="form-group">
                                     <label for="username">Pseudo</label>
-                                    <input type="text" tabindex="2" wire:model.defer="state.username" class="form-control @error('username') is-invalid @enderror" id="username" aria-describedby="nameHelp" placeholder="Entrez le Pseudo">
+                                    <input type="text" tabindex="2" wire:model.defer="state.username" class="form-control @error('username') is-invalid @enderror" id="username" aria-describedby="nameHelp" placeholder="Pseudo">
                                     @error('username')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -333,7 +333,7 @@
 
                                 <div class="form-group">
                                     <label for="mobile">Mobile</label>
-                                    <input type="text" tabindex="4" wire:model.defer="state.mobile" class="form-control @error('mobile') is-invalid @enderror" id="mobile" aria-describedby="nameHelp" placeholder="Entrez Le Numéro de téléphone">
+                                    <input type="text" tabindex="4" wire:model.defer="state.mobile" class="form-control @error('mobile') is-invalid @enderror" id="mobile" aria-describedby="nameHelp" placeholder="Numéro de téléphone">
                                     @error('mobile')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -345,7 +345,7 @@
 
                                 <div class="form-group">
                                     <label for="passwordConfirmation">Confirm Password</label>
-                                    <input type="password" tabindex="6" wire:model.defer="state.password_confirmation" class="form-control" id="passwordConfirmation" placeholder="Confirmez le mot de passe">
+                                    <input type="password" tabindex="6" wire:model.defer="state.password_confirmation" class="form-control" id="passwordConfirmation" placeholder="Confirmer le mot de passe">
                                 </div>
                             </div>
                         </div>
