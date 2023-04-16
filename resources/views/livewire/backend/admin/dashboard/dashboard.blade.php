@@ -4,18 +4,47 @@
         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
     </div>
 
+    <div class="row mb-5">
+        <div class="col-sm-12">
+            <div class="card shadow h-100 py-2">
+                <div class="card-body">
+                    <form  wire:submit.prevent="submit">
+                        {{ csrf_field() }}
+                        <div class="row">
+                            <div class="col-sm-4">
+                                Date Début:<br/>
+                                <input type="text" class="form-control" id="begin" wire:model.lazy="begin" autocomplete="off">
+                                @error('begin') <span class="error">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="col-sm-4">
+                                Date Fin:<br/>
+                                <input type="text" class="form-control" id="end" wire:model.lazy="end" autocomplete="off">
+                                @error('end') <span class="error">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="col-sm-4">
+                                <br/>
+                                <button class="btn btn-success" id="btnSearch" value="1" type="submit">Rechercher</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
     <!-- Content Row -->
     <div class="row">
 
-        <!-- Earnings (Monthly) Card Example -->
+        <!-- Abonnements Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Earnings (Monthly)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                Nb Clients</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$totalCustomers}}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -25,15 +54,15 @@
             </div>
         </div>
 
-        <!-- Earnings (Monthly) Card Example -->
+        <!-- Earnings Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Earnings (Annual)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                Profits</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{formatPrice($totalProfits)}}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -49,18 +78,11 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Nb Abonnements
                             </div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
-                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                </div>
-                                <div class="col">
-                                    <div class="progress progress-sm mr-2">
-                                        <div class="progress-bar bg-info" role="progressbar"
-                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                            aria-valuemax="100"></div>
-                                    </div>
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{$totalSubscriptions}}</div>
                                 </div>
                             </div>
                         </div>
@@ -79,11 +101,11 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Pending Requests</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                Nb Abonnements Actifs</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$totalActiveSubscriptions}}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -101,26 +123,12 @@
                 <!-- Card Header - Dropdown -->
                 <div
                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
+                    <h6 class="m-0 font-weight-bold text-primary">Ventes Par Mois</h6>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="myAreaChart"></canvas>
+                <div class="card-body" data-sales="{{base64_encode(json_encode($subscriptionsTotalSalesPerMonth))}}">
+                    <div class="chart-area"  wire:ignore>
+                        <canvas id="salesPerMonthChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -132,37 +140,37 @@
                 <!-- Card Header - Dropdown -->
                 <div
                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
+                    <h6 class="m-0 font-weight-bold text-primary">Ventes Par Wilayas</h6>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart"></canvas>
+                <div class="card-body ">
+                    <div class="chart-pie pt-4 pb-2" wire:ignore>
+                        <canvas id="subscriptionsPerRegions"  ></canvas>
                     </div>
-                    <div class="mt-4 text-center small">
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-primary"></i> Direct
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i> Social
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i> Referral
-                        </span>
+                    <div class="mt-4 text-center small"  id="subscriptionsPerRegionsData">
+                        <?php
+                        $colors = [
+                            [ "backgroundColor"=> '#ff6384', "hoverBackgroundColor"=> '#ff6384cc' ],
+                            [ "backgroundColor"=> '#36a2eb', "hoverBackgroundColor"=> '#36a2ebcc' ],
+                            [ "backgroundColor"=> '#ffce56', "hoverBackgroundColor"=> '#ffce56cc' ],
+                            [ "backgroundColor"=> '#cc65fe', "hoverBackgroundColor"=> '#cc65fecc' ],
+                            [ "backgroundColor"=> '#ff9f40', "hoverBackgroundColor"=> '#ff9f40cc' ],
+                            [ "backgroundColor"=> '#837cfc', "hoverBackgroundColor"=> '#837cfccc' ],
+                            [ "backgroundColor"=> '#4bc0c0', "hoverBackgroundColor"=> '#4bc0c0cc' ],
+                            [ "backgroundColor"=> '#7cb5ec', "hoverBackgroundColor"=> '#7cb5eccc' ],
+                            [ "backgroundColor"=> '#91e8e1', "hoverBackgroundColor"=> '#91e8e1cc' ],
+                            [ "backgroundColor"=> '#2b908f', "hoverBackgroundColor"=> '#2b908fcc' ]
+                        ];
+                        ?>
+                        @forelse($topSubscriptionsPerRegions as $region)
+                            <span class="mr-2" data-color="{{ base64_encode(json_encode($colors[$loop->iteration-1]))}}" data-profit="{{$region["total_spent"]}}" >
+                                <i class="fas fa-circle " style="color:{{$colors[$loop->iteration-1]["backgroundColor"]}}" ></i> <span class="label-data">{{$region["state"]}}</span>
+                            </span>
+                            @empty
+                                <span class="mr-2" data-color="{{ base64_encode(json_encode($colors[0])) }}" data-profit="{{$totalSales}}">
+                                <i class="fas fa-circle " style="color:{{$colors[0]["backgroundColor"]}}" ></i> <span class="label-data">Total Ventes</span>
+                            </span>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -173,157 +181,229 @@
     <div class="row">
 
         <!-- Content Column -->
-        <div class="col-lg-6 mb-4">
+        <div class="col-12 mb-4">
 
             <!-- Project Card Example -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Abonnements Par Services</h6>
                 </div>
-                <div class="card-body">
-                    <h4 class="small font-weight-bold">Server Migration <span
-                            class="float-right">20%</span></h4>
+                <div class="card-body" style="max-height: 400px; overflow: auto;">
+                    @forelse($subscriptionsTotalServices as $key=>$service)
+                    <h4 class="small font-weight-bold">{{$key}} <span
+                            class="float-right"> {{$service. '  ('.number_format($service * 100 / $totalSubscriptions, 2 ,".", "").'%)'}}</span></h4>
                     <div class="progress mb-4">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ number_format($service * 100 / $totalSubscriptions, 2 ,".", "")}}%"
                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
-                    <h4 class="small font-weight-bold">Sales Tracking <span
-                            class="float-right">40%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Customer Database <span
-                            class="float-right">60%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar" role="progressbar" style="width: 60%"
-                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Payout Details <span
-                            class="float-right">80%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
-                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Account Setup <span
-                            class="float-right">Complete!</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+                    @empty
+                        <h4 class="small font-weight-bold">Total Ventes <span
+                                class="float-right">100% </span></h4>
+                        <div class="progress mb-4">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 100%"
+                                 aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    @endforelse
                 </div>
             </div>
 
-            <!-- Color System -->
-            <div class="row">
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-primary text-white shadow">
-                        <div class="card-body">
-                            Primary
-                            <div class="text-white-50 small">#4e73df</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-success text-white shadow">
-                        <div class="card-body">
-                            Success
-                            <div class="text-white-50 small">#1cc88a</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-info text-white shadow">
-                        <div class="card-body">
-                            Info
-                            <div class="text-white-50 small">#36b9cc</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-warning text-white shadow">
-                        <div class="card-body">
-                            Warning
-                            <div class="text-white-50 small">#f6c23e</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-danger text-white shadow">
-                        <div class="card-body">
-                            Danger
-                            <div class="text-white-50 small">#e74a3b</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-secondary text-white shadow">
-                        <div class="card-body">
-                            Secondary
-                            <div class="text-white-50 small">#858796</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-light text-black shadow">
-                        <div class="card-body">
-                            Light
-                            <div class="text-black-50 small">#f8f9fc</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-dark text-white shadow">
-                        <div class="card-body">
-                            Dark
-                            <div class="text-white-50 small">#5a5c69</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         </div>
 
-        <div class="col-lg-6 mb-4">
-
-            <!-- Illustrations -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-                </div>
-                <div class="card-body">
-                    <div class="text-center">
-                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                            src="{{ asset('backend/img/undraw_posting_photo.svg') }}" alt="...">
-                    </div>
-                    <p>Add some quality, svg illustrations to your project courtesy of <a
-                            target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
-                        constantly updated collection of beautiful svg images that you can use
-                        completely free and without attribution!</p>
-                    <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
-                        unDraw &rarr;</a>
-                </div>
-            </div>
-
-            <!-- Approach -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                </div>
-                <div class="card-body">
-                    <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
-                        CSS bloat and poor page performance. Custom CSS classes are used to create
-                        custom components and custom utility classes.</p>
-                    <p class="mb-0">Before working with this theme, you should become familiar with the
-                        Bootstrap framework, especially the utility classes.</p>
-                </div>
-            </div>
-
-        </div>
     </div>
     @section('script')
         <script src="{{ asset('backend/vendor/chart.js/Chart.min.js') }}"></script>
-        <script src="{{ asset('backend/js/demo/chart-area-demo.js') }}"></script>
-        <script src="{{ asset('backend/js/demo/chart-pie-demo.js') }}"></script>
+        <script>
+            window.addEventListener('draw-dashboard-charts', event => {
+                drawtopSubscriptionsPerRegions();
+                drawtopServices();
+            });
+
+            Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+            Chart.defaults.global.defaultFontColor = '#858796';
+
+            function drawtopSubscriptionsPerRegions(){
+                var chartContainer = $("#subscriptionsPerRegions").parent();
+                $(chartContainer).html("");
+                $(chartContainer).html('<canvas id="subscriptionsPerRegions"></canvas>');
+                var dataLabels = [];
+                var dataValues = [];
+                var dataBackColors = [];
+                var dataHoverBackColors = [];
+                $("#subscriptionsPerRegionsData > span").each(function(){
+                    dataLabels.push($(this).find(".label-data").text());
+                    dataValues.push($(this).attr("data-profit"));
+                    var dataColors = JSON.parse(atob($(this).data("color")));
+                    dataBackColors.push(dataColors.backgroundColor);
+                    dataHoverBackColors.push(dataColors.hoverBackgroundColor);
+                });
+                var ctx = document.getElementById("subscriptionsPerRegions");
+
+                var myPieChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: dataLabels,
+                        datasets: [{
+                            data: dataValues,
+                            backgroundColor:  dataBackColors,
+                            hoverBackgroundColor: dataHoverBackColors,
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                        tooltips: {
+                        backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: '#dddfeb',
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                            callbacks: {
+                            label: function(tooltipItem, data) {
+                                var value = data.datasets[0].data[tooltipItem.index];
+                                return data.labels[tooltipItem.index] + ': ' + value + ' DA';
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    cutoutPercentage: 80,
+                },
+            });
+            }
+
+            function drawtopServices(){
+                var dataLabels = [];
+                var dataValues = [];
+                var dataSales = JSON.parse(atob($("#salesPerMonthChart").parent().parent().attr("data-sales")));
+                Object.keys(dataSales).forEach(function(key, index) {
+                     dataValues.push(dataSales[key]);
+                });
+                dataLabels = Object.keys(dataSales);
+                var chartContainer = $("#salesPerMonthChart").parent();
+                $(chartContainer).html("");
+                $(chartContainer).html('<canvas id="salesPerMonthChart"></canvas>');
+                var ctx = document.getElementById("salesPerMonthChart");
+                var myLineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dataLabels,
+                        datasets: [{
+                            label: "Earnings",
+                            lineTension: 0.3,
+                            backgroundColor: "rgba(78, 115, 223, 0.05)",
+                            borderColor: "rgba(78, 115, 223, 1)",
+                            pointRadius: 3,
+                            pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                            pointBorderColor: "rgba(78, 115, 223, 1)",
+                            pointHoverRadius: 3,
+                            pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                            pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                            pointHitRadius: 10,
+                            pointBorderWidth: 2,
+                            data: dataValues,
+                        }],
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: 'date'
+                                },
+                                gridLines: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 7
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    maxTicksLimit: 5,
+                                    padding: 10,
+                                    // Include a dollar sign in the ticks
+                                    callback: function(value, index, values) {
+                                        return value+" DA";
+                                    }
+                                },
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            }],
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            titleMarginBottom: 10,
+                            titleFontColor: '#6e707e',
+                            titleFontSize: 14,
+                            borderColor: '#dddfeb',
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            intersect: false,
+                            mode: 'index',
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function(tooltipItem, chart) {
+                                    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                                    return datasetLabel + ': ' + tooltipItem.yLabel+' DA';
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+
+
+            $(document).ready(function(){
+                drawtopSubscriptionsPerRegions();
+                drawtopServices();
+                $('#begin').daterangepicker({
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    minYear: 2000,
+                    locale: {
+                        format: 'DD/MM/YYYY'
+                    }
+                }, function(start, end, label) {
+                    @this.set('begin',start.format('DD/MM/YYYY') );
+
+                });
+                $('#end').daterangepicker({
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    minYear: 2000,
+                    locale: {
+                        format: 'DD/MM/YYYY'
+                    }
+                }, function(start, end, label) {
+                    @this.set('end', start.format('DD/MM/YYYY'));
+                });
+            });
+        </script>
     @endsection
 </div>

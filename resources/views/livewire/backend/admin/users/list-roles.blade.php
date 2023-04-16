@@ -11,14 +11,17 @@
                 <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
                 <li class="breadcrumb-item active">Roles</li>
             </ol>
+            
+            @if(Auth::user()->hasPermission('users-create'))
             <div class="mt-2 d-flex justify-content-end">
                 <button wire:click.prevent='addNewRole' class="ml-1 btn btn-sm btn-primary">
                     <i class="mr-2 fa fa-plus-circle"
                         aria-hidden="true">
-                        <span>Add Role</span>
+                        <span>Ajouter un  Role</span>
                     </i>
                 </button>
             </div>
+            @endif
         </div>
 
         <div class="p-3 card-body">
@@ -28,37 +31,47 @@
                         <tr class="text-center">
                             <th class="align-middle" scope="col">#</th>
                             <th class="align-middle">
-                                {{ trans('role.name') }}
+                                Nom
                             </th>
                             <th class="align-middle">
-                                {{ trans('role.display_name') }}
+                                Dispaly Name
                             </th>
                             <th class="align-middle">
-                                {{ trans('role.description') }}
+                                Description
                             </th>
                             <th class="align-middle">
-                                {{ trans('role.permissions') }}
+                                Permissions
                             </th>
-                            <th class="align-middle" style="width: 10px" colspan="2">{{ trans('messages.actions') }}</th>
+                            
+                            @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
+                                <th class="align-middle" style="width: 10px" colspan="2">Actions</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($roles as $role)
+                        
+                        @if($role->id!=1)
                         <tr class="text-center">
                             <td class="align-middle" scope="row">{{ $loop->iteration }}</td>
                             <td class="align-middle">{{ $role->name }}</td>
                             <td class="align-middle">{{ $role->display_name }}</td>
                             <td class="align-middle">{{ $role->description }}</td>
                             <td class="align-middle">{{ $role->permissions()->count() }}</td>
+                            
+                            @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
                             <td class="align-middle">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="#" wire:click.prevent="edit({{ $role }})" class="btn btn-primary">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-
-                                    <a class="btn btn-danger" href="#" wire:click.prevent="confirmRoleRemoval({{ $role->id }})">
-                                        <i class="fa fa-trash bg-danger"></i>
-                                    </a>
+                                    @if(Auth::user()->hasPermission('users-update'))
+                                        <a href="#" wire:click.prevent="edit({{ $role }})" class="btn btn-primary">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    @endif
+                                    @if(Auth::user()->hasPermission('users-delete'))
+                                        <a class="btn btn-danger" href="#" wire:click.prevent="confirmRoleRemoval({{ $role->id }})">
+                                            <i class="fa fa-trash bg-danger"></i>
+                                        </a>
+                                    @endif
 
                                 </div>
                                 <form action="" method="post" id="delete-role-{{ $role->id }}" class="d-none">
@@ -66,10 +79,12 @@
                                     @method('DELETE')
                                 </form>
                             </td>
+                            @endif
                         </tr>
+                        @endif
                         @empty
                         <tr>
-                            <td colspan="6" class="text-center">No Role found</td>
+                            <td colspan="6" class="text-center">Aucun rôle trouvé</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -88,15 +103,15 @@
     <!-- Modal Create or Update Role -->
 
     <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog " role="document">
             <form autocomplete="off" wire:submit.prevent="{{ $showEditModal ? 'updateRole' : 'createRole' }}">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
                             @if ($showEditModal)
-                                <span>Edit Role</span>
+                                <span>Modifier le rôle</span>
                             @else
-                            <span>Add New Role</span>
+                            <span>Ajouter un nouveau rôle</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -110,7 +125,7 @@
                                 <!-- Modal Role Name -->
 
                                 <div class="form-group">
-                                    <label for="name">Name</label>
+                                    <label for="name">Nom</label>
                                     <input type="text" tabindex="1" wire:model.defer="data.name" class="form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" placeholder="Enter role name">
                                     @error('name')
                                     <div class="invalid-feedback">
@@ -122,7 +137,7 @@
                                 <!-- Modal Role Display Name -->
 
                                 <div class="form-group">
-                                    <label for="display_name">Display Name</label>
+                                    <label for="display_name">Nom d'affichage</label>
                                     <input type="text" tabindex="1" wire:model.defer="data.display_name" class="form-control @error('display_name') is-invalid @enderror" id="display_name" aria-describedby="display_nameHelp" placeholder="Enter role displayname">
                                     @error('display_name')
                                     <div class="invalid-feedback">
@@ -153,28 +168,39 @@
                                     <h4 class="text-center">Permissions</h4>
                                 </div>
                                 <div class="card-body">
-                                    <p class="card-text">
-                                        <div class="row">
-                                            @foreach ($permissions as $index => $permission)
-                                                <div class="col-4">
-                                                    <div class="form-group">
-                                                        <div class="custom-control form-checkbox small">
-                                                            <label class="items-center" :key="{{ $permission->id }}">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    name="role_permissions.{{ $permission->id }}"
-                                                                    wire:model.defer="role_permissions.{{ $permission->id }}"
-                                                                    value="{{ $permission->id }}"
-                                                                    class="form-checkbox"
-                                                                />
-                                                                <span class="mr-1">{{ $permission->display_name }}</span>
-                                                            </label>
+                                    
+                                            
+    {{-- // echo'<pre>';
+        // var_dump($array_permissions); 
+        // echo'</pre>'; --}}
+                                            @foreach ($array_permissions as $index => $permissions)
+                                            <div class="sce" style="margin:1 0;padding:2 0">
+                                                
+                                            <h6 class="m-0 font-weight-bold text-primary">{{ $index }}</h6> <br>
+                                            <div class="cra" style="display:flex;"> 
+                                                    
+                                                    @foreach ($permissions as $permission)
+                                                    <div class="trs" style="margin">
+                                                        <div class="form-group">
+                                                            <div class="custom-control form-checkbox small">
+                                                                <label class="items-center" :key="{{ $permission->id }}">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        name="role_permissions.{{ $permission->id }}"
+                                                                        wire:model.defer="role_permissions.{{ $permission->id }}"
+                                                                        value="{{ $permission->id }}"
+                                                                        class="form-checkbox"
+                                                                    />
+                                                                    <span class="mr-1">{{ $permission->display_name }}</span>
+                                                                </label>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </p>
+                                                    @endforeach 
+                                            </div> 
+                                            <hr> 
+                                            </div>
+                                            @endforeach 
                                 </div>
                             </div>
                             {{-- @endforeach --}}
@@ -182,12 +208,12 @@
                     </div>
 
                     <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Annuler</button>
                         <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-save"></i>
                             @if ($showEditModal)
-                                <span>Save Changes</span>
+                                <span>Sauvegarder les modifications</span>
                             @else
-                            <span>Save</span>
+                            <span>Sauvegarder</span>
                             @endif
                         </button>
                     </div>
@@ -205,12 +231,12 @@
                 </div>
 
                 <div class="modal-body">
-                    <h4>Are you sure you want to delete this role?</h4>
+                    <h4>Voulez-vous vraiment supprimer ce rôle ?</h4>
                 </div>
 
                 <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Cancel</button>
-                    <button type="button" wire:click.prevent="deleteRole" class="btn btn-danger"><i class="mr-1 fa fa-trash"></i>Delete Role</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Annuler</button>
+                    <button type="button" wire:click.prevent="deleteRole" class="btn btn-danger"><i class="mr-1 fa fa-trash"></i>Supprimer le rôle</button>
                 </div>
             </div>
         </div>
@@ -234,13 +260,13 @@
         <script>
             window.addEventListener('show-delete-alert-confirmation', event =>{
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
+                    title: 'Es-tu sûr?',
+                    text: "Vous ne pourrez pas revenir en arrière !",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Oui, supprimez-le !'
                     }).then((result) => {
                     if (result.isConfirmed) {
                         Livewire.emit('deleteConfirmed')

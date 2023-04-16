@@ -2,19 +2,21 @@
 
 namespace App\Http\Livewire\Backend\Admin\Users;
 
+use App\Exports\UsersExport;
+use App\Imports\UsersImport;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
-use Livewire\Component;
-use Illuminate\Support\Facades\Validator;
-use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
-use Livewire\WithPagination;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Exports\UsersExport;
-use App\Imports\UsersImport;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
-use PDF;
+use Meneses\LaravelMpdf\Facades\LaravelMpdf;
 
 class ListUsers extends Component
 {
@@ -30,9 +32,9 @@ class ListUsers extends Component
 
     public $user;
 
-	public $showEditModal = false;
+    public $showEditModal = false;
 
-	public $userIdBeingRemoved = null;
+    public $userIdBeingRemoved = null;
 
     public $searchTerm = null;
 
@@ -54,7 +56,7 @@ class ListUsers extends Component
 
     public $selectedRows = [];
 
-	public $selectPageRows = false;
+    public $selectPageRows = false;
 
     protected $listeners = ['deleteConfirmed' => 'deleteUsers'];
 
@@ -65,88 +67,94 @@ class ListUsers extends Component
     // Updated Select Page Rows
 
     public function updatedSelectPageRows($value)
-	{
-		if ($value) {
-			$this->selectedRows = $this->users->pluck('id')->map(function ($id) {
-				return (string) $id;
-			});
-		} else {
-			$this->reset(['selectedRows', 'selectPageRows']);
-		}
-	}
+    {
+        if ($value) {
+            $this->selectedRows = $this->users->pluck('id')->map(function ($id) {
+                return (string) $id;
+            });
+        } else {
+            $this->reset(['selectedRows', 'selectPageRows']);
+        }
+    }
 
     // Get Users Data
 
     public function getUsersProperty()
-	{
-		if ($this->roleFilter) {
-            $users = User::whereRelation('roles', 'name',$this->roleFilter )
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(15);
+    {
+        if ($this->roleFilter) {
+            $users = User::whereRelation('roles', 'name', $this->roleFilter)
+                ->where('name', 'like', '%' . $this->searchTerm . '%')
+                ->orderBy($this->sortColumnName, $this->sortDirection)
+                ->paginate(15);
         } else {
             $users = User::query()
-            ->where('name', 'like', '%'.$this->searchTerm.'%')
-            ->orWhere('username', 'like', '%'.$this->searchTerm.'%')
-            ->orWhere('email', 'like', '%'.$this->searchTerm.'%')
-            ->orWhere('mobile', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(15);
+                ->where('name', 'like', '%' . $this->searchTerm . '%')
+                ->orWhere('username', 'like', '%' . $this->searchTerm . '%')
+                ->orWhere('email', 'like', '%' . $this->searchTerm . '%')
+                ->orWhere('mobile', 'like', '%' . $this->searchTerm . '%')
+                ->orderBy($this->sortColumnName, $this->sortDirection)
+                ->paginate(15);
         }
 
         return $users;
-	}
+    }
 
     // set All selected User As Active
 
     public function setAllAsActive()
-	{
-		User::whereIn('id', $this->selectedRows)->update(['status' => 1]);
+    {
+        if (Auth::user()->hasPermission('users-update')) {
+        User::whereIn('id', $this->selectedRows)->update(['status' => 1]);
 
         $this->dispatchBrowserEvent('swal', [
-            'title'             => 'Users set As Active successfully.',
-            'icon'              =>'success',
-            'iconColor'         => 'green',
-            'position'          => 'center',
-            'timer'             => '1700',
-        ]);
-
-		$this->reset(['selectPageRows', 'selectedRows']);
-	}
+            'title' => 'Les utilisateurs ont été définis comme actifs avec succès.',
+            'icon' => 'Succès',
+            'iconColor' => 'green',
+            'position' => 'center',
+            'timer' => '1700',
+        ]); 
+        $this->reset(['selectPageRows', 'selectedRows']);
+    }
+    }
 
     // set All selected User As InActive
 
-	public function setAllAsInActive()
-	{
-		User::whereIn('id', $this->selectedRows)->update(['status' => 0]);
+    public function setAllAsInActive()
+    {
+        
+        if (Auth::user()->hasPermission('users-update')) {
+        User::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
-		$this->dispatchBrowserEvent('swal', [
-            'title'             => 'Users set As Inactive successfully.',
-            'icon'              =>'success',
-            'iconColor'         => 'green',
-            'position'          => 'center',
-            'timer'             => '1700',
+        $this->dispatchBrowserEvent('swal', [
+            'title' => 'Les utilisateurs ont été définis comme inactifs avec succès.',
+            'icon' => 'Succès',
+            'iconColor' => 'green',
+            'position' => 'center',
+            'timer' => '1700',
         ]);
 
-		$this->reset(['selectPageRows', 'selectedRows']);
-	}
+        $this->reset(['selectPageRows', 'selectedRows']);
+    }
+    }
 
     // show Sweetalert Confirmation for Delete
 
-	public function deleteSelectedRows()
-	{
+    public function deleteSelectedRows()
+    {
         $this->dispatchBrowserEvent('show-delete-alert-confirmation');
-	}
+    }
 
     // Delete Selected User with relationship roles And permission
 
     public function deleteUsers()
     {
+
+        if (Auth::user()->hasPermission('users-delete')) {
         // delete images for users if exists from Storage folder
-        $profileImages =User::whereIn('id', $this->selectedRows)->get(['profile_photo_path']);
-        foreach($profileImages as $profileImage){
+        $profileImages = User::whereIn('id', $this->selectedRows)->get(['profile_photo_path']);
+        foreach ($profileImages as $profileImage) {
             $imageFileName = $profileImage->profile_photo_path;
-            if($imageFileName){
+            if ($imageFileName) {
                 Storage::disk('profile_photos')->delete($imageFileName);
             }
         }
@@ -156,24 +164,26 @@ class ListUsers extends Component
         DB::table('permission_user')->whereIn('user_id', $this->selectedRows)->delete();
 
         // delete selected users from database
-		User::whereIn('id', $this->selectedRows)->delete();
+        User::whereIn('id', $this->selectedRows)->delete();
 
         $this->dispatchBrowserEvent('swal', [
-            'title'             => 'All selected users got deleted.',
-            'icon'              =>'success',
-            'iconColor'         => 'green',
-            'position'          => 'center',
-            'timer'             => '1700',
+            'title' => 'Tous les utilisateurs sélectionnés ont été supprimés.',
+            'icon' => 'Succès',
+            'iconColor' => 'green',
+            'position' => 'center',
+            'timer' => '1700',
         ]);
 
-		$this->reset();
+        $this->reset();
+    }
     }
 
     // Update User Role
 
-    public function updateUserRole(User $user ,$role)
+    public function updateUserRole(User $user, $role)
     {
-        Validator::make(['role' => $role],[
+        if (Auth::user()->hasPermission('users-update')) {
+        Validator::make(['role' => $role], [
             //'role' => 'required|in:1,2,3',
             'role' => 'required',
         ])->validate();
@@ -181,65 +191,71 @@ class ListUsers extends Component
         $user->roles()->sync($role);
 
         $this->dispatchBrowserEvent('swal', [
-            'title'             => 'User role updated.',
-            'icon'              =>'success',
-            'iconColor'         => 'green',
-            'position'          => 'center',
-            'timer'             => '1700',
+            'title' => 'Rôle utilisateur modifié.',
+            'icon' => 'Succès',
+            'iconColor' => 'green',
+            'position' => 'center',
+            'timer' => '1700',
         ]);
+        }
     }
 
     // Open Modal form to Add New User
 
     public function addNewUser()
     {
+        if (Auth::user()->hasPermission('users-create')) {
         $this->reset();
 
         $this->showEditModal = false;
 
         $this->dispatchBrowserEvent('show-form');
+        }
     }
 
     // store New User
 
     public function createUser()
     {
-        $validatedData = Validator::make($this->state, [
-			'name' => 'required',
-			'username' => 'required|unique:users',
-			'email' => 'required|email|unique:users',
-			'mobile' => 'required|numeric|unique:users',
-			'password' => 'required|confirmed',
-            'role_id'   => 'required',
-		])->validate();
+        if (Auth::user()->hasPermission('users-create')) {
+            $validatedData = Validator::make($this->state, [
+                'name' => 'required',
+                'username' => 'required|unique:users',
+                'email' => 'required|email|unique:users',
+                'mobile' => 'required|numeric|unique:users',
+                'password' => 'required|confirmed',
+                'role_id' => 'required',
+            ])->validate();
 
-		$validatedData['password'] = bcrypt($validatedData['password']);
+            $validatedData['password'] = bcrypt($validatedData['password']);
 
-		if ($this->photo) {
-			$validatedData['profile_photo_path'] = $this->photo->store('/', 'profile_photos');
-		}
-
-        $user_permissions = [];
-        for ($i=0; $i <  count($this->user_permissions); $i++) {
-            $permission_value = array_values($this->user_permissions);
-            if ($permission_value[$i] != false) {
-                array_push($user_permissions, $permission_value[$i]);
+            if ($this->photo) {
+                $validatedData['profile_photo_path'] = $this->photo->store('/', 'profile_photos');
             }
+
+            $user_permissions = [];
+            for ($i = 0; $i < count($this->user_permissions); $i++) {
+                $permission_value = array_values($this->user_permissions);
+                if ($permission_value[$i] != false) {
+                    array_push($user_permissions, $permission_value[$i]);
+                }
+            }
+
+            $user = User::create($validatedData);
+            $user->attachRole($this->state['role_id']);
+            $user->permissions()->attach($user_permissions);
+
+            $this->dispatchBrowserEvent('hide-form');
+
+            $this->dispatchBrowserEvent('swal', [
+                'title' => 'Utilisateur ajouté avec succès.',
+                'icon' => 'Success',
+                'iconColor' => 'green',
+                'position' => 'center',
+                'timer' => '1700',
+            ]);
         }
 
-		$user = User::create($validatedData);
-        $user->attachRole($this->state['role_id']);
-        $user->permissions()->attach($user_permissions);
-
-        $this->dispatchBrowserEvent('hide-form');
-
-        $this->dispatchBrowserEvent('swal', [
-            'title' => 'User Added Successfully.',
-            'icon'=>'success',
-            'iconColor' => 'green',
-            'position' => 'center',
-            'timer' => '1700',
-        ]);
     }
 
     public function permissions_form($role)
@@ -255,105 +271,122 @@ class ListUsers extends Component
 
     public function edit(User $user)
     {
+        
+        if (Auth::user()->hasPermission('users-update')) {
         $this->reset();
 
-		$this->showEditModal = true;
+        $this->showEditModal = true;
 
-		$this->user = $user;
+        $this->user = $user;
 
-		$this->state = $user->toArray();
+        $this->state = $user->toArray();
 
         $this->state['role_id'] = $user->roles[0]->id;
 
-        if ($this->state['role_id']==3) {
+        if ($this->state['role_id'] == 3) {
             $this->showPermissions = false;
         }
 
-        $this->user_permissions = $user->permissions()->pluck('id','permission_id')->toArray();
+        $this->user_permissions = $user->permissions()->pluck('id', 'permission_id')->toArray();
 
-		$this->dispatchBrowserEvent('show-form');
+        $this->dispatchBrowserEvent('show-form');
+    }
     }
 
     // Update User
 
     public function updateUser()
-	{
-        try {
-            $validatedData = Validator::make($this->state, [
-                'name'                  => 'required',
-                'username'              => 'required|unique:users,username,'.$this->user->id,
-                'email'                 => 'required|email|unique:users,email,'.$this->user->id,
-                'mobile'                => 'required|numeric|unique:users,mobile,'.$this->user->id,
-                'role_id'               => 'required',
-                'password'              => 'sometimes|confirmed',
-                'photo'    => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            ])->validate();
+    {
+        if (Auth::user()->hasPermission('users-update')) {
+            try {
+                $validatedData = Validator::make($this->state, [
+                    'name' => 'required',
+                    'username' => 'required|unique:users,username,' . $this->user->id,
+                    'email' => 'required|email|unique:users,email,' . $this->user->id,
+                    'mobile' => 'required|numeric|unique:users,mobile,' . $this->user->id,
+                    'role_id' => 'required',
+                    'password' => 'sometimes|confirmed',
+                    'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                ])->validate();
 
-            if(!empty($validatedData['password'])) {
-                $validatedData['password'] = bcrypt($validatedData['password']);
-            }
-
-            if ($this->photo) {
-                if($this->user->profile_photo_path){
-                    Storage::disk('profile_photos')->delete($this->user->profile_photo_path);
+                if (!empty($validatedData['password'])) {
+                    $validatedData['password'] = bcrypt($validatedData['password']);
                 }
-                $validatedData['profile_photo_path'] = $this->photo->store('/', 'profile_photos');
-            }
 
-            $user_permissions = [];
-            for ($i=0; $i <  count($this->user_permissions); $i++) {
-                $permission_value = array_values($this->user_permissions);
-                if ($permission_value[$i] != false) {
-                    array_push($user_permissions, $permission_value[$i]);
+                if ($this->photo) {
+                    if ($this->user->profile_photo_path) {
+                        Storage::disk('profile_photos')->delete($this->user->profile_photo_path);
+                    }
+                    $validatedData['profile_photo_path'] = $this->photo->store('/', 'profile_photos');
                 }
+
+                $user_permissions = [];
+                for ($i = 0; $i < count($this->user_permissions); $i++) {
+                    $permission_value = array_values($this->user_permissions);
+                    if ($permission_value[$i] != false) {
+                        array_push($user_permissions, $permission_value[$i]);
+                    }
+                }
+
+                $this->user->update($validatedData);
+                $this->user->roles()->sync($this->state['role_id']);
+                $this->user->permissions()->sync($user_permissions);
+
+                $this->dispatchBrowserEvent('hide-form');
+
+                $this->dispatchBrowserEvent('swal', [
+                    'title' => 'Utilisateur mis à jour avec succès.',
+                    'icon' => 'Succès',
+                    'iconColor' => 'green',
+                    'position' => 'center',
+                    'timer' => '1700',
+                ]);
+
+            } catch (\Throwable $th) {
+                return $th->getMessage();
             }
-
-            $this->user->update($validatedData);
-            $this->user->roles()->sync($this->state['role_id']);
-            $this->user->permissions()->sync($user_permissions);
-
-            $this->dispatchBrowserEvent('hide-form');
-
-            $this->dispatchBrowserEvent('swal', [
-                'title'         => 'User updated Successfully.',
-                'icon'          =>'success',
-                'iconColor'     => 'green',
-                'position'      => 'center',
-                'timer'         => '1700',
-            ]);
-
-        } catch (\Throwable $th) {
-            return $th->getMessage();
         }
-	}
+    }
 
     // Show Modal Form to Confirm User Removal
 
     public function confirmUserRemoval($userId)
-	{
-		$this->userIdBeingRemoved = $userId;
+    {
 
-		$this->dispatchBrowserEvent('show-delete-modal');
-	}
+        $this->userIdBeingRemoved = $userId;
+
+        $this->dispatchBrowserEvent('show-delete-modal');
+    }
 
     // Delete User
 
-	public function deleteUser()
-	{
-		$user = User::findOrFail($this->userIdBeingRemoved);
+    public function deleteUser()
+    { 
+        if (Auth::user()->hasPermission('users-delete')) {
 
-		$user->delete();
+            $user = User::findOrFail($this->userIdBeingRemoved);
+            if ($user->hasRole('superadmin')) {
+                $this->dispatchBrowserEvent('swal', [
+                    'title' => 'Impossible de supprimer cette utilistaeur',
+                    'icon' => 'Success',
+                    'iconColor' => 'green',
+                    'position' => 'center',
+                    'timer' => '1700',
+                ]);
+            } else {
+                $user->delete();
+                $this->dispatchBrowserEvent('hide-delete-modal');
 
-		$this->dispatchBrowserEvent('hide-delete-modal');
-
-        $this->dispatchBrowserEvent('swal', [
-            'title' => 'User Deleted Successfully.',
-            'icon'=>'success',
-            'iconColor' => 'green',
-            'position' => 'center',
-            'timer' => '1700',
-        ]);
-	}
+                $this->dispatchBrowserEvent('swal', [
+                    'title' => 'Utilisateur supprimé avec Succès.',
+                    'icon' => 'Success',
+                    'iconColor' => 'green',
+                    'position' => 'center',
+                    'timer' => '1700',
+                ]);
+            }
+        }
+    }
 
     // Sort By Column Name
 
@@ -390,11 +423,49 @@ class ListUsers extends Component
         $this->roleFilter = $roleFilter;
     }
 
+    // Render date to list-users Blade
+
+    public function render()
+    {
+        $userCount = User::count();
+        $roleUserCount = User::whereRelation('roles', 'name', 'user')->count();
+        $roleAdminCount = User::whereRelation('roles', 'name', 'admin')->count();
+        $roleSuperadminCount = User::whereRelation('roles', 'name', 'superadmin')->count();
+
+        $roles = Role::all();
+        $permissions = Permission::all();
+        $array_permissions = [];
+        foreach ($permissions as $permission) {
+            if (!array_key_exists($permission->groupe, $array_permissions)) {
+                $array_permissions[$permission->groupe] = [];
+            }
+            $array_permissions[$permission->groupe][] = $permission;
+        }
+
+        $users = $this->users;
+
+        return view('livewire.backend.admin.users.list-users', [
+            'users' => $users,
+            'roles' => $roles,
+            'array_permissions' => $array_permissions,
+            'permissions' => $permissions,
+            'userCount' => $userCount,
+            'roleUserCount' => $roleUserCount,
+            'roleAdminCount' => $roleAdminCount,
+            'roleSuperadminCount' => $roleSuperadminCount
+        ])->layout('layouts.admin');
+    }
+
+
+
+
+
+    // ----------------------------------------
     // Export Excel File
 
     public function exportExcel()
     {
-        return Excel::download(new UsersExport($this->searchTerm,$this->selectedRows), 'users.xlsx');
+        return Excel::download(new UsersExport($this->searchTerm, $this->selectedRows), 'users.xlsx');
     }
 
     // Show Import Excel Form
@@ -402,7 +473,7 @@ class ListUsers extends Component
     public function importExcelForm()
     {
         $this->reset();
-		$this->dispatchBrowserEvent('show-import-excel-modal');
+        $this->dispatchBrowserEvent('show-import-excel-modal');
     }
 
     public function importType($value)
@@ -451,8 +522,8 @@ class ListUsers extends Component
             // end method
 
             $this->dispatchBrowserEvent('swal', [
-                'title' => 'Users Added Successfully.',
-                'icon'=>'success',
+                'title' => 'Utilisateur ajouté avec Succès.',
+                'icon' => 'Success',
                 'iconColor' => 'green',
                 'position' => 'center',
                 'timer' => '1700',
@@ -464,8 +535,8 @@ class ListUsers extends Component
         } catch (\Exception $e) {
             //return $e->getMessage();
             $this->dispatchBrowserEvent('swal', [
-                'title' =>  'ملف الإكسل غير مطابق !!',
-                'icon'=>'error',
+                'title' => 'Le fichier excel ne correspond pas',
+                'icon' => 'error',
                 'iconColor' => 'red',
                 'position' => 'center',
                 'timer' => '1700',
@@ -480,41 +551,15 @@ class ListUsers extends Component
 
     public function exportPDF()
     {
-        return response()->streamDownload(function(){
+        return response()->streamDownload(function () {
             if ($this->selectedRows) {
                 $users = User::whereIn('id', $this->selectedRows)->orderBy('name', 'asc')->get();
             } else {
                 $users = $this->users;
             }
-
-            $pdf = PDF::loadView('livewire.backend.admin.users.pdf',['users' => $users]);
+            $pdf = \Mccarlosen\LaravelMpdf\LaravelMpdf::loadView('livewire.backend.admin.users.pdf', ['users' => $users]);
             return $pdf->stream('users');
 
-        },'users.pdf');
-    }
-
-    // Render date to list-users Blade
-
-    public function render()
-    {
-        $userCount= User::count();
-        $roleUserCount= User::whereRelation('roles', 'name', 'user')->count();
-        $roleAdminCount= User::whereRelation('roles', 'name', 'admin')->count();
-        $roleSuperadminCount= User::whereRelation('roles', 'name', 'superadmin')->count();
-
-        $roles = Role::all();
-        $permissions = Permission::all();
-
-        $users = $this->users;
-
-        return view('livewire.backend.admin.users.list-users',[
-            'users' => $users,
-            'roles' => $roles,
-            'permissions' => $permissions,
-            'userCount' => $userCount,
-            'roleUserCount' => $roleUserCount,
-            'roleAdminCount' => $roleAdminCount,
-            'roleSuperadminCount' => $roleSuperadminCount
-        ])->layout('layouts.admin');
+        }, 'users.pdf');
     }
 }
