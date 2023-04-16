@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id('id_service');
             $table->string('name', 100);
             $table->text('description')->nullable();
-            $table->decimal('cost_price');
-            $table->decimal('selling_price');
+            $table->decimal('cost_price', 9, 2);
+            $table->decimal('selling_price', 9, 2);
             $table->integer('duration_unit')->default(1);
             $table->integer('duration')->default(1);
             $table->boolean('active')->default('0');

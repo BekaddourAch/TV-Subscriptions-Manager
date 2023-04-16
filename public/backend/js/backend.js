@@ -15,7 +15,9 @@
     });
 
     window.addEventListener('show-delete-modal', function (event) {
+      console.log('cccccccccccccccccccc');
       $('#confirmationModal').modal('show');
+      console.log('fffffffffffffffffffffff');
     });
 
     window.addEventListener('hide-delete-modal', function (event) {

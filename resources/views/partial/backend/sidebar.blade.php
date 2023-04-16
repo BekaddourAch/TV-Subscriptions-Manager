@@ -22,31 +22,45 @@
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Tableau de bord</span></a>
     </li>
+    @if((Auth::user()->hasPermission('services-display')))
+        <!-- Divider -->
+        <hr class="sidebar-divider">
 
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Abonnements
+            </div>
+            <!-- Nav Item - Services -->
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.subscriptions') }}">
+                    <i class="fas fa-fw fa-tv"></i>
+                    <span>Abonnements</span></a>
+            </li>
+    @endif
 
     @if((Auth::user()->hasPermission('services-display')))
         <!-- Divider -->
         <hr class="sidebar-divider">
 
-        
+
             <!-- Heading -->
             <div class="sidebar-heading">
                 Services
-            </div> 
+            </div>
             <!-- Nav Item - Services -->
-        
+
             <li class="nav-item">
-                @if(Auth::user()->hasPermission('services-display'))
                 <a class="nav-link" href="{{ route('admin.services') }}">
                     <i class="fas fa-fw fa-tv"></i>
                     <span>Services</span></a>
-                    @endif    
-            </li> 
-    @endif    
+            </li>
+    @endif
 
     @if((Auth::user()->hasPermission('customers-display')))
         <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block"> 
+        <hr class="sidebar-divider d-none d-md-block">
         <div class="sidebar-heading">
             Clients
         </div>
@@ -55,10 +69,10 @@
             <a class="nav-link" href="{{ route('admin.customers') }}">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Clients</span></a>
-        </li> 
+        </li>
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
-    @endif    
+    @endif
 
     <!-- Divider -->
     {{-- <hr class="sidebar-divider"> --}}
@@ -66,7 +80,7 @@
     @if((Auth::user()->hasPermission('users-display')))
             <!-- Heading -->
             <div class="sidebar-heading">
-                Utilisateurs 
+                Utilisateurs
             </div>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
@@ -77,14 +91,14 @@
             </a>
             <div id="UsersUtilities" class="collapse" aria-labelledby="headingUtilities"
                 data-parent="#accordionSidebar">
-                <div class="py-2 bg-white rounded collapse-inner"> 
+                <div class="py-2 bg-white rounded collapse-inner">
                     <a class="collapse-item" href="{{ route('admin.users') }}">Utilisateurs</a>
                     <a class="collapse-item" href="{{ route('admin.roles') }}">Roles</a>
-                    <a class="collapse-item" href="{{ route('admin.permissions') }}">Permissions</a> 
+                    <a class="collapse-item" href="{{ route('admin.permissions') }}">Permissions</a>
                 </div>
             </div>
-        </li> 
-    @endif    
+        </li>
+    @endif
 
 
     <!-- Divider -->

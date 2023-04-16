@@ -114,12 +114,12 @@
                             <?php if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete'))): ?>
                                 <td class="align-middle" scope="col">
                                     <div class="custom-control custom-checkbox small">
-                                        <input type="checkbox" wire:model="selectedRows" value="<?php echo e($service->id); ?>" class="custom-control-input" id="<?php echo e($service->id); ?>">
-                                        <label class="custom-control-label" for="<?php echo e($service->id); ?>"></label>
+                                        <input type="checkbox" wire:model="selectedRows" value="<?php echo e($service->id_service); ?>" class="custom-control-input" id="<?php echo e($service->id_service); ?>">
+                                        <label class="custom-control-label" for="<?php echo e($service->id_service); ?>"></label>
                                     </div>
                                 </td>
                             <?php endif; ?>
-                            <td class="align-middle" scope="row"><?php echo e($service->id); ?></td>
+                            <td class="align-middle" scope="row"><?php echo e($service->id_service); ?></td>
                             <td class="align-middle"><?php echo e($service->name); ?></td>
                             <td class="align-middle"><?php echo e($service->description); ?></td>
                             <td class="align-middle"><?php echo e($service->cost_price); ?></td>
@@ -145,12 +145,12 @@
                                         <?php endif; ?>
                                         
                                         <?php if(Auth::user()->hasPermission('services-delete')): ?>
-                                            <a class="btn btn-danger" href="#" wire:click.prevent="confirmServiceRemoval(<?php echo e($service->id); ?>)">
+                                            <a class="btn btn-danger" href="#" wire:click.prevent="confirmServiceRemoval(<?php echo e($service->id_service); ?>)">
                                                 <i class="fa fa-trash bg-danger"></i>
                                             </a>
                                         <?php endif; ?>
                                     </div>
-                                    <form action="" method="post" id="delete-service-<?php echo e($service->id); ?>" class="d-none">
+                                    <form action="" method="post" id="delete-service-<?php echo e($service->id_service); ?>" class="d-none">
                                         <?php echo csrf_field(); ?>
                                         <?php echo method_field('DELETE'); ?>
                                     </form>
@@ -277,7 +277,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" id="cost_price"
-                                           aria-describedby="nameHelp" >
+                                           aria-describedby="nameHelp" step="0.01">
                                     <?php $__errorArgs = ['cost_price'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -308,7 +308,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" id="selling_price"
-                                           aria-describedby="nameHelp" >
+                                           aria-describedby="nameHelp"  step="0.01">
                                     <?php $__errorArgs = ['selling_price'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :

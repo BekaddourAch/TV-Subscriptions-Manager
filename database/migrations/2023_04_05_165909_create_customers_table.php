@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id('id_customer');
             $table->string('firstname', 100);
             $table->string('lastname', 100);
-            $table->integer('phone1');
-            $table->integer('phone2')->nullable();
+            $table->string('phone1',14);
+            $table->string('phone2',14)->nullable();
             $table->string('email')->nullable();
             $table->string('address')->nullable();
             $table->string('state')->nullable();

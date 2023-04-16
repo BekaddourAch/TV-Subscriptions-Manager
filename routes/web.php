@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Livewire\Backend\Admin\Customer\ListCustomers;
+use App\Http\Livewire\Backend\Admin\Subscriptions\ListSubsctiptions;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\BackendController;
 use App\Http\Livewire\Backend\Admin\Dashboard\Dashboard;
@@ -44,6 +45,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
         Route::get('customer', ListCustomers::class)->name('customers');
         Route::get('services', ListServices::class)->name('services');
+        Route::get('subscriptions', ListSubsctiptions::class)->name('subscriptions');
 
         // Route::get('/wow', function () {
         //     // This route can be accessed only if the user has the "some-permission" permission.
