@@ -122,12 +122,12 @@
                             @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
                                 <td class="align-middle" scope="col">
                                     <div class="custom-control custom-checkbox small">
-                                        <input type="checkbox" wire:model="selectedRows" value="{{ $service->id }}" class="custom-control-input" id="{{ $service->id }}">
-                                        <label class="custom-control-label" for="{{ $service->id }}"></label>
+                                        <input type="checkbox" wire:model="selectedRows" value="{{ $service->id_service }}" class="custom-control-input" id="{{ $service->id_service }}">
+                                        <label class="custom-control-label" for="{{ $service->id_service }}"></label>
                                     </div>
                                 </td>
                             @endif
-                            <td class="align-middle" scope="row">{{ $service->id }}</td>
+                            <td class="align-middle" scope="row">{{ $service->id_service }}</td>
                             <td class="align-middle">{{ $service->name }}</td>
                             <td class="align-middle">{{ $service->description }}</td>
                             <td class="align-middle">{{ $service->cost_price }}</td>
@@ -153,12 +153,12 @@
                                         @endif
                                         
                                         @if(Auth::user()->hasPermission('services-delete'))
-                                            <a class="btn btn-danger" href="#" wire:click.prevent="confirmServiceRemoval({{ $service->id }})">
+                                            <a class="btn btn-danger" href="#" wire:click.prevent="confirmServiceRemoval({{ $service->id_service }})">
                                                 <i class="fa fa-trash bg-danger"></i>
                                             </a>
                                         @endif
                                     </div>
-                                    <form action="" method="post" id="delete-service-{{ $service->id }}" class="d-none">
+                                    <form action="" method="post" id="delete-service-{{ $service->id_service }}" class="d-none">
                                         @csrf
                                         @method('DELETE')
                                     </form>
@@ -247,7 +247,7 @@
                                     <label for="cost_price">Prix d'Achat</label>
                                     <input type="number" min="1" tabindex="1" wire:model.defer="data.cost_price"
                                            class="form-control @error('cost_price') is-invalid @enderror" id="cost_price"
-                                           aria-describedby="nameHelp" >
+                                           aria-describedby="nameHelp" step="0.01">
                                     @error('cost_price')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -263,7 +263,7 @@
                                     <label for="selling_price">Prix de Vente</label>
                                     <input type="number" min="1" tabindex="1" wire:model.defer="data.selling_price"
                                            class="form-control @error('selling_price') is-invalid @enderror" id="selling_price"
-                                           aria-describedby="nameHelp" >
+                                           aria-describedby="nameHelp"  step="0.01">
                                     @error('selling_price')
                                     <div class="invalid-feedback">
                                         {{ $message }}

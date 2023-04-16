@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
+    protected $primaryKey = 'id_service';
     use HasFactory;
     protected $fillable = [
         'name',
@@ -34,7 +35,6 @@ class Service extends Model
                 return $this->duration." ".$this->getDurationUnits()[$this->duration_unit]."s";
             }
         }
-        return $this->duration." ".$this->getDurationUnits()[$this->duration_unit];
-
+        return $this->duration." ".$this->getDurationUnits()[$this->duration_unit]; 
     }
 }

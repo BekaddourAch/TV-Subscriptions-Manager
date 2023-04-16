@@ -15,26 +15,27 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id('id_subscription');
-            $table->bigInteger("id_service")->unsigned(); 
-            $table->bigInteger("id_customer")->unsigned(); 
-            $table->bigInteger("id_user")->unsigned();  
-            $table->decimal('cost_price', 6, 2);
+            $table->bigInteger("id_service")->unsigned()->nullable(); 
+            $table->bigInteger("id_customer")->unsigned()->nullable(); 
+            $table->bigInteger("id_user")->unsigned()->nullable();  
+            $table->decimal('cost_price', 9, 2);
             $table->integer('quantity');
-            $table->decimal('selling_price', 6, 2);
+            $table->decimal('selling_price', 9, 2);
             $table->date('begin_date');
             $table->date('end_date');
-            $table->decimal('total', 6, 2);  
+            $table->decimal('total', 9, 2);  
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
             
         Schema::table('subscriptions', function (Blueprint $table) {
-            $table->foreign('id_service')->references('id_service')->on('services');
+            $table->foreign('id_service')->references('id_service')->on('services')->onDelete('set null');
         });
         Schema::table('subscriptions', function (Blueprint $table) {
-            $table->foreign('id_customer')->references('id_customer')->on('customers');
+            $table->foreign('id_customer')->references('id_customer')->on('customers')->onDelete('set null');
         });
         Schema::table('subscriptions', function (Blueprint $table) {
-            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_user')->references('id')->on('users')->onDelete('set null');;
         });
     }
 
