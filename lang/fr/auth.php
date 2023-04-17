@@ -14,5 +14,5 @@
 return [
     'failed'   => "Ces informations d'identification ne correspondent pas aux données que nous avons enregistrées.",
     'password' => 'Le mot de passe utilisé est incorrect.',
-    'throttle' => "Trop de tentatives de connexion. Veuillez réessayer après : seconds",
+    'throttle' => "Trop de tentatives de connexion. Veuillez réessayer après quelques secondes",
 ];

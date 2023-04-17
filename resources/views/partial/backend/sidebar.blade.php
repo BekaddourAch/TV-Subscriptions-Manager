@@ -35,7 +35,8 @@
 
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.subscriptions') }}">
-                    <i class="fas fa-fw fa-tv"></i>
+                    <i class="fas fa-fw fa-handshake"></i>
+                    {{-- <i class="fas fa-handshake-alt"></i> --}}
                     <span>Abonnements</span></a>
             </li>
     @endif

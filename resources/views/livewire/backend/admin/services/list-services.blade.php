@@ -102,13 +102,48 @@
                             </th>
                         @endif
                         <th class="align-middle" scope="col">#</th>
-                        <th class="text-left align-middle "> Nom </th>
-                        <th class="text-left align-middle  d-none d-md-table-cell"> Description </th>
-                        <th class="align-middle  d-none d-md-table-cell"> Prix d'Achat </th>
-                        <th class="align-middle  d-none d-md-table-cell"> Prix de Vente </th>
-                        <th class="align-middle"> Durée </th>
-                        <th class="align-middle"> Actif </th>
-                        <th class="text-left align-middle  d-none d-md-table-cell"> Remarques </th>
+                        <th class="align-middle"> Nom
+                            <span wire:click="sortBy('services.name')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            </span>
+                        </th>
+                        <th class="align-middle"> Description
+                            <span wire:click="sortBy('services.description')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.description' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.description' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            </span>
+                        </th>
+                        <th class="align-middle"> Prix d'Achat
+                            <span wire:click="sortBy('services.cost_price')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.cost_price' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.cost_price' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            </span>
+                        </th>
+                        <th class="align-middle"> Prix de Vente
+                            <span wire:click="sortBy('services.selling_price')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.selling_price' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.selling_price' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            </span>
+                        </th>
+                        <th class="align-middle"> Durée
+                            <span wire:click="sortBy('services.duration')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.duration' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.duration' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            </span>
+                        </th>
+                        <th class="align-middle"> Actif
+                            <span wire:click="sortBy('services.active')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.active' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.active' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            </span>
+                        </th>
+                        <th class="align-middle"> Remarques
+                            <span wire:click="sortBy('services.notes')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.notes' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.notes' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            </span>
+                        </th>
 
                         @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
                             <th class="align-middle" style="width: 10%" colspan="2">Actions  </th>

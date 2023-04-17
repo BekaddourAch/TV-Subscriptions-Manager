@@ -125,16 +125,62 @@
                             @endif
 
                             <th class="align-middle" scope="col">#</th>
-                            <th class="text-left">Nom </th>
-                            <th class="text-left"> Prénom </th>
-                            <th class="align-middle d-none d-md-table-cell"> Téléphone1 </th>
-                            <th class="align-middle"> Téléphone2 </th>
-                            <th class="align-middle "> Email </th>
-                            <th class="text-left d-none d-md-table-cell"> Adresse </th>
-                            <th class="text-left d-none d-md-table-cell"> Wilaya </th>
-                            <th class="text-left d-none d-md-table-cell"> Commune </th>
-                            <th class="align-middle"> Actif </th>
-                            <th class="text-left d-none d-md-table-cell"> Remarques </th>
+
+                            <th class="align-middle">Nom
+                                <span wire:click="sortBy('customers.firstname')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.firstname' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.firstname' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Prénom
+                                <span wire:click="sortBy('customers.lastname')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.lastname' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.lastname' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Téléphone 1
+                                <span wire:click="sortBy('customers.phone1')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.phone1' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.phone1' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Téléphone 2
+                                <span wire:click="sortBy('customers.phone2')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.phone2' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.phone2' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Email
+                                <span wire:click="sortBy('customers.email')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.email' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.email' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Adresse
+                                <span wire:click="sortBy('customers.address')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.address' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.address' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Wilaya
+                                <span wire:click="sortBy('customers.state')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.state' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.state' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Commune
+                                <span wire:click="sortBy('customers.city')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.city' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.city' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            </span>
+                            </th>
+                            <th class="align-middle"> Actif
+                                <span wire:click="sortBy('customers.notes')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.notes' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.notes' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                             <th class="align-middle"> Remarques </th>
                             @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
                                 <th class="align-middle" style="width: 10%" colspan="2">Actions
                                 </th>
@@ -165,6 +211,7 @@
                                 <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->state }}</td>
                                 <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->city }}</td>
                                 <td class="align-middle">
+
                                     @if ($customer->active ==1)
                                     <span class="font-weight-bold badge text-white bg-success">Oui</span>
                                     @else
