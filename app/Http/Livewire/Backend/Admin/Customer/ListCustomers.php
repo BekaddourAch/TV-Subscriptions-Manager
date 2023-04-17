@@ -12,16 +12,16 @@ use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
-use PhpOffice\PhpSpreadsheet\Writer\Pdf;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf; 
 
 class ListCustomers extends Component
-{
-    // public $customers, $name, $email, $phone_number, $customer_id;
+{ 
+    // public $customers, $name, $email, $phone_number, $customer_id; 
 
     use WithPagination;
 
     public $sortColumnName = 'id_customer';
-
+  
 	public $selectPageRows = false;
 
 
@@ -30,7 +30,7 @@ class ListCustomers extends Component
     public $importTypevalue = 'addNew';
     public $selectedRows = [];
     public $sortDirection = 'asc';
-    protected $paginationTheme = 'bootstrap';
+    protected $paginationTheme = 'bootstrap'; 
 
     public $data = [];
 
@@ -42,14 +42,14 @@ class ListCustomers extends Component
 
     protected $listeners = ['deleteConfirmed' => 'deleteCustomers'];
 
-
+    
     protected $CustomerCount = Null;
     protected $roleCustomerCount = Null;
     protected $roleAdminCount = Null;
     protected $roleSuperadminCount = Null;
 
-
-    public $searchTerm = null;
+    
+    public $searchTerm = null; 
     protected $queryString = ['searchTerm' => ['except' => '']];
 
     public function updatedSelectPageRows($value)
@@ -114,7 +114,7 @@ class ListCustomers extends Component
 	}
     public function deleteCustomers()
     {
-
+         
         if (Auth::user()->hasPermission('customers-delete')) {
         // delete selected users from database
 		Customer::whereIn('id_customer', $this->selectedRows)->delete();
@@ -132,34 +132,34 @@ class ListCustomers extends Component
 
     public function addNewCustomer()
     {
-
+        
         if (Auth::user()->hasPermission('customers-create')) {
-              $this->reset();
-        $this->showEditModal = false;
+              $this->reset(); 
+        $this->showEditModal = false; 
         $this->dispatchBrowserEvent('show-form');
         }
-
+      
     }
 
     public function createCustomer()
-    {
-
+    { 
+        
         if (Auth::user()->hasPermission('customers-create')) {
-
-        $validatedData = Validator::make($this->data, [
+        
+        $validatedData = Validator::make($this->data, [ 
 			'firstname' => 'required',
 			'lastname' => 'required',
 			'phone1' => 'required|regex:/[0-9]{10}/',
-            'phone2' => '',
-            'email' => 'email',
-            'address' => '',
-            'state' => '',
+            'phone2' => '', 
+            'email' => 'email', 
+            'address' => '', 
+            'state' => '', 
             'city' => '',
-            'active' => '',
-            'notes' => '',
+            'active' => '', 
+            'notes' => '', 
 		])->validate();
 
-
+        
 
         Customer::create($validatedData);
 
@@ -189,7 +189,7 @@ class ListCustomers extends Component
 		$this->dispatchBrowserEvent('show-form');
         }
     }
-
+    
     public function updateCustomer()
 	{
         if (Auth::user()->hasPermission('customers-update')) {
@@ -198,13 +198,13 @@ class ListCustomers extends Component
                 'firstname' => 'required',
                 'lastname' => 'required',
                 'phone1' => 'required',
-                'phone2' => '',
-                'email' => '',
-                'address' => '',
-                'state' => '',
+                'phone2' => '', 
+                'email' => '', 
+                'address' => '', 
+                'state' => '', 
                 'city' => '',
-                'active' => '',
-                'notes' => '',
+                'active' => '', 
+                'notes' => '', 
             ])->validate();
 
 
@@ -260,18 +260,18 @@ class ListCustomers extends Component
     }
     public function getCustomersProperty()
 	{
-
+		 
             $customers = Customer::query()
             ->where('firstname', 'like', '%'.$this->searchTerm.'%')
             ->orWhere('lastname', 'like', '%'.$this->searchTerm.'%')
             ->orWhere('phone1', 'like', '%'.$this->searchTerm.'%')
             ->orWhere('email', 'like', '%'.$this->searchTerm.'%')
             ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(10)->onEachSide(0);
-
+            ->paginate(15);
+        
         return $customers;
 	}
-
+    
     // Export Excel File
 
     public function exportExcel()
@@ -312,12 +312,12 @@ class ListCustomers extends Component
                         'firstname' => $customer['firstname'],
                         'lastname' => $customer['lastname'],
                         'phone1' => $customer['phone1'],
-                        'phone2' => $customer['phone2'],
+                        'phone2' => $customer['phone2'], 
                         'email' => $customer['email'],
                         'address' => $customer['address'],
                         'state' => $customer['state'],
-                        'active' => $customer['active'],
-                        'notes' => $customer['notes'],
+                        'active' => $customer['active'], 
+                        'notes' => $customer['notes'], 
                     ]);
                 }
             }
@@ -380,17 +380,17 @@ class ListCustomers extends Component
     }
 
     public function render()
-    {
+    { 
         $customersCount= Customer::count();
-       //  $customers = Customer::paginate(10);
+       //  $customers = Customer::paginate(15); 
         $customers = $this->customers;
         return view('livewire.backend.admin.customer.list-customers',[
             'customers' => $customers,
             'customersCount' => $customersCount,
             ])->layout('layouts.admin');
-    }
+    } 
 
-
+        
     // Sort By Column Name
 
     public function sortBy($columnName)

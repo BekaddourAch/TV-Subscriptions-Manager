@@ -256,7 +256,7 @@ class ListServices extends Component
             ->where('name', 'like', '%'.$this->searchTerm.'%')
             ->orWhere('description', 'like', '%'.$this->searchTerm.'%')
             ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(10)->onEachSide(0);
+            ->paginate(15);
 
         return $services;
     }
@@ -364,7 +364,7 @@ class ListServices extends Component
         ])->layout('layouts.admin');
     }
 
-
+        
     // Sort By Column Name
 
     public function sortBy($columnName)
