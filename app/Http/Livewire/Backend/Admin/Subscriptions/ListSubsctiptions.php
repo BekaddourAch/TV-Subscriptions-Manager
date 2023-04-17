@@ -5,7 +5,7 @@ use App\Models\Customer;
 use App\Models\Service;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator; 
+use Illuminate\Support\Facades\Validator;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,7 +17,7 @@ class ListSubsctiptions extends Component
     use WithFileUploads;
 
     use WithPagination;
-    
+
     public $sortColumnName = 'id_subscription';
 
     public $selectPageRows = false;
@@ -142,7 +142,7 @@ class ListSubsctiptions extends Component
     public function createSubscription()
     {
         if (Auth::user()->hasPermission('subscription-create')) {
-       
+
         $validatedData = Validator::make($this->data, [
             'id_customer' => 'required',
             'id_service' => 'required',
@@ -157,7 +157,7 @@ class ListSubsctiptions extends Component
 
 
         $validatedData['id_user']=auth()->id();
-        
+
         $validatedData['total']=$validatedData['selling_price']*$validatedData['quantity'];
 
         Subscription::create($validatedData);
@@ -207,9 +207,9 @@ class ListSubsctiptions extends Component
 
 
             $validatedData['id_user']=auth()->id();
-        
+
             $validatedData['total']=$validatedData['selling_price']*$validatedData['quantity'];
-    
+
             $this->subscription->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
@@ -275,9 +275,9 @@ class ListSubsctiptions extends Component
             // ->where('name', 'like', '%'.$this->searchTerm.'%')
             // ->orWhere('description', 'like', '%'.$this->searchTerm.'%')
             ->orderByRaw($this->sortColumnName .' '.$this->sortDirection)
-            
-            ->paginate(15);
-        return $subscriptions; 
+
+            ->paginate(10)->onEachSide(0);
+        return $subscriptions;
     }
 
     // Export Excel File
@@ -375,7 +375,7 @@ class ListSubsctiptions extends Component
     public function render()
     {
         $subscriptionsCount= Subscription::count();
-        $subscriptions = $this->subscriptions; 
+        $subscriptions = $this->subscriptions;
         return view('livewire.backend.admin.subscriptions.list-subsctiptions',[
             'subscriptions' => $subscriptions,
             'subscriptionsCount' => $subscriptionsCount,
@@ -386,7 +386,7 @@ class ListSubsctiptions extends Component
     }
 
 
-    
+
     // Sort By Column Name
 
     public function sortBy($columnName)
