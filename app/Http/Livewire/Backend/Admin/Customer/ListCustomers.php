@@ -389,4 +389,26 @@ class ListCustomers extends Component
             'customersCount' => $customersCount,
             ])->layout('layouts.admin');
     } 
+
+        
+    // Sort By Column Name
+
+    public function sortBy($columnName)
+    {
+        if ($this->sortColumnName === $columnName) {
+            $this->sortDirection = $this->swapSortDirection();
+        } else {
+            $this->sortDirection = 'asc';
+        }
+
+        $this->sortColumnName = $columnName;
+
+    }
+
+    // Swap Sort Direction
+
+    public function swapSortDirection()
+    {
+        return $this->sortDirection === 'asc' ? 'desc' : 'asc';
+    }
 }
