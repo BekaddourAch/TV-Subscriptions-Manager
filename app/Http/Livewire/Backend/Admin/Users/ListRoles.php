@@ -156,14 +156,14 @@ class ListRoles extends Component
 
     public function render()
     {
-         $roles = Role::paginate(10);
+         $roles = Role::paginate(15);
     //     // $permissions = Permission::all();
-    //     $permissions = Permission::select('permissions.*')
+    //     $permissions = Permission::select('permissions.*') 
     // ->groupBy('permissions.groupe')
     // ->get()
     // ->toArray();
     // echo'<pre>';
-    // var_dump($array_permissions);
+    // var_dump($array_permissions); 
     // echo'</pre>';
     $permissions = Permission::all();
         $array_permissions=[];

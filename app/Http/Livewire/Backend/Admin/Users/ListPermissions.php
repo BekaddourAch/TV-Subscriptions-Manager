@@ -82,7 +82,7 @@ class ListPermissions extends Component
 
     public function render()
     {
-        $permissions = Permission::paginate(10);
+        $permissions = Permission::paginate(15);
 
         // var_dump(count($permissions));
         return view('livewire.backend.admin.users.list-permissions',[
