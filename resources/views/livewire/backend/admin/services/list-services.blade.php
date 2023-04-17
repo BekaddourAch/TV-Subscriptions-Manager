@@ -102,44 +102,44 @@
                             </th>
                         @endif
                         <th class="align-middle" scope="col">#</th>
-                        <th class="align-middle"> Nom
-                            <span wire:click="sortBy('services.name')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                        <th wire:click="sortBy('services.name')" style="cursor: pointer;" class="align-middle text-left whitespace-no-wrap"> Nom
+                            <span  class="text-sm" style="cursor: pointer;font-size:10px;">
                                 <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
                         </th>
-                        <th class="align-middle"> Description
-                            <span wire:click="sortBy('services.description')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                        <th  wire:click="sortBy('services.description')" style="cursor: pointer;" class="align-middle text-left d-none d-md-table-cell whitespace-no-wrap"> Description
+                            <span class="text-sm" style="cursor: pointer;font-size:10px;">
                                 <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.description' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.description' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
                         </th>
-                        <th class="align-middle"> Prix d'Achat
-                            <span wire:click="sortBy('services.cost_price')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                        <th  wire:click="sortBy('services.cost_price')" style="cursor: pointer;" class="align-middle d-none d-md-table-cell whitespace-no-wrap"> Prix d'Achat
+                            <span class="text-sm " style="cursor: pointer;font-size:10px;">
                                 <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.cost_price' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.cost_price' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
                         </th>
-                        <th class="align-middle"> Prix de Vente
-                            <span wire:click="sortBy('services.selling_price')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                        <th  wire:click="sortBy('services.selling_price')" style="cursor: pointer;" class="align-middle d-none d-md-table-cell whitespace-no-wrap"> Prix de Vente
+                            <span class="text-sm " style="cursor: pointer;font-size:10px;">
                                 <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.selling_price' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.selling_price' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
                         </th>
-                        <th class="align-middle"> Durée
-                            <span wire:click="sortBy('services.duration')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                        <th  wire:click="sortBy('services.duration')" style="cursor: pointer;" class="align-middle text-left whitespace-no-wrap"> Durée
+                            <span class="text-sm " style="cursor: pointer;font-size:10px;">
                                 <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.duration' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.duration' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
                         </th>
-                        <th class="align-middle"> Actif
-                            <span wire:click="sortBy('services.active')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                        <th  wire:click="sortBy('services.active')" style="cursor: pointer;" class="align-middle whitespace-no-wrap"> Actif
+                            <span class="text-sm " style="cursor: pointer;font-size:10px;">
                                 <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.active' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.active' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
                         </th>
-                        <th class="align-middle"> Remarques
-                            <span wire:click="sortBy('services.notes')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                        <th  wire:click="sortBy('services.notes')" style="cursor: pointer;" class="align-middle whitespace-no-wrap text-left  d-none d-xl-table-cell"> Remarques
+                            <span class="text-sm " style="cursor: pointer;font-size:10px;">
                                 <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.notes' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.notes' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
@@ -165,9 +165,9 @@
                             <td class="align-middle" scope="row">#{{ $service->id_service }}</td>
                             <td class="align-middle text-left">{{ $service->name }}</td>
                             <td class="align-middle text-left d-none d-md-table-cell">{{ $service->description }}</td>
-                            <td class="align-middle d-none d-md-table-cell">{{ formatPrice($service->cost_price) }}</td>
-                            <td class="align-middle d-none d-md-table-cell">{{ formatPrice($service->selling_price) }}</td>
-                            <td class="align-middle">{{ $service->getDurationWithUnit() }}</td>
+                            <td class="align-middle d-none d-md-table-cell whitespace-no-wrap">{{ formatPrice($service->cost_price) }}</td>
+                            <td class="align-middle d-none d-md-table-cell whitespace-no-wrap">{{ formatPrice($service->selling_price) }}</td>
+                            <td class="align-middle text-left whitespace-no-wrap">{{ $service->getDurationWithUnit() }}</td>
                             <td class="align-middle">
                                 @if ($service->active ==1)
                                     <span class="font-weight-bold badge text-white bg-success">Oui</span>
@@ -175,7 +175,7 @@
                                     <span class="font-weight-bold badge text-white bg-secondary">Non</span>
                                 @endif
                             </td>
-                            <td class="align-middle text-left d-none d-md-table-cell">{{ $service->notes }}</td>
+                            <td class="align-middle text-left d-none d-xl-table-cell">{{ $service->notes }}</td>
 
                             @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
                                 <td class="align-middle">
