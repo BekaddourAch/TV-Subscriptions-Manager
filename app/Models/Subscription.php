@@ -37,7 +37,7 @@ class Subscription extends Model
         return $this->belongsTo(User::class,'id_user');
     }
 
-    public static function getSubscriptionsWithData($beginDate = null, $endDate = null, $idUser = 0)
+    public static function getSubscriptionsWithData($beginDate = null, $endDate = null, $idUser = 0,$idCustomer= 0)
     {
         $query = $regions = DB::table('subscriptions')
             ->join('customers', 'customers.id_customer', '=', 'subscriptions.id_customer')
@@ -50,9 +50,12 @@ class Subscription extends Model
             $query->whereRaw ("subscriptions.end_date >= '".$beginDate."'");
             $query->whereRaw ("subscriptions.end_date <= '".$endDate."'");
         }
-        $query->whereRaw ("DATEDIFF(end_date, NOW()) < 30 && DATEDIFF(end_date, NOW())>0");
+        if($idCustomer>0){
+            $query->where("subscriptions.id_customer","=",$idCustomer);
+        }else{
+            $query->whereRaw ("DATEDIFF(end_date, NOW()) < 30 && DATEDIFF(end_date, NOW())>0");
+        }
         $result= $query->orderByRaw('DATEDIFF(end_date, NOW()) ASC')->get();
-
         $subs = $result->map(function ($item) {
             return (array) $item;
         })->toArray();

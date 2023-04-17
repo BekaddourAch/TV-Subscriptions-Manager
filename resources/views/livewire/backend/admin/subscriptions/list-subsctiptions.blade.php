@@ -107,13 +107,13 @@
                             @endif
                             <th class="align-middle" scope="col">#</th>
 
-                            <th class="align-middle"> Service
+                            <th class="align-middle text-left"> Service
                                 <span wire:click="sortBy('services.name')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Client
+                            <th class="align-middle text-left"> Client
                                 <span wire:click="sortBy('concat(customers.firstname ,\' \', customers.lastname)')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === "concat(customers.firstname ,' ', customers.lastname)" && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === "concat(customers.firstname ,' ', customers.lastname)" && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
@@ -143,12 +143,6 @@
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.end_date' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Remarques
-                                <span wire:click="sortBy('subscriptions.notes')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.notes' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.notes' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                </span>
-                            </th>
 
                             @if (Auth::user()->hasPermission('subscription-update') || Auth::user()->hasPermission('subscription-delete'))
                                 <th class="align-middle" style="width: 10%" colspan="2">Actions </th>
@@ -173,7 +167,7 @@
                                 <td class="align-middle" scope="row">{{ $subscription->id_subscription }}</td>
                                 <td class="align-middle text-left">{{ $subscription->Service->name }}</td>
                                 <td class="align-middle text-left">
-                                    {{ $subscription->Customer->firstname . ' ' . $subscription->Customer->lastname }}
+                                    <a  class="text-primary" href="{{route("admin.customer-details",$subscription->id_customer)}}">{{ $subscription->Customer->firstname . ' ' . $subscription->Customer->lastname }}</a>
                                 </td>
                                 <td class="align-middle d-none d-md-table-cell">{{ $subscription->User->name }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription->total) }}</td>

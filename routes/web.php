@@ -1,5 +1,5 @@
 <?php
-
+use \App\Http\Livewire\Backend\Admin\Customer\CustomerDetails;
 use App\Http\Livewire\Backend\Admin\Customer\ListCustomers;
 use App\Http\Livewire\Backend\Admin\Subscriptions\ListSubsctiptions;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +44,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('permissions', ListPermissions::class)->name('permissions');
 
         Route::get('customer', ListCustomers::class)->name('customers');
+        Route::get('customer/{id}', CustomerDetails::class)->name('customer-details');
         Route::get('services', ListServices::class)->name('services');
         Route::get('subscriptions', ListSubsctiptions::class)->name('subscriptions');
 
