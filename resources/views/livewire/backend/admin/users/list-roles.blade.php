@@ -8,10 +8,10 @@
     <div class="shadow card">
         <div class="py-3 card-header">
             <ol class="m-0 breadcrumb float-sm-left font-weight-bold text-primary">
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Page Principale</a></li>
                 <li class="breadcrumb-item active">Roles</li>
             </ol>
-            
+
             @if(Auth::user()->hasPermission('users-create'))
             <div class="mt-2 d-flex justify-content-end">
                 <button wire:click.prevent='addNewRole' class="ml-1 btn btn-sm btn-primary">
@@ -27,7 +27,7 @@
         <div class="p-3 card-body">
             <div class="table-responsive">
                 <table class="table">
-                    <thead class="text-white bg-gradient-secondary">
+                    <thead class="text-white  bg-primary">
                         <tr class="text-center">
                             <th class="align-middle" scope="col">#</th>
                             <th class="align-middle">
@@ -36,13 +36,13 @@
                             <th class="align-middle">
                                 Dispaly Name
                             </th>
-                            <th class="align-middle">
+                            <th class="align-middle d-none d-md-table-cell">
                                 Description
                             </th>
-                            <th class="align-middle">
+                            <th class="align-middle d-none d-md-table-cell">
                                 Permissions
                             </th>
-                            
+
                             @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
                                 <th class="align-middle" style="width: 10px" colspan="2">Actions</th>
                             @endif
@@ -50,15 +50,15 @@
                     </thead>
                     <tbody>
                         @forelse($roles as $role)
-                        
+
                         @if($role->id!=1)
                         <tr class="text-center">
                             <td class="align-middle" scope="row">{{ $loop->iteration }}</td>
                             <td class="align-middle">{{ $role->name }}</td>
                             <td class="align-middle">{{ $role->display_name }}</td>
-                            <td class="align-middle">{{ $role->description }}</td>
-                            <td class="align-middle">{{ $role->permissions()->count() }}</td>
-                            
+                            <td class="align-middle d-none d-md-table-cell">{{ $role->description }}</td>
+                            <td class="align-middle d-none d-md-table-cell">{{ $role->permissions()->count() }}</td>
+
                             @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
                             <td class="align-middle">
                                 <div class="btn-group btn-group-sm">
@@ -168,17 +168,17 @@
                                     <h4 class="text-center">Permissions</h4>
                                 </div>
                                 <div class="card-body">
-                                    
-                                            
+
+
     {{-- // echo'<pre>';
-        // var_dump($array_permissions); 
+        // var_dump($array_permissions);
         // echo'</pre>'; --}}
                                             @foreach ($array_permissions as $index => $permissions)
                                             <div class="sce" style="margin:1 0;padding:2 0">
-                                                
+
                                             <h6 class="m-0 font-weight-bold text-primary">{{ $index }}</h6> <br>
-                                            <div class="cra" style="display:flex;"> 
-                                                    
+                                            <div class="cra" style="display:flex;">
+
                                                     @foreach ($permissions as $permission)
                                                     <div class="trs" style="margin">
                                                         <div class="form-group">
@@ -196,11 +196,11 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    @endforeach 
-                                            </div> 
-                                            <hr> 
+                                                    @endforeach
                                             </div>
-                                            @endforeach 
+                                            <hr>
+                                            </div>
+                                            @endforeach
                                 </div>
                             </div>
                             {{-- @endforeach --}}

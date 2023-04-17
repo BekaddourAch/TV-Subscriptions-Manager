@@ -1,7 +1,7 @@
 <div>
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+        <h1 class="h3 mb-0 text-gray-800">Statistiques</h1>
     </div>
 
     <div class="row mb-5">
@@ -210,6 +210,90 @@
 
         </div>
 
+    </div>
+
+    <div class="shadow card" >
+        <div class="py-3 card-header">
+            <ol class="m-0 breadcrumb float-sm-left font-weight-bold text-primary">
+                <li class="breadcrumb-item"><a href="{{ route('admin.subscriptions') }}">Les Abonnements</a></li>
+            </ol>
+            <div class="mt-2 d-flex justify-content-end">
+
+            </div>
+        </div>
+        <div class="flex-wrap d-flex justify-content-between">
+            <div class="pt-3 my-2 ml-3 ml-md-3 my-md-0 mw-80 navbar-search">
+                <div class="input-group">
+                    <input wire:model="searchTerm" type="text" class="border-0 form-control bg-light small"
+                           placeholder="Rechercher..." aria-label="Search" aria-describedby="basic-addon2"
+                           spellcheck="false" data-ms-editor="true">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary btn-sm" type="button">
+                            <i class="fas fa-search fa-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="p-3 card-body">
+            <div class="table-responsive" >
+                <table class="table" >
+                    <thead class="text-white bg-primary">
+                    <tr class="text-center">
+
+                        <th class="align-middle" scope="col">#</th>
+                        <th class="text-left align-middle "> Service </th>
+                        <th class="text-left align-middle "> Client </th>
+                        <th class="align-middle d-none d-md-table-cell"> Prix d'Achat </th>
+                        <th class="align-middle d-none d-md-table-cell"> Quantité </th>
+                        <th class="align-middle d-none d-md-table-cell"> Prix de Vente </th>
+                        <th class="align-middle d-none d-md-table-cell"> Total </th>
+                        <th class="align-middle d-none d-md-table-cell"> Date Début </th>
+                        <th class="align-middle d-none d-md-table-cell"> Date Fin </th>
+                        <th class="align-middle"> A Expirer dans (jours) </th>
+
+                    </tr>
+                    </thead>
+                    <tbody >
+                    @forelse($subscriptionsPerDate as $index => $subscription)
+                        <tr class="text-center">
+
+                            <td class="align-middle" scope="row">#{{ $subscription["id_subscription"] }}</td>
+                            <td class="align-middle text-left">{{ $subscription["service_name"] }}</td>
+                            <td class="align-middle text-left">
+                                {{ $subscription["firstname"] . ' ' . $subscription["lastname"] }}
+                            </td>
+                            <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription["cost_price"]) }}</td>
+                            <td class="align-middle d-none d-md-table-cell">{{ $subscription["quantity"] }}</td>
+                            <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription["selling_price"]) }}</td>
+                            <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription["total"]) }}</td>
+                            <td class="align-middle d-none d-md-table-cell">{{ formatDate($subscription["begin_date"]) }}</td>
+                            <td class="align-middle d-none d-md-table-cell">{{ formatDate($subscription["end_date"]) }}</td>
+                            <td class="align-middle">
+                                <div class="progress">
+                                    <div class="progress-bar @if($subscription["nb_days"]>20) bg-info @elseif($subscription["nb_days"]>10) bg-warning @else bg-danger @endif " role="progressbar" style="width: {{ formatTwoDecimal(100-($subscription["nb_days"]*100/30)) }}%;" aria-valuenow="{{ formatTwoDecimal(100-($subscription["nb_days"]*100/30))  }}" aria-valuemin="0" aria-valuemax="100">{{ $subscription["nb_days"]  }}</div>
+                                </div>
+                            </td>
+
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center">Aucun abonnement trouvé</td>
+                        </tr>
+                    @endforelse
+                    </tbody>
+                    <tfoot>
+                    <tr class="bg-light">
+                        <td colspan="14">
+{{--                            {!! $subscriptionsPerDate->appends(request()->all())->links() !!}--}}
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
     </div>
     @section('script')
         <script src="{{ asset('backend/vendor/chart.js/Chart.min.js') }}"></script>

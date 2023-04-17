@@ -264,12 +264,20 @@ class ListSubsctiptions extends Component
     {
 
         $subscriptions = Subscription::query()
+        ->join('services', 'services.id_service', '=', 'subscriptions.id_service')
+        ->join('customers', 'customers.id_customer', '=', 'subscriptions.id_customer')
+        ->join('users', 'users.id', '=', 'subscriptions.id_user')
+            ->select('subscriptions.*', 'services.name', 'customers.firstname', 'customers.lastname', 'users.*')
+            ->where('services.name', 'like', '%' . $this->searchTerm . '%')
+            ->orWhere('customers.firstname', 'like', '%' . $this->searchTerm . '%')
+            ->orWhere('customers.lastname', 'like', '%' . $this->searchTerm . '%')
+            ->orWhere('users.name', 'like', '%' . $this->searchTerm . '%')
             // ->where('name', 'like', '%'.$this->searchTerm.'%')
             // ->orWhere('description', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
+            ->orderByRaw($this->sortColumnName .' '.$this->sortDirection)
+            
             ->paginate(15);
-
-        return $subscriptions;
+        return $subscriptions; 
     }
 
     // Export Excel File
@@ -376,4 +384,28 @@ class ListSubsctiptions extends Component
             'services' => Service::all(),
         ])->layout('layouts.admin');
     }
+
+
+    
+    // Sort By Column Name
+
+    public function sortBy($columnName)
+    {
+        if ($this->sortColumnName === $columnName) {
+            $this->sortDirection = $this->swapSortDirection();
+        } else {
+            $this->sortDirection = 'asc';
+        }
+
+        $this->sortColumnName = $columnName;
+
+    }
+
+    // Swap Sort Direction
+
+    public function swapSortDirection()
+    {
+        return $this->sortDirection === 'asc' ? 'desc' : 'asc';
+    }
+
 }

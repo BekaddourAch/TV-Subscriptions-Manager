@@ -5,7 +5,7 @@
     <button id="sidebarToggleTop" class="mr-3 btn btn-link d-md-none rounded-circle">
         <i class="fa fa-bars"></i>
     </button>
-
+    @if(1==0)
     <!-- Topbar Search -->
     <form class="my-2 mr-auto d-none d-sm-inline-block form-inline ml-md-3 my-md-0 mw-100 navbar-search">
         <div class="input-group">
@@ -18,10 +18,10 @@
             </div>
         </div>
     </form>
-
+    @endif
     <!-- Topbar Navbar -->
     <ul class="ml-auto navbar-nav">
-
+        @if(1==0)
         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
         <li class="nav-item dropdown no-arrow d-sm-none">
             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
@@ -45,7 +45,8 @@
             </div>
         </li>
 
-        <!-- Nav Item - Alerts -->
+
+      <!-- Nav Item - Alerts -->
         <li class="mx-1 nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
@@ -159,13 +160,13 @@
         </li>
 
         <div class="topbar-divider d-none d-sm-block"></div>
-
+        @endif
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 text-gray-600 d-none d-lg-inline small">{{ Auth::user()->name }}</span>
-                <img class="img-profile rounded-circle" src="{{ asset('backend/img/undraw_profile.svg') }}">
+                <img class="img-profile rounded-circle" src="{{ Auth::user()->profile_photo_path ? Auth::user()->profile_url : Auth::user()->profile_photo_url }}">
             </a>
             <!-- Dropdown - User Information -->
             <div class="shadow dropdown-menu dropdown-menu-right animated--grow-in" aria-labelledby="userDropdown">
@@ -173,6 +174,7 @@
                     <i class="mr-2 text-gray-400 fas fa-user fa-sm fa-fw"></i>
                     {{ __('Profile') }}
                 </a>
+                @if(1==0)
                 <a class="dropdown-item" href="#">
                     <i class="mr-2 text-gray-400 fas fa-cogs fa-sm fa-fw"></i>
                     Settings
@@ -181,6 +183,7 @@
                     <i class="mr-2 text-gray-400 fas fa-list fa-sm fa-fw"></i>
                     Activity Log
                 </a>
+                @endif
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                     <i class="mr-2 text-gray-400 fas fa-sign-out-alt fa-sm fa-fw"></i>

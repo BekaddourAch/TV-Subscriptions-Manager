@@ -28,6 +28,10 @@
                         @yield('message')
                     </div>
                 </div>
+
+                <div class="ml-4 mt-4 text-lg text-gray-500 uppercase tracking-wider">
+                    <a href="{{route("profile.show")}}">Click Here To get back to your profile Back to your profile</a>
+                </div>
             </div>
         </div>
     </body>

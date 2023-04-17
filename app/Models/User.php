@@ -81,7 +81,7 @@ class User extends Authenticatable
         if ($this->profile_photo_path && Storage::disk('profile_photos')->exists($this->profile_photo_path)) {
             return Storage::disk('profile_photos')->url($this->profile_photo_path);
         }
-        //return asset('noimage.png');
+        return $this->profile_photo_url;
     }
 
     public function hasPermission($permissions)

@@ -8,7 +8,7 @@
     <div class="shadow card">
         <div class="py-3 card-header">
             <ol class="m-0 breadcrumb float-sm-left font-weight-bold text-primary">
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Page Principale</a></li>
                 <li class="breadcrumb-item active">Les Abonnements</li>
             </ol>
             <div class="mt-2 d-flex justify-content-end">
@@ -80,7 +80,7 @@
                         </button>
                         <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton"
                             style="">
-                            
+
                             @if (Auth::user()->hasPermission('subscription-delete'))
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item text-danger delete-confirm"
@@ -92,8 +92,8 @@
                 </div>
             @endif
             <div class="table-responsive">
-                <table class="table">
-                    <thead class="text-white bg-gradient-secondary">
+                <table class="table table-striped">
+                    <thead class="text-white bg-primary">
                         <tr class="text-center">
 
                             @if (Auth::user()->hasPermission('subscription-update') || Auth::user()->hasPermission('subscription-delete'))
@@ -106,16 +106,67 @@
                                 </th>
                             @endif
                             <th class="align-middle" scope="col">#</th>
-                            <th class="align-middle"> Service </th>
-                            <th class="align-middle"> Client </th>
-                            <th class="align-middle"> Créer par </th>
-                            <th class="align-middle"> Prix d'Achat </th>
-                            <th class="align-middle"> Quantité </th>
-                            <th class="align-middle"> Prix de Vente </th>
-                            <th class="align-middle"> Date Début </th>
-                            <th class="align-middle"> Date Fin </th>
-                            <th class="align-middle"> Total </th>
-                            <th class="align-middle"> Remarques </th>
+
+                            <th class="align-middle"> Service
+                                <span wire:click="sortBy('services.name')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Client
+                                <span wire:click="sortBy('concat(customers.firstname ,\' \', customers.lastname)')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === "concat(customers.firstname ,' ', customers.lastname)" && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === "concat(customers.firstname ,' ', customers.lastname)" && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Créer par
+                                <span wire:click="sortBy('users.name')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'users.name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'users.name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Prix d'Achat
+                                <span wire:click="sortBy('subscriptions.cost_price')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.cost_price' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.cost_price' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Quantité
+                                <span wire:click="sortBy('subscriptions.quantity')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.quantity' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.quantity' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Prix de Vente
+                                <span wire:click="sortBy('subscriptions.selling_price')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.selling_price' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.selling_price' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Date Début
+                                <span wire:click="sortBy('subscriptions.begin_date')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.begin_date' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.begin_date' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Date Fin
+                                <span wire:click="sortBy('subscriptions.end_date')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.end_date' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.end_date' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Total
+                                <span wire:click="sortBy('subscriptions.total')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.total' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.total' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle"> Remarques
+                                <span wire:click="sortBy('subscriptions.notes')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.notes' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.notes' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
 
                             @if (Auth::user()->hasPermission('subscription-update') || Auth::user()->hasPermission('subscription-delete'))
                                 <th class="align-middle" style="width: 10%" colspan="2">Actions </th>
@@ -127,7 +178,7 @@
                             <tr class="text-center">
 
                                 @if (Auth::user()->hasPermission('subscription-update') || Auth::user()->hasPermission('subscription-delete'))
-                                    <td class="align-middle" scope="col">
+                                    <td class="align-middle" scope="col" wire:ignore>
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectedRows"
                                                 value="{{ $subscription->id_subscription }}"
@@ -138,18 +189,18 @@
                                     </td>
                                 @endif
                                 <td class="align-middle" scope="row">{{ $subscription->id_subscription }}</td>
-                                <td class="align-middle">{{ $subscription->Service->name }}</td>
-                                <td class="align-middle">
+                                <td class="align-middle text-left">{{ $subscription->Service->name }}</td>
+                                <td class="align-middle text-left">
                                     {{ $subscription->Customer->firstname . ' ' . $subscription->Customer->lastname }}
                                 </td>
-                                <td class="align-middle">{{ $subscription->User->username }}</td>
-                                <td class="align-middle">{{ $subscription->cost_price }}</td>
-                                <td class="align-middle">{{ $subscription->quantity }}</td>
-                                <td class="align-middle">{{ $subscription->selling_price }}</td>
-                                <td class="align-middle">{{ $subscription->begin_date }}</td>
-                                <td class="align-middle">{{ $subscription->end_date }}</td>
-                                <td class="align-middle">{{ $subscription->total }}</td>
-                                <td class="align-middle">{{ $subscription->notes }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ $subscription->User->username }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription->cost_price) }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ $subscription->quantity }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription->selling_price) }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription->total) }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ formatDate($subscription->begin_date) }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ formatDate($subscription->end_date) }}</td>
+                                <td class="align-middle text-left d-none d-md-table-cell">{{ $subscription->notes }}</td>
 
                                 @if (Auth::user()->hasPermission('subscription-update') || Auth::user()->hasPermission('subscription-delete'))
                                     <td class="align-middle">
@@ -418,7 +469,7 @@
     {{-- JS Code --}}
 
     @section('script')
-        
+
         <script src="{{ asset('backend/js/backend.js') }}"></script>
 
         {{-- show or hide subscriptions section on Modal --}}
@@ -438,7 +489,7 @@
         {{-- show-delete-alert-confirmation --}}
 
         <script>
-            // To style all selects 
+            // To style all selects
             window.addEventListener('show-delete-alert-confirmation', event => {
                 Swal.fire({
                     title: 'Es-tu sûr?',
@@ -459,7 +510,7 @@
             window.addEventListener('post-show-form', event => {
                 // $('#service_select').css( { "display", "block !important" } );
 
-                // $('#customer_select').css( { "display", "block !important" } ); 
+                // $('#customer_select').css( { "display", "block !important" } );
 
                 $('#customer_select').selectpicker();
 

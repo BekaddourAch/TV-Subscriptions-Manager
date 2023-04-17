@@ -32,7 +32,7 @@ class ListPermissions extends Component
 
         $this->dispatchBrowserEvent('show-form');
     }
- 
+
     public function edit(Permission $permission)
     {
         if (Auth::user()->hasPermission('users-update')) {
@@ -53,17 +53,12 @@ class ListPermissions extends Component
         if (Auth::user()->hasPermission('users-update')) {
         try {
             $validatedData = Validator::make($this->data, [
-                //'name'              => 'required|unique:permissions,name,'.$this->permission->id,
-                'display_name'      => 'required|unique:permissions,display_name,'.$this->permission->id,
-                'description'       => 'required',
+                'name'              => 'required',
+                'display_name'      => 'required',
+                'description'       => '',
+                'groupe'            => 'required',
             ])->validate();
 
-            $permission_name = $validatedData['display_name'];
-            $permission_name = strtolower($permission_name);
-            $permission_name = explode(" ", $permission_name);
-            $permission_name = $permission_name[1] . "-" . $permission_name[0];
-
-            $validatedData['name'] = $permission_name ;
 
             $this->permission->update($validatedData);
 
@@ -83,12 +78,12 @@ class ListPermissions extends Component
     }
 	}
 
- 
+
 
     public function render()
     {
         $permissions = Permission::paginate(15);
- 
+
         // var_dump(count($permissions));
         return view('livewire.backend.admin.users.list-permissions',[
             'permissions' => $permissions,
