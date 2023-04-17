@@ -13,5 +13,14 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
-/storage/*
-/storage/!.gitignore
+/storage/*.zip
+/storage/app/*
+/storage/debugbar/*
+/storage/framework/*
+/storage/logs/*
+!/storage/app/.gitkeep
+!/storage/framework/cache/.gitkeep
+!/storage/framework/sessions/.gitkeep
+!/storage/framework/testing/.gitkeep
+!/storage/framework/views/.gitkeep
+!/storage/logs/.gitkeep
