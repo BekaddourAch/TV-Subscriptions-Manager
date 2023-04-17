@@ -3,14 +3,14 @@
 @endphp
 
 <!-- Sidebar -->
-<ul class="navbar-nav bg-dark sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
         <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
+            <i class="fas fa-file"></i>
         </div>
-        <div class="mx-3 sidebar-brand-text">Tableau de bord Admin </div>
+        <div class="mx-3 sidebar-brand-text">Gestion Des Abonnements</div>
     </a>
 
     <!-- Divider -->
@@ -20,7 +20,7 @@
     <li class="nav-item {{ request()->is('admin') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.index') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Tableau de bord</span></a>
+            <span>Statistiques</span></a>
     </li>
     @if((Auth::user()->hasPermission('services-display')))
         <!-- Divider -->
@@ -91,7 +91,7 @@
                 <span>gestion des Utilisateurs</span>
             </a>
             <div id="UsersUtilities" class="collapse" aria-labelledby="headingUtilities"
-                data-parent="#accordionSidebar">
+                data-parent="#accordionSidebar" style="z-index: 2">
                 <div class="py-2 bg-white rounded collapse-inner">
                     <a class="collapse-item" href="{{ route('admin.users') }}">Utilisateurs</a>
                     <a class="collapse-item" href="{{ route('admin.roles') }}">Roles</a>

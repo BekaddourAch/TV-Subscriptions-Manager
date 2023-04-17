@@ -6,9 +6,13 @@ use App\Models\Customer;
 use App\Models\Subscription;
 use Carbon\Carbon;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Dashboard extends Component
 {
+
+    use WithPagination;
+
     public $begin;
     public $end;
     public $totalSales;
@@ -19,6 +23,7 @@ class Dashboard extends Component
     public $topSubscriptionsPerRegions;
     public $subscriptionsTotalSalesPerMonth;
     public $subscriptionsTotalServices;
+    public $subscriptionsPerDate;
 
     public function mount()
     {
@@ -31,6 +36,7 @@ class Dashboard extends Component
         $this->topSubscriptionsPerRegions = Subscription::getTopSubscriptionsPerRegions();
         $this->subscriptionsTotalSalesPerMonth = Subscription::getSubscriptionsTotalSalesPerMonth();
         $this->subscriptionsTotalServices = Subscription::getSubscriptionsTotalServices();
+        $this->subscriptionsPerDate = Subscription::getSubscriptionsWithData();
         $this->totalCustomers = Customer::countCustomers();
     }
 
@@ -45,6 +51,7 @@ class Dashboard extends Component
         $this->totalActiveSubscriptions = Subscription::countActiveSubscriptions();
         $this->subscriptionsTotalSalesPerMonth = Subscription::getSubscriptionsTotalSalesPerMonth($startDate,$endDate);
         $this->subscriptionsTotalServices = Subscription::getSubscriptionsTotalServices($startDate,$endDate);
+        $this->subscriptionsPerDate = Subscription::getSubscriptionsWithData($startDate,$endDate);
         $this->totalCustomers = Customer::countCustomers($startDate,$endDate);
         $this->dispatchBrowserEvent('draw-dashboard-charts');
     }

@@ -12,9 +12,9 @@
 */
 
 return [
-    'reset'     => 'تمت إعادة تعيين كلمة المرور!',
-    'sent'      => 'تم إرسال تفاصيل استعادة كلمة المرور الخاصة بك إلى بريدك الإلكتروني!',
-    'throttled' => 'الرجاء الانتظار قبل إعادة المحاولة.',
-    'token'     => 'رمز استعادة كلمة المرور الذي أدخلته غير صحيح.',
-    'user'      => 'لم يتم العثور على أيّ حسابٍ بهذا العنوان الإلكتروني.',
+    'reset'     => 'Votre mot de passe est renouvelée!',
+    'sent'      => 'Les détails de récupération de votre mot de passe ont été envoyés à votre adresse e-mail!',
+    'throttled' => 'Veuillez patienter avant de réessayer.',
+    'token'     => 'Le code de récupération de mot de passe que vous avez entré est incorrect.',
+    'user'      => "Aucun compte n'a été trouvé avec cette adresse e-mail.",
 ];

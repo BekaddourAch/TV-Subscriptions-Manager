@@ -12,7 +12,7 @@
 */
 
 return [
-    'failed'   => 'بيانات الاعتماد هذه غير متطابقة مع البيانات المسجلة لدينا.',
-    'password' => 'كلمة المرور المستخدمة غير صحيحة.',
-    'throttle' => 'عدد كبير جدا من محاولات الدخول. يرجى المحاولة مرة أخرى بعد :seconds ثانية.',
+    'failed'   => "Ces informations d'identification ne correspondent pas aux données que nous avons enregistrées.",
+    'password' => 'Le mot de passe utilisé est incorrect.',
+    'throttle' => "Trop de tentatives de connexion. Veuillez réessayer après quelques secondes",
 ];

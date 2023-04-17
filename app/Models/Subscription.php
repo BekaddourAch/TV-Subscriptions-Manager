@@ -37,6 +37,29 @@ class Subscription extends Model
         return $this->belongsTo(User::class,'id_user');
     }
 
+    public static function getSubscriptionsWithData($beginDate = null, $endDate = null, $idUser = 0)
+    {
+        $query = $regions = DB::table('subscriptions')
+            ->join('customers', 'customers.id_customer', '=', 'subscriptions.id_customer')
+            ->join('services', 'services.id_service', '=', 'subscriptions.id_service')
+            ->select(['subscriptions.*',DB::raw('DATEDIFF(end_date, NOW()) nb_days') ,'services.name as service_name','customers.firstname','customers.lastname','customers.phone1','customers.phone2','customers.email']);
+
+        if ($beginDate && $endDate) {
+            $beginDate = Carbon::parse($beginDate)->startOfDay();
+            $endDate = Carbon::parse($endDate)->endOfDay();
+            $query->whereRaw ("subscriptions.end_date >= '".$beginDate."'");
+            $query->whereRaw ("subscriptions.end_date <= '".$endDate."'");
+        }
+        $query->whereRaw ("DATEDIFF(end_date, NOW()) < 30 && DATEDIFF(end_date, NOW())>0");
+        $result= $query->orderByRaw('DATEDIFF(end_date, NOW()) ASC')->get();
+
+        $subs = $result->map(function ($item) {
+            return (array) $item;
+        })->toArray();
+
+        return $subs;
+    }
+
     public static function getTotalSales($beginDate = null, $endDate = null)
     {
         $query = self::query();

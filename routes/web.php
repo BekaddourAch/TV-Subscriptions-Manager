@@ -47,15 +47,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('services', ListServices::class)->name('services');
         Route::get('subscriptions', ListSubsctiptions::class)->name('subscriptions');
 
-        // Route::get('/wow', function () {
-        //     // This route can be accessed only if the user has the "some-permission" permission.
-        // })->middleware('permission:profile-read');
     });
-    // Route::group(['middleware' => ['auth', 'role:user']], function (){
-    //     Route::get('/', Dashboard::class)->name('index');
-    //     Route::get('customer', ListCustomers::class)->name('customers');
-    //     Route::get('services', ListServices::class)->name('services');
-    // });
 });
 
 

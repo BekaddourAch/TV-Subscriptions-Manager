@@ -8,33 +8,33 @@
     <div class="shadow card">
         <div class="py-3 card-header">
             <ol class="m-0 breadcrumb float-sm-left font-weight-bold text-primary">
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Page Principale</a></li>
                 <li class="breadcrumb-item active">Permissions</li>
             </ol>
-            
-                 
-             
+
+
+
         </div>
 
         <div class="p-3 card-body">
             <div class="table-responsive">
                 <table class="table">
-                    <thead class="text-white bg-gradient-secondary">
+                    <thead class="text-white bg-primary">
                         <tr class="text-center">
                             <th class="align-middle" scope="col">#</th>
-                            <th class="align-middle"> 
+                            <th class="align-middle d-none d-md-table-cell">
                                 Nom
                             </th>
-                            <th class="align-middle"> 
-                                Titre d'affichage
-                            </th>
-                            <th class="align-middle"> 
-                                Déscription
-                            </th>
-                            <th class="align-middle"> 
+                            <th class="align-middle">
                                 Groupe
                             </th>
-                            
+                            <th class="align-middle">
+                                Nom visible
+                            </th>
+                            <th class="align-middle d-none d-md-table-cell">
+                                Déscription
+                            </th>
+
                             @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
                                 <th class="align-middle" style="width: 10%" colspan="2">Actions</th>
                             @endif
@@ -44,18 +44,18 @@
                         @forelse($permissions as $permission)
                         <tr class="text-center">
                             <td class="align-middle" scope="row">{{ $loop->iteration }}</td>
-                            <td class="align-middle">{{ $permission->name }}</td>
-                            <td class="align-middle">{{ $permission->display_name }}</td>
-                            <td class="align-middle">{{ $permission->description }}</td>
+                            <td class="align-middle d-none d-md-table-cell">{{ $permission->name }}</td>
                             <td class="align-middle">{{ $permission->groupe }}</td>
+                            <td class="align-middle">{{ $permission->display_name }}</td>
+                            <td class="align-middle d-none d-md-table-cell">{{ $permission->description }}</td>
                             <td class="align-middle">
 
                                 @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))
                                     <div class="btn-group btn-group-sm">
                                         <a href="#" wire:click.prevent="edit({{ $permission }})" class="btn btn-primary">
                                             <i class="fa fa-edit"></i>
-                                        </a> 
-                                    </div> 
+                                        </a>
+                                    </div>
                                 @endif
                             </td>
                         </tr>
@@ -103,7 +103,20 @@
 
                                 <div class="form-group">
                                     <label for="name">Name</label>
-                                    <input type="text" tabindex="1" wire:model.defer="data.name" class="form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" placeholder="Enter permission name" readonly>
+                                    <input type="text" tabindex="1" wire:model.defer="data.name" class="form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" readonly>
+                                    @error('name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+
+
+                                <!-- Modal Permission Groupe -->
+
+                                <div class="form-group">
+                                    <label for="group">Groupe</label>
+                                    <input type="text" tabindex="1" wire:model.defer="data.groupe" class="form-control @error('groupe') is-invalid @enderror" id="group" aria-describedby="groupeHelp" placeholder="Nom du groupe" readonly>
                                     @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -116,7 +129,7 @@
 
                                 <div class="form-group">
                                     <label for="display_name">Display Name</label>
-                                    <input type="text" tabindex="1" wire:model.defer="data.display_name" class="form-control @error('display_name') is-invalid @enderror" id="display_name" aria-describedby="display_nameHelp" placeholder="Enter permission display name, E.g : Create Users">
+                                    <input type="text" tabindex="1" wire:model.defer="data.display_name" class="form-control @error('display_name') is-invalid @enderror" id="display_name" aria-describedby="display_nameHelp" placeholder="Nom public">
                                     @error('display_name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -128,7 +141,7 @@
 
                                 <div class="form-group">
                                     <label for="description">Description</label>
-                                    <input type="text" tabindex="1" wire:model.defer="data.description" class="form-control @error('description') is-invalid @enderror" id="description" aria-describedby="descriptionHelp" placeholder="Enter permission description">
+                                    <input type="text" tabindex="1" wire:model.defer="data.description" class="form-control @error('description') is-invalid @enderror" id="description" aria-describedby="descriptionHelp" placeholder="Description">
                                     @error('description')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -181,17 +194,7 @@
 
         {{-- show or hide Permissions section on Modal --}}
 
-        <script>
-            $(document).ready( function() {
-                $('#display_name').keyup(function() {
-                    let name = this.value.toLowerCase();
-                    name = name.split(" ");
-                    name = name[1] + '-' + name[0];
-                    //change txtInterest% value
-                    $('#name').val(name);
-                });
-            });
-        </script>
+
 
         {{-- show-delete-alert-confirmation --}}
 

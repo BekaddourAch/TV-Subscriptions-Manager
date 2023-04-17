@@ -8,7 +8,7 @@
     <div class="shadow card">
         <div class="py-3 card-header">
             <ol class="m-0 breadcrumb float-sm-left font-weight-bold text-primary">
-                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Page Principale</a></li>
                 <li class="breadcrumb-item active">Les Clients</li>
             </ol>
             <div class="mt-2 d-flex justify-content-end">
@@ -25,7 +25,7 @@
                     </div> --}}
                 @endif
                 @if(Auth::user()->hasPermission('customers-create'))
-                
+
                 <button wire:click.prevent='addNewCustomer' class="ml-1 btn btn-sm btn-primary">
                     <i class="mr-2 fa fa-plus-circle"
                         aria-hidden="true">
@@ -33,7 +33,7 @@
                     </i>
                 </button>
                 @endif
-            </div> 
+            </div>
         </div>
         <div class="flex-wrap d-flex justify-content-between">
             <div class="pt-3 my-2 ml-3 ml-md-3 my-md-0 mw-80 navbar-search">
@@ -55,7 +55,7 @@
                             </span>
                             <span class="text">Tous</span>
                         </button>
-                        
+
                         @if(0==1)
                         {{-- <button wire:click="filterUsersByRoles('user')" class="btn btn-sm btn-info btn-icon-split">
                             <span class="icon text-white-20">
@@ -87,16 +87,16 @@
                 <div class="mb-3 d-flex">
                     <span class="pt-1 text-success">
                         <i class="fa fa-user" aria-hidden="true"></i>
-                       
+
                          <span class="text-gray-900 font-weight-bold">{{ count($selectedRows) }}</span> {{ Str::plural('Clients', count($selectedRows)) }} Sélectionné
                     </span>
-                   
-                
+
+
                         <div class="ml-3 dropdown">
                             <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Actions
                             </button>
-                            
+
                             <div class="bg-gray-100 dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
                                 @if(Auth::user()->hasPermission('customers-update'))
                                     <a class="dropdown-item" wire:click.prevent="setAllAsActive" href="#">Définir comme actif</a>
@@ -107,73 +107,80 @@
                                     <a class="dropdown-item text-danger delete-confirm" wire:click.prevent="deleteSelectedRows" href="#">Supprimer les clients sélectionnée</a>
                                 @endif
                             </div>
-                        </div> 
+                        </div>
                 </div>
             @endif
             <div class="table-responsive">
-                <table class="table">
-                    <thead class="text-white bg-gradient-secondary">
+                <table class="table table-striped">
+                    <thead class="text-white bg-primary">
                         <tr class="text-center">
-                            
+
                             @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
                                 <th class="align-middle" scope="col">
                                     <div class="custom-control custom-checkbox small">
                                         <input type="checkbox" wire:model="selectPageRows" value="" class="custom-control-input" id="customCheck">
                                         <label class="custom-control-label" for="customCheck"></label>
                                     </div>
-                                </th> 
-                            @endif              
+                                </th>
+                            @endif
 
                             <th class="align-middle" scope="col">#</th>
-                            <th class="align-middle">Nom 
+
+                            <th class="align-middle">Nom
                                 <span wire:click="sortBy('customers.firstname')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.firstname' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.firstname' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Prénom 
+                            <th class="align-middle"> Prénom
                                 <span wire:click="sortBy('customers.lastname')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.lastname' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.lastname' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Téléphone 1 
+                            <th class="align-middle"> Téléphone 1
                                 <span wire:click="sortBy('customers.phone1')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.phone1' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.phone1' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Téléphone 2 
+                            <th class="align-middle"> Téléphone 2
                                 <span wire:click="sortBy('customers.phone2')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.phone2' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.phone2' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Email 
+                            <th class="align-middle"> Email
                                 <span wire:click="sortBy('customers.email')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.email' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.email' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Adresse 
+                            <th class="align-middle"> Adresse
                                 <span wire:click="sortBy('customers.address')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.address' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.address' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Wilaya 
+                            <th class="align-middle"> Wilaya
                                 <span wire:click="sortBy('customers.state')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.state' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.state' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
-                            </th> 
-                            <th class="align-middle"> Actif 
+                            </th>
+                            <th class="align-middle"> Commune
+                                <span wire:click="sortBy('customers.city')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.city' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.city' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            </span>
+                            </th>
+                            <th class="align-middle"> Actif
                                 <span wire:click="sortBy('customers.notes')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.notes' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.notes' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            {{-- <th class="align-middle"> Commentaires </th> --}}
+                             <th class="align-middle"> Remarques </th>
                             @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
                                 <th class="align-middle" style="width: 10%" colspan="2">Actions
                                 </th>
@@ -185,7 +192,7 @@
                         {{-- @forelse($customers as $customer) --}}
                             <tr class="text-center">
                                 {{-- <td class="align-middle" scope="row">{{ $loop->iteration }}</td> --}}
-                                
+
                                 @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
                                     <td class="align-middle" scope="col">
                                         <div class="custom-control custom-checkbox small">
@@ -194,30 +201,32 @@
                                         </div>
                                     </td>
                                 @endif
-                                <td class="align-middle" scope="row">{{ $customer->id }}</td>
-                                <td class="align-middle">{{ $customer->firstname }}</td>
-                                <td class="align-middle">{{ $customer->lastname }}</td>
+                                <td class="align-middle" scope="row">#{{ $customer->id_customer }}</td>
+                                <td class="align-middle text-left">{{ $customer->firstname }}</td>
+                                <td class="align-middle text-left">{{ $customer->lastname }}</td>
                                 <td class="align-middle">{{ $customer->phone1 }}</td>
-                                <td class="align-middle">{{ $customer->phone2 }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ $customer->phone2 }}</td>
                                 <td class="align-middle">{{ $customer->email }}</td>
-                                <td class="align-middle">{{ $customer->address }}</td>
-                                <td class="align-middle">{{ $customer->state }}</td> 
-                                <td class="align-middle"> 
+                                <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->address }}</td>
+                                <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->state }}</td>
+                                <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->city }}</td>
+                                <td class="align-middle">
+
                                     @if ($customer->active ==1)
                                     <span class="font-weight-bold badge text-white bg-success">Oui</span>
                                     @else
                                     <span class="font-weight-bold badge text-white bg-secondary">Non</span>
-                                    @endif 
+                                    @endif
                             </td>
-                                {{-- <td class="align-middle">{{ $customer->notes }}</td> --}}
-                                
+                                <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->notes }}</td>
+
                             @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
                                     <td class="align-middle">
                                         <div class="btn-group btn-group-sm">
                                             @if(Auth::user()->hasPermission('customers-update'))
                                             <a href="#" wire:click.prevent="edit({{ $customer }})" class="btn btn-primary">
                                                 <i class="fa fa-edit"></i>
-                                            </a>  
+                                            </a>
                                             @endif
                                             @if(Auth::user()->hasPermission('customers-delete'))
                                         <a class="btn btn-danger" href="#" wire:click.prevent="confirmCustomerRemoval({{ $customer->id }})">
@@ -229,7 +238,7 @@
                                         <form action="" method="post" id="delete-customer-{{ $customer->id }}" class="d-none">
                                                 @csrf
                                             @method('DELETE')
-                                        </form>  
+                                        </form>
                                     </td>
                                 @endif
                             </tr>
@@ -242,7 +251,7 @@
                     <tfoot>
                         <tr class="bg-light">
                             <td colspan="14">
-                                {!! $customers->appends(request()->all())->links() !!}  
+                                {!! $customers->appends(request()->all())->links() !!}
                             </td>
                         </tr>
                     </tfoot>
@@ -304,7 +313,7 @@
                                 </div>
                                 {{-- ---------------------------------------------------- --}}
                             </div>
-                            
+
                         </div>
                             <div class="row h-100 justify-content-center align-items-center">
                                 <div class="col-6">
@@ -362,7 +371,7 @@
                                         <label for="address">Adresse</label>
                                         <input type="text" tabindex="1" wire:model.defer="data.address" class="form-control @error('address') is-invalid @enderror"
                                             id="address" aria-describedby="nameHelp" placeholder="Entrez l'adresse du client">
-                                     
+
                                         @error('address')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -402,7 +411,7 @@
                                                 <option value="Jijel">Jijel</option>
                                                 <option value="Sétif">Sétif</option>
                                                 <option value="Saïda">Saïda</option>
-                                                <option value="Skikda">Skikda</option> 
+                                                <option value="Skikda">Skikda</option>
                                                 <option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
                                                 <option value="Annaba">Annaba</option>
                                                 <option value="Guelma">Guelma</option>
@@ -428,7 +437,7 @@
                                                 <option value="ain-defla">Aïn Defla</option>
                                                 <option value="naama">Naâma</option>
                                                 <option value="Aïn Témouchent">Aïn Témouchent</option>
-                                                <option value="ghardaia">Ghardaia</option> 
+                                                <option value="ghardaia">Ghardaia</option>
                                                 <option value="Relizane">Relizane</option>
                                                 <option value="Timimoun">Timimoun </option>
                                                 <option value="Bordj Badji Mokhtar">Bordj Badji Mokhtar</option>
@@ -452,7 +461,7 @@
                                 </div>
                                 <div class="col-6">
                                     <!-- Modal customer notes -->
-                                    <div class="form-group"> 
+                                    <div class="form-group">
                                         <label for="customSwitch1">Rendre le client Actif</label>
                                         <div class="custom-control custom-switch" style="min-width: 180px;margin-right: 80px;">
                                             <input type="checkbox" class="custom-control-input" id="customSwitch1" checked="" wire:model.defer="data.active">
@@ -487,7 +496,7 @@
                                     {{-- ---------------------------------------------------- --}}
 
                                 </div>
-                            </div> 
+                            </div>
                     </div>
 
                     <div class="modal-footer bg-light">
