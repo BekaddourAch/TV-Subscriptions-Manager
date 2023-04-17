@@ -201,7 +201,7 @@
                                         </div>
                                     </td>
                                 @endif
-                                <td class="align-middle" scope="row">#{{ $customer->id_customer }}</td>
+                                <td class="align-middle" scope="row"><a  class="text-primary" href="{{route("admin.customer-details",$customer->id_customer)}}">#{{ $customer->id_customer }}</a></td>
                                 <td class="align-middle text-left">{{ $customer->firstname }}</td>
                                 <td class="align-middle text-left">{{ $customer->lastname }}</td>
                                 <td class="align-middle">{{ $customer->phone1 }}</td>
