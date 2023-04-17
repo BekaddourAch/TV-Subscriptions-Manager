@@ -23,6 +23,7 @@
         {{-- <link rel="stylesheet" href="{{ mix('css/app.css') }}"> --}}
         <link href="{{ asset('backend/css/sb-admin-2.min.css') }}" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('vendor/laratrust/laratrust.css') }}" />
         <livewire:styles />
         @yield('style')
     </head>
