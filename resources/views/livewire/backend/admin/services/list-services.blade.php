@@ -90,7 +90,7 @@
             @endif
             <div class="table-responsive">
                 <table class="table table-striped">
-                    <thead class="text-white bg-primary">
+                    <thead class="text-white bg-dark">
                     <tr class="text-center">
 
                         @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))

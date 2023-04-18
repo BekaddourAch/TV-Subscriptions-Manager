@@ -106,7 +106,7 @@
             @endif
             <div class="table-responsive">
                 <table class="table">
-                    <thead class="text-white  bg-primary">
+                    <thead class="text-white bg-dark">
                         <tr class="text-center">
 
                             @if((Auth::user()->hasPermission('users-update')) || (Auth::user()->hasPermission('users-delete')))

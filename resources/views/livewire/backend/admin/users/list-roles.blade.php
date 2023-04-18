@@ -27,7 +27,7 @@
         <div class="p-3 card-body">
             <div class="table-responsive">
                 <table class="table">
-                    <thead class="text-white  bg-primary">
+                    <thead class="text-white bg-dark">
                         <tr class="text-center">
                             <th class="align-middle" scope="col">#</th>
                             <th class="align-middle">

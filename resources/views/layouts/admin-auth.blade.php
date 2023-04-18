@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
         <link href="{{ asset('backend/css/sb-admin-2.min.css') }}" rel="stylesheet">
     </head>
-    <body class="bg-gradient-primary">
+    <body class="bg-dark">
 
         <div class="container">
             @yield('content')

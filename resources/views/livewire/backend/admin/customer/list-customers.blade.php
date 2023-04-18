@@ -112,7 +112,7 @@
             @endif
             <div class="table-responsive">
                 <table class="table table-striped">
-                    <thead class="text-white bg-primary">
+                    <thead class="text-white bg-dark">
                         <tr class="text-center">
 
                             @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
@@ -174,11 +174,17 @@
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.city' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
                             </th>
-                            <th class="align-middle"> Actif
-                                <span wire:click="sortBy('customers.notes')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.notes' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.notes' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            <th class="align-middle"> Revendeur
+                                <span wire:click="sortBy('customers.is_reseller')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.is_reseller' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.is_reseller' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
+                        </th>
+                            <th class="align-middle"> Actif
+                                <span wire:click="sortBy('customers.active')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.active' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.active' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            </span>
                             </th>
                              <th class="align-middle"> Remarques </th>
                             @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
@@ -210,6 +216,14 @@
                                 <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->address }}</td>
                                 <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->state }}</td>
                                 <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->city }}</td>
+                                <td class="align-middle">
+
+                                    @if ($customer->is_reseller ==1)
+                                    <span class="font-weight-bold badge text-white bg-success">Oui</span>
+                                    @else
+                                    <span class="font-weight-bold badge text-white bg-secondary">Non</span>
+                                    @endif
+                            </td>
                                 <td class="align-middle">
 
                                     @if ($customer->active ==1)
@@ -320,9 +334,9 @@
                                     <!-- Modal customer phone1 -->
                                     <div class="form-group">
                                         <label for="phone1">Téléphone 1</label>
-                                        <input  type="tel" tabindex="1" placeholder="ex:0655112233" pattern="[0-9]{10}" required wire:model.defer="data.phone1"
+                                        <input  type="tel" tabindex="1" placeholder="ex:0655112233" required wire:model.defer="data.phone1"
                                             class="form-control @error('phone1') is-invalid @enderror" id="phone1"
-                                            aria-describedby="nameHelp" placeholder="Entrez le 1er téléphone  du client">
+                                            aria-describedby="nameHelp" placeholder="Téléphone 1">
                                         @error('phone1')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -336,9 +350,9 @@
                                     <!-- Modal customer phone2 -->
                                     <div class="form-group">
                                         <label for="phone2">Téléphone 2</label>
-                                        <input  type="tel" tabindex="1" placeholder="ex:0655112233" pattern="[0-9]{10}"  wire:model.defer="data.phone2"
+                                        <input  type="tel" tabindex="1" placeholder="ex:0655112233" wire:model.defer="data.phone2"
                                             class="form-control @error('phone2') is-invalid @enderror" id="phone2"
-                                            aria-describedby="nameHelp" placeholder="Entrez le 2ème téléphone  du client">
+                                            aria-describedby="nameHelp" placeholder="Téléphone 2">
                                         @error('phone2')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -459,10 +473,27 @@
                                     {{-- ---------------------------------------------------- --}}
 
                                 </div>
-                                <div class="col-6">
+                                <div class="col-3">
                                     <!-- Modal customer notes -->
                                     <div class="form-group">
-                                        <label for="customSwitch1">Rendre le client Actif</label>
+                                        <label for="customSwitch1">Revendeur</label>
+                                        <div class="custom-control custom-switch" style="min-width: 180px;margin-right: 80px;">
+                                            <input type="checkbox" class="custom-control-input" id="isReseller" checked="" wire:model.defer="data.is_reseller">
+                                            <label class="custom-control-label" for="isReseller"></label>
+                                          </div>
+                                        @error('is_reseller')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                    {{-- ---------------------------------------------------- --}}
+
+                                </div>
+                                <div class="col-3">
+                                    <!-- Modal customer notes -->
+                                    <div class="form-group">
+                                        <label for="customSwitch1">Actif</label>
                                         <div class="custom-control custom-switch" style="min-width: 180px;margin-right: 80px;">
                                             <input type="checkbox" class="custom-control-input" id="customSwitch1" checked="" wire:model.defer="data.active">
                                             <label class="custom-control-label" for="customSwitch1"></label>

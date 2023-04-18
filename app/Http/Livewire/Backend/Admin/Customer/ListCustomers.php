@@ -156,6 +156,7 @@ class ListCustomers extends Component
             'state' => '',
             'city' => '',
             'active' => '',
+            'is_reseller' => '',
             'notes' => '',
 		])->validate();
 
@@ -204,6 +205,7 @@ class ListCustomers extends Component
                 'state' => '',
                 'city' => '',
                 'active' => '',
+                'is_reseller' => '',
                 'notes' => '',
             ])->validate();
 
@@ -267,7 +269,7 @@ class ListCustomers extends Component
             ->orWhere('phone1', 'like', '%'.$this->searchTerm.'%')
             ->orWhere('email', 'like', '%'.$this->searchTerm.'%')
             ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(10)->onEachSide(0);
+            ->paginate(15);
 
         return $customers;
 	}
@@ -382,7 +384,7 @@ class ListCustomers extends Component
     public function render()
     {
         $customersCount= Customer::count();
-       //  $customers = Customer::paginate(10);
+       //  $customers = Customer::paginate(15);
         $customers = $this->customers;
         return view('livewire.backend.admin.customer.list-customers',[
             'customers' => $customers,
