@@ -93,7 +93,7 @@
             @endif
             <div class="table-responsive">
                 <table class="table table-striped">
-                    <thead class="text-white bg-primary">
+                    <thead class="text-white bg-dark">
                         <tr class="text-center">
 
                             @if (Auth::user()->hasPermission('subscription-update') || Auth::user()->hasPermission('subscription-delete'))
@@ -119,25 +119,31 @@
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === "concat(customers.firstname ,' ', customers.lastname)" && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Créer par
+                            <th class="align-middle d-none d-md-table-cell"> Créer par
                                 <span wire:click="sortBy('users.name')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'users.name' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'users.name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Total
+                            <th class="align-middle d-none d-md-table-cell"> Total
                                 <span wire:click="sortBy('subscriptions.total')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.total' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.total' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Date Début
+                            <th class="align-middle d-none d-md-table-cell"> Montant Payé
+                                <span wire:click="sortBy('subscriptions.paid_amount')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.paid_amount' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.paid_amount' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                                </span>
+                            </th>
+                            <th class="align-middle d-none d-md-table-cell"> Date Début
                                 <span wire:click="sortBy('subscriptions.begin_date')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.begin_date' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.begin_date' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Date Fin
+                            <th class="align-middle d-none d-md-table-cell"> Date Fin
                                 <span wire:click="sortBy('subscriptions.end_date')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.end_date' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.end_date' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
@@ -177,6 +183,7 @@
                                 </td>
                                 <td class="align-middle d-none d-md-table-cell">{{ $subscription->User->username }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription->total) }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription->paid_amount) }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ formatDate($subscription->begin_date) }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ formatDate($subscription->end_date) }}</td>
                                 <td class="align-middle text-left d-none d-md-table-cell">{{ $subscription->notes }}</td>
@@ -210,10 +217,12 @@
                                 @endif
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="6" class="text-center">Aucun abonnement trouvé</td>
-                            </tr>
                         @endforelse
+
+                        <tr>
+                            <td colspan="10" class="text-center  d-none d-md-table-cell">Aucun abonnement trouvé</td>
+                            <td colspan="5" class="text-center   d-table-cell d-md-none">Aucun abonnement trouvé</td>
+                        </tr>
                     </tbody>
                     <tfoot>
                         <tr class="bg-light">
@@ -329,7 +338,7 @@
                         </div>
                         <div class="row h-100 justify-content-center align-items-center">
 
-                            <div class="col-12">
+                            <div class="col-6">
                                 <!-- Modal subscription quantity -->
                                 <div class="form-group">
                                     <label for="quantity">Quantité</label>
@@ -338,6 +347,24 @@
                                         class="form-control @error('quantity') is-invalid @enderror" id="quantity"
                                         aria-describedby="nameHelp">
                                     @error('quantity')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                {{-- ---------------------------------------------------- --}}
+
+                            </div>
+
+                            <div class="col-6">
+                                <!-- Modal subscription quantity -->
+                                <div class="form-group">
+                                    <label for="paid_amount">Montant Payé</label>
+                                    <input type="number" min="1" tabindex="1"
+                                        wire:model.defer="data.paid_amount"
+                                        class="form-control @error('paid_amount') is-invalid @enderror" id="paid_amount"
+                                        aria-describedby="nameHelp">
+                                    @error('paid_amount')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>

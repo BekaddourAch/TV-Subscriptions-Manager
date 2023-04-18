@@ -23,6 +23,7 @@ class Subscription extends Model
         'begin_date',
         'end_date',
         'total',
+        'paid_amount',
         'notes'
     ];
 

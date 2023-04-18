@@ -152,6 +152,7 @@ class ListSubsctiptions extends Component
             'begin_date' => 'required',
             'end_date' => 'required',
             'total' => '',
+            'paid_amount' => '',
             'notes' => '',
         ])->validate();
 
@@ -202,6 +203,7 @@ class ListSubsctiptions extends Component
                 'begin_date' => 'required',
                 'end_date' => 'required',
                 'total' => '',
+                'paid_amount' => '',
                 'notes' => '',
             ])->validate();
 

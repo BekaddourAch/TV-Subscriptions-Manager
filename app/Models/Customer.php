@@ -19,6 +19,7 @@ class Customer extends Model
         'address',
         'state',
         'active',
+        'is_reseller',
         'notes',
     ];
 
