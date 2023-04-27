@@ -136,6 +136,9 @@ class ListCustomers extends Component
         if (Auth::user()->hasPermission('customers-create')) {
               $this->reset();
         $this->showEditModal = false;
+
+        $this->data["active"] = 1;
+        $this->data["state"] = "Alger";
         $this->dispatchBrowserEvent('show-form');
         }
 

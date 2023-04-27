@@ -202,8 +202,8 @@
                                 @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
                                     <td class="align-middle" scope="col">
                                         <div class="custom-control custom-checkbox small">
-                                            <input type="checkbox" wire:model="selectedRows" value="{{ $customer->id }}" class="custom-control-input" id="{{ $customer->id }}">
-                                            <label class="custom-control-label" for="{{ $customer->id }}"></label>
+                                            <input type="checkbox" wire:model="selectedRows" value="{{ $customer->id_customer }}" class="custom-control-input" id="{{ $customer->id_customer }}">
+                                            <label class="custom-control-label" for="{{ $customer->id_customer }}"></label>
                                         </div>
                                     </td>
                                 @endif
@@ -243,16 +243,12 @@
                                             </a>
                                             @endif
                                             @if(Auth::user()->hasPermission('customers-delete'))
-                                        <a class="btn btn-danger" href="#" wire:click.prevent="confirmCustomerRemoval({{ $customer->id }})">
+                                        <a class="btn btn-danger" href="#" wire:click.prevent="confirmCustomerRemoval({{ $customer->id_customer }})">
                                             <i class="fa fa-trash bg-danger"></i>
                                         </a>
                                         @endif
 
                                         </div>
-                                        <form action="" method="post" id="delete-customer-{{ $customer->id }}" class="d-none">
-                                                @csrf
-                                            @method('DELETE')
-                                        </form>
                                     </td>
                                 @endif
                             </tr>
@@ -302,7 +298,7 @@
                                     <label for="firstname">Nom</label>
                                     <input type="text" tabindex="1" wire:model.defer="data.firstname"
                                         class="form-control @error('firstname') is-invalid @enderror" id="firstname"
-                                        aria-describedby="nameHelp" placeholder="Saisissez le nom du client">
+                                        aria-describedby="nameHelp" placeholder="Nom">
                                     @error('firstname')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -318,7 +314,7 @@
                                     <label for="lastname">Prénom</label>
                                     <input type="text" tabindex="1" wire:model.defer="data.lastname"
                                         class="form-control @error('lastname') is-invalid @enderror" id="lastname"
-                                        aria-describedby="nameHelp" placeholder="Saisissez le prénom du client">
+                                        aria-describedby="nameHelp" placeholder="Prénom">
                                     @error('lastname')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -334,9 +330,9 @@
                                     <!-- Modal customer phone1 -->
                                     <div class="form-group">
                                         <label for="phone1">Téléphone 1</label>
-                                        <input  type="tel" tabindex="1" placeholder="ex:0655112233" required wire:model.defer="data.phone1"
+                                        <input  type="tel" tabindex="1" placeholder="0655112233" required wire:model.defer="data.phone1"
                                             class="form-control @error('phone1') is-invalid @enderror" id="phone1"
-                                            aria-describedby="nameHelp" placeholder="Téléphone 1">
+                                            aria-describedby="nameHelp" >
                                         @error('phone1')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -350,9 +346,9 @@
                                     <!-- Modal customer phone2 -->
                                     <div class="form-group">
                                         <label for="phone2">Téléphone 2</label>
-                                        <input  type="tel" tabindex="1" placeholder="ex:0655112233" wire:model.defer="data.phone2"
+                                        <input  type="tel" tabindex="1" placeholder="0655112233" wire:model.defer="data.phone2"
                                             class="form-control @error('phone2') is-invalid @enderror" id="phone2"
-                                            aria-describedby="nameHelp" placeholder="Téléphone 2">
+                                            aria-describedby="nameHelp" >
                                         @error('phone2')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -369,7 +365,7 @@
                                         <label for="email">Email</label>
                                         <input type="text" tabindex="1" wire:model.defer="data.email"
                                             class="form-control @error('email') is-invalid @enderror" id="email"
-                                            aria-describedby="nameHelp" placeholder="Entrez l'e-mail du client">
+                                            aria-describedby="nameHelp" placeholder="Email">
                                         @error('email')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -384,7 +380,7 @@
                                     <div class="form-group">
                                         <label for="address">Adresse</label>
                                         <input type="text" tabindex="1" wire:model.defer="data.address" class="form-control @error('address') is-invalid @enderror"
-                                            id="address" aria-describedby="nameHelp" placeholder="Entrez l'adresse du client">
+                                            id="address" aria-describedby="nameHelp" placeholder="Adresse">
 
                                         @error('address')
                                             <div class="invalid-feedback">
@@ -516,7 +512,7 @@
                                         <label for="notes">Remarques</label>
                                         <textarea type="textarea" tabindex="1" wire:model.defer="data.notes"
                                             class="form-control @error('notes') is-invalid @enderror" id="notes" aria-describedby="nameHelp"
-                                            placeholder="Saisir les Remarques des clients">
+                                            placeholder="Remarques">
                                     </textarea>
                                         @error('notes')
                                             <div class="invalid-feedback">

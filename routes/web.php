@@ -9,6 +9,7 @@ use App\Http\Livewire\Backend\Admin\Users\ListPermissions;
 use App\Http\Livewire\Backend\Admin\Users\ListRoles;
 use App\Http\Livewire\Backend\Admin\Users\ListUsers;
 use App\Http\Livewire\Backend\Admin\Services\ListServices;
+use App\Http\Livewire\Backend\Admin\Settings\Settings;
 use Illuminate\Support\Facades\URL;
 
 /*
@@ -47,6 +48,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('customer/{id}', CustomerDetails::class)->name('customer-details');
         Route::get('services', ListServices::class)->name('services');
         Route::get('subscriptions', ListSubsctiptions::class)->name('subscriptions');
+        Route::get('settings', Settings::class)->name('settings');
 
     });
 });
