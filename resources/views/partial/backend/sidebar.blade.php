@@ -28,12 +28,12 @@
 
 
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <div class="sidebar-heading {{ $current_page=='admin.subscriptions' ? 'active' : '' }}">
                 Abonnements
             </div>
             <!-- Nav Item - Services -->
 
-            <li class="nav-item">
+            <li class="nav-item {{ $current_page=='admin.subscriptions' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.subscriptions') }}">
                     <i class="fas fa-fw fa-handshake"></i>
                     {{-- <i class="fas fa-handshake-alt"></i> --}}
@@ -47,12 +47,12 @@
 
 
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <div class="sidebar-heading {{ $current_page=='admin.services' ? 'active' : '' }}">
                 Services
             </div>
             <!-- Nav Item - Services -->
 
-            <li class="nav-item">
+            <li class="nav-item {{ $current_page=='admin.services' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.services') }}">
                     <i class="fas fa-fw fa-tv"></i>
                     <span>Services</span></a>
@@ -62,16 +62,28 @@
     @if((Auth::user()->hasPermission('customers-display')))
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
-        <div class="sidebar-heading">
+        <div class="sidebar-heading {{ $current_page=='admin.customers' ? 'active' : '' }}">
             Clients
         </div>
         <!-- Nav Item - Clients -->
-        <li class="nav-item">
+        <li class="nav-item {{ $current_page=='admin.customers' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('admin.customers') }}">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Clients</span></a>
         </li>
         <!-- Divider -->
+    @endif
+
+    @if((Auth::user()->hasRole('superadmin')))
+        <hr class="sidebar-divider d-none d-md-block">
+        <div class="sidebar-heading {{ $current_page=='admin.settings' ? 'active' : '' }}">
+            Configuration
+        </div>
+        <li class="nav-item {{ $current_page=='admin.settings' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('admin.settings') }}">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Configuration</span></a>
+        </li>
         <hr class="sidebar-divider d-none d-md-block">
     @endif
 
@@ -79,23 +91,24 @@
     {{-- <hr class="sidebar-divider"> --}}
 
     @if((Auth::user()->hasPermission('users-display')))
+
             <!-- Heading -->
-            <div class="sidebar-heading">
+            <div class="sidebar-heading {{ in_array($current_page,['admin.users','admin.roles','admin.permissions'])  ? 'active' : '' }}">
                 Utilisateurs
             </div>
         <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#UsersUtilities"
+        <li class="nav-item {{ in_array($current_page,['admin.users','admin.roles','admin.permissions'])  ? 'active' : '' }}">
+            <a class="nav-link {{ in_array($current_page,['admin.users','admin.roles','admin.permissions']) ? '' : 'collapsed' }}" href="#" data-toggle="collapse" {{ in_array($current_page,['admin.users','admin.roles','admin.permissions']) ? 'aria-expanded="true"' : 'aria-expanded="false"' }} data-target="#UsersUtilities"
                 aria-expanded="true" aria-controls="collapseUtilities">
                 <i class="fas fa-fw fa-users"></i>
                 <span>gestion des Utilisateurs</span>
             </a>
-            <div id="UsersUtilities" class="collapse" aria-labelledby="headingUtilities"
+            <div id="UsersUtilities" class="collapse {{ in_array($current_page,['admin.users','admin.roles','admin.permissions'])  ? 'show' : '' }}" aria-labelledby="headingUtilities"
                 data-parent="#accordionSidebar" style="z-index: 2">
                 <div class="py-2 bg-white rounded collapse-inner">
-                    <a class="collapse-item" href="{{ route('admin.users') }}">Utilisateurs</a>
-                    <a class="collapse-item" href="{{ route('admin.roles') }}">Roles</a>
-                    <a class="collapse-item" href="{{ route('admin.permissions') }}">Permissions</a>
+                    <a class="collapse-item {{ in_array($current_page,['admin.users'])  ? 'active' : '' }}" href="{{ route('admin.users') }}">Utilisateurs</a>
+                    <a class="collapse-item {{ in_array($current_page,['admin.roles'])  ? 'active' : '' }}" href="{{ route('admin.roles') }}">Roles</a>
+                    <a class="collapse-item {{ in_array($current_page,['admin.permissions'])  ? 'active' : '' }}" href="{{ route('admin.permissions') }}">Permissions</a>
                 </div>
             </div>
         </li>
