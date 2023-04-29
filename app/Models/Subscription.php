@@ -34,6 +34,7 @@ class Subscription extends Model
     public function Customer(){
         return $this->belongsTo(Customer::class,'id_customer');
     }
+
     public function User(){
         return $this->belongsTo(User::class,'id_user');
     }
@@ -60,7 +61,7 @@ class Subscription extends Model
             }
             $nbDays = settings()->get('dashboard_nb_subscriptions_days');
 
-            $query->whereRaw ("DATEDIFF(end_date, NOW()) <= ".$nbDays." && DATEDIFF(end_date, NOW())>0");
+            $query->whereRaw ("DATEDIFF(end_date, NOW()) <= ".$nbDays." AND DATEDIFF(end_date, NOW())>0");
         }
         $result= $query->orderByRaw('DATEDIFF(end_date, NOW()) ASC')->get();
         $subs = $result->map(function ($item) {

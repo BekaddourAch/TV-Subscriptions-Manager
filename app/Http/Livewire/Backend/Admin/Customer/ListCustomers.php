@@ -140,6 +140,7 @@ class ListCustomers extends Component
         $this->data["active"] = 1;
         $this->data["state"] = "Alger";
         $this->dispatchBrowserEvent('show-form');
+        $this->dispatchBrowserEvent('post-show-form');
         }
 
     }
@@ -192,6 +193,7 @@ class ListCustomers extends Component
 		$this->customer = $customer;
 
 		$this->dispatchBrowserEvent('show-form');
+        $this->dispatchBrowserEvent('post-show-form');
         }
     }
 
@@ -272,8 +274,8 @@ class ListCustomers extends Component
             ->orWhere('lastname', 'like', '%'.$this->searchTerm.'%')
             ->orWhere('phone1', 'like', '%'.$this->searchTerm.'%')
             ->orWhere('email', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(15);
+            ->orderByRaw($this->sortColumnName .' '.$this->sortDirection)
+            ->paginate(10)->onEachSide(0);
         return $customers;
 	}
 
