@@ -285,7 +285,9 @@
                             <tr class="text-center">
 
                                 <td class="align-middle" scope="row">#{{ $subscription["id_subscription"] }}</td>
-                                <td class="align-middle text-left">{{ $subscription["service_name"] }}</td>
+                                <td class="align-middle text-left">
+                                    <a  class="text-primary" href="{{route("admin.services-details",$subscription["id_service"])}}">{{ $subscription["service_name"] }}</a>
+                                </td>
                                 <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription["cost_price"]) }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ $subscription["quantity"] }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription["selling_price"]) }}</td>

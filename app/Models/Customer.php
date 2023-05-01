@@ -17,6 +17,7 @@ class Customer extends Model
         'phone2',
         'email',
         'address',
+        'country',
         'state',
         'active',
         'is_reseller',

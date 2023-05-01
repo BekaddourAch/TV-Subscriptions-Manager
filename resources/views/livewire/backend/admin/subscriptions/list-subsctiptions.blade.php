@@ -176,7 +176,6 @@
                     <tbody>
                         @forelse($subscriptions as $index => $subscription)
                             <tr class="text-center">
-
                                 @if (Auth::user()->hasPermission('subscription-update') || Auth::user()->hasPermission('subscription-delete'))
                                     <td class="align-middle" scope="col" >
                                         <div class="custom-control custom-checkbox small">
@@ -188,8 +187,11 @@
                                         </div>
                                     </td>
                                 @endif
+
                                 <td class="align-middle" scope="row">{{ $subscription->id_subscription }}</td>
-                                <td class="align-middle text-left">{{ $subscription->service_name }}</td>
+                                <td class="align-middle d-none d-md-table-cell">
+                                        <a  class="text-primary" href="{{route("admin.services-details",$subscription->id_service)}}">{{ $subscription->Service->name }}</a>
+                                </td>
                                 <td class="align-middle text-left">
                                     <a  class="text-primary" href="{{route("admin.customer-details",$subscription->id_customer)}}">{{ $subscription->firstname . ' ' . $subscription->lastname }}</a>
                                 </td>

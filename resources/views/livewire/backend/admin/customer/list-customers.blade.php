@@ -1,6 +1,9 @@
 <div>
     @section('style')
+{{--        <link href="{{ asset('css/countrySelect.min.css') }}" rel="stylesheet">--}}
+        <link href="{{ asset('css/flags.css') }}" rel="stylesheet"type="text/css" >
         <style>
+
 
         </style>
     @endsection
@@ -26,6 +29,8 @@
                 @endif
                 @if(Auth::user()->hasPermission('customers-create'))
 
+
+
                 <button wire:click.prevent='addNewCustomer' class="ml-1 btn btn-sm btn-primary">
                     <i class="mr-2 fa fa-plus-circle"
                         aria-hidden="true">
@@ -33,7 +38,12 @@
                     </i>
                 </button>
                 @endif
+
+
+
+
             </div>
+
         </div>
         <div class="flex-wrap d-flex justify-content-between">
             <div class="pt-3 my-2 ml-3 ml-md-3 my-md-0 mw-80 navbar-search">
@@ -272,7 +282,7 @@
 
                                 <!-- Modal customer lastname -->
                                 <div class="form-group">
-                                    <label for="firstname">Nom</label>
+                                    <label for="firstname">Nom</label><span style="color: red !important; display: inline; float: none;">*</span>
                                     <input type="text" tabindex="1" wire:model.defer="data.firstname"
                                         class="form-control @error('firstname') is-invalid @enderror" id="firstname"
                                         aria-describedby="nameHelp" placeholder="Nom">
@@ -288,7 +298,7 @@
                             <div class="col-6">
                                 <!-- Modal customer firstname -->
                                 <div class="form-group">
-                                    <label for="lastname">Prénom</label>
+                                    <label for="lastname">Prénom</label><span style="color: red !important; display: inline; float: none;">*</span>
                                     <input type="text" tabindex="1" wire:model.defer="data.lastname"
                                         class="form-control @error('lastname') is-invalid @enderror" id="lastname"
                                         aria-describedby="nameHelp" placeholder="Prénom">
@@ -306,8 +316,8 @@
                                 <div class="col-6">
                                     <!-- Modal customer phone1 -->
                                     <div class="form-group">
-                                        <label for="phone1">Téléphone 1</label>
-                                        <input  type="tel" tabindex="1" placeholder="0655112233" required wire:model.defer="data.phone1"
+                                        <label for="phone1">Téléphone 1</label><span style="color: red !important; display: inline; float: none;">*</span>
+                                        <input  type="tel" tabindex="1" placeholder="ex:0655112233" required wire:model.defer="data.phone1"
                                             class="form-control @error('phone1') is-invalid @enderror" id="phone1"
                                             aria-describedby="nameHelp" >
                                         @error('phone1')
@@ -336,7 +346,7 @@
                                 </div>
                             </div>
                             <div class="row h-100 justify-content-center align-items-center">
-                                <div class="col-6">
+                                <div class="col-12">
                                     <!-- Modal customer email -->
                                     <div class="form-group">
                                         <label for="email">Email</label>
@@ -370,83 +380,122 @@
                             </div>
                             <div class="row h-100 justify-content-center align-items-center">
                                 <div class="col-6">
-                                    <!-- Modal customer state -->
                                     <div class="form-group">
-                                        <label for="state">Wilaya</label>
+                                        <label for="country">pays</label>
+
+                                        <select id="country" name="country" class="form-control" wire:model="data.country"
+                                                data-live-search="true"
+                                                title="Selectionez un pays" >
+    {{--                                        @include(app_path() .'\public\Countries.php' );--}}
+                                            @php
+                                                require(app_path() .'$.\..\resources\views\livewire\backend\admin\customer\Countries.php' );
+                                            @endphp
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    @if($data['country']=='Algérie')
+                                    <!-- Modal customer state -->
+                                    <div class="form-group state" >
+                                        <label for="state" id="state">Wilaya</label>
                                         {{-- <input type="text" tabindex="1" wire:model.defer="data.state"
                                             class="form-control @error('state') is-invalid @enderror" id="state"
                                             aria-describedby="nameHelp" placeholder="Enter customer state"> --}}
-                                            <select  wire:model.defer="data.state" class="form-control @error('state') is-invalid @enderror" id="state"
-                                                aria-describedby="nameHelp">
-                                                <option value="Adrar">Adrar</option>
-                                                <option value="Chlef">Chlef</option>
-                                                <option value="Laghouat">Laghouat</option>
-                                                <option value="Oum El Bouaghi">Oum El Bouaghi</option>
-                                                <option value="Batna">Batna</option>
-                                                <option value="Béjaïa">Béjaïa</option>
-                                                <option value="Biskra">Biskra</option>
-                                                <option value="Béchar">Béchar</option>
-                                                <option value="Blida">Blida</option>
-                                                <option value="Bouira">Bouira</option>
-                                                <option value="Tamanrasset">Tamanrasset</option>
-                                                <option value="Tébessa">Tébessa</option>
-                                                <option value="Tlemcen">Tlemcen</option>
-                                                <option value="Tiaret">Tiaret</option>
-                                                <option value="Tizi Ouzou">Tizi Ouzou</option>
-                                                <option value="Alger">Alger</option>
-                                                <option value="Djelfa">Djelfa</option>
-                                                <option value="Jijel">Jijel</option>
-                                                <option value="Sétif">Sétif</option>
-                                                <option value="Saïda">Saïda</option>
-                                                <option value="Skikda">Skikda</option>
-                                                <option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
-                                                <option value="Annaba">Annaba</option>
-                                                <option value="Guelma">Guelma</option>
-                                                <option value="Constantine">Constantine</option>
-                                                <option value="Médéa">Médéa</option>
-                                                <option value="Mostaganem">Mostaganem</option>
-                                                <option value="M'Sila">M'Sila</option>
-                                                <option value="Mascara">Mascara</option>
-                                                <option value="Ouargla">Ouargla</option>
-                                                <option value="Oran">Oran</option>
-                                                <option value="El Bayadh">El Bayadh</option>
-                                                <option value="Illizi">Illizi</option>
-                                                <option value="Bordj Bou Arreridj">Bordj Bou Arreridj</option>
-                                                <option value="Boumerdès">Boumerdès</option>
-                                                <option value="El Tarf">El Tarf</option>
-                                                <option value="Tindouf">Tindouf</option>
-                                                <option value="Tissemsilt">Tissemsilt</option>
-                                                <option value="El Oued">El Oued</option>
-                                                <option value="Khenchela">Khenchela</option>
-                                                <option value="Souk Ahras">Souk Ahras</option>
-                                                <option value="Tipaza">Tipaza</option>
-                                                <option value="Mila">Mila</option>
-                                                <option value="ain-defla">Aïn Defla</option>
-                                                <option value="naama">Naâma</option>
-                                                <option value="Aïn Témouchent">Aïn Témouchent</option>
-                                                <option value="ghardaia">Ghardaia</option>
-                                                <option value="Relizane">Relizane</option>
-                                                <option value="Timimoun">Timimoun </option>
-                                                <option value="Bordj Badji Mokhtar">Bordj Badji Mokhtar</option>
-                                                <option value="Ouled Djellal">Ouled Djellal</option>
-                                                <option value="Béni Abbès">Béni Abbès</option>
-                                                <option value="Ain Salah">Aïn Salah</option>
-                                                <option value="Ain Guezzam">Aïn Guezzam</option>
-                                                <option value="Touggourt">Touggourt</option>
-                                                <option value="Djanet">Djanet </option>
-                                                <option value="El M'Ghair">El M'Ghair</option>
-                                                <option value="El Meniaa">El Meniaa</option>
-                                            </select>
+                                        <select  wire:model.defer="data.state" class="form-control @error('state') is-invalid @enderror" id="state"
+                                                 aria-describedby="nameHelp">
+                                            <option value="Adrar">Adrar</option>
+                                            <option value="Chlef">Chlef</option>
+                                            <option value="Laghouat">Laghouat</option>
+                                            <option value="Oum El Bouaghi">Oum El Bouaghi</option>
+                                            <option value="Batna">Batna</option>
+                                            <option value="Béjaïa">Béjaïa</option>
+                                            <option value="Biskra">Biskra</option>
+                                            <option value="Béchar">Béchar</option>
+                                            <option value="Blida">Blida</option>
+                                            <option value="Bouira">Bouira</option>
+                                            <option value="Tamanrasset">Tamanrasset</option>
+                                            <option value="Tébessa">Tébessa</option>
+                                            <option value="Tlemcen">Tlemcen</option>
+                                            <option value="Tiaret">Tiaret</option>
+                                            <option value="Tizi Ouzou">Tizi Ouzou</option>
+                                            <option value="Alger">Alger</option>
+                                            <option value="Djelfa">Djelfa</option>
+                                            <option value="Jijel">Jijel</option>
+                                            <option value="Sétif">Sétif</option>
+                                            <option value="Saïda">Saïda</option>
+                                            <option value="Skikda">Skikda</option>
+                                            <option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
+                                            <option value="Annaba">Annaba</option>
+                                            <option value="Guelma">Guelma</option>
+                                            <option value="Constantine">Constantine</option>
+                                            <option value="Médéa">Médéa</option>
+                                            <option value="Mostaganem">Mostaganem</option>
+                                            <option value="M'Sila">M'Sila</option>
+                                            <option value="Mascara">Mascara</option>
+                                            <option value="Ouargla">Ouargla</option>
+                                            <option value="Oran">Oran</option>
+                                            <option value="El Bayadh">El Bayadh</option>
+                                            <option value="Illizi">Illizi</option>
+                                            <option value="Bordj Bou Arreridj">Bordj Bou Arreridj</option>
+                                            <option value="Boumerdès">Boumerdès</option>
+                                            <option value="El Tarf">El Tarf</option>
+                                            <option value="Tindouf">Tindouf</option>
+                                            <option value="Tissemsilt">Tissemsilt</option>
+                                            <option value="El Oued">El Oued</option>
+                                            <option value="Khenchela">Khenchela</option>
+                                            <option value="Souk Ahras">Souk Ahras</option>
+                                            <option value="Tipaza">Tipaza</option>
+                                            <option value="Mila">Mila</option>
+                                            <option value="ain-defla">Aïn Defla</option>
+                                            <option value="naama">Naâma</option>
+                                            <option value="Aïn Témouchent">Aïn Témouchent</option>
+                                            <option value="ghardaia">Ghardaia</option>
+                                            <option value="Relizane">Relizane</option>
+                                            <option value="Timimoun">Timimoun </option>
+                                            <option value="Bordj Badji Mokhtar">Bordj Badji Mokhtar</option>
+                                            <option value="Ouled Djellal">Ouled Djellal</option>
+                                            <option value="Béni Abbès">Béni Abbès</option>
+                                            <option value="Ain Salah">Aïn Salah</option>
+                                            <option value="Ain Guezzam">Aïn Guezzam</option>
+                                            <option value="Touggourt">Touggourt</option>
+                                            <option value="Djanet">Djanet </option>
+                                            <option value="El M'Ghair">El M'Ghair</option>
+                                            <option value="El Meniaa">El Meniaa</option>
+                                        </select>
                                         @error('state')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
                                         @enderror
                                     </div>
                                     {{-- ---------------------------------------------------- --}}
-
+                                    {{-- ---------------------------------------------------- --}}
+                                    {{-- ---------------------------------------------------- --}}
+                                    {{-- ---------------------------------------------------- --}}
+                                    @endif
                                 </div>
-                                <div class="col-3">
+                            </div>
+
+                        <div class="row h-100 justify-content-center align-items-center">
+                            <div class="col-12">
+                                <!-- Modal customer address -->
+                                <div class="form-group">
+                                    <label for="address">Adresse</label>
+                                    <input type="text" tabindex="1" wire:model.defer="data.address" class="form-control @error('address') is-invalid @enderror"
+                                           id="address" aria-describedby="nameHelp" placeholder="Entrez l'adresse du client">
+
+                                    @error('address')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                {{-- ---------------------------------------------------- --}}
+                            </div>
+                        </div>
+
+                        <div class="row h-100 justify-content-center align-items-center">
+                                <div class="col-6">
                                     <!-- Modal customer notes -->
                                     <div class="form-group">
                                         <label for="customSwitch1">Revendeur</label>
@@ -463,7 +512,7 @@
                                     {{-- ---------------------------------------------------- --}}
 
                                 </div>
-                                <div class="col-3">
+                                <div class="col-6">
                                     <!-- Modal customer notes -->
                                     <div class="form-group">
                                         <label for="customSwitch1">Actif</label>
@@ -549,10 +598,21 @@
 
         {{-- show or hide customers section on Modal --}}
 
+            <script src="{{ asset('js/jquery.flagstrap.js') }}"></script>
 
+            <script>
 
-        {{-- show-delete-alert-confirmation --}}
+                $(document).ready(function(){
 
+                    window.addEventListener('post-show-modal', function (event) {
+                        $('#country').selectpicker('render');
+                        $('#state').on('load',function(){$('#state').selectpicker('render')});
+                    });
+
+                });
+            </script>
+
+            {{-- show-delete-alert-confirmation --}}
         <script>
             window.addEventListener('show-delete-alert-confirmation', event => {
                 Swal.fire({
