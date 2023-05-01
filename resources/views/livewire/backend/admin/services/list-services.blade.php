@@ -108,19 +108,13 @@
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.name' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
                         </th>
-                        <th class="align-middle"> Description
-                            <span wire:click="sortBy('services.description')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.description' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.description' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                            </span>
-                        </th>
-                        <th class="align-middle"> Prix d'Achat
+                        <th class="align-middle d-none d-md-table-cell"> Prix d'Achat
                             <span wire:click="sortBy('services.cost_price')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                 <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.cost_price' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.cost_price' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
                         </th>
-                        <th class="align-middle"> Prix de Vente
+                        <th class="align-middle d-none d-md-table-cell"> Prix de Vente
                             <span wire:click="sortBy('services.selling_price')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                 <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.selling_price' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.selling_price' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
@@ -138,13 +132,12 @@
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.active' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
                         </th>
-                        <th class="align-middle"> Remarques
-                            <span wire:click="sortBy('services.notes')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.notes' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.notes' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                            </span>
+                        <th class="align-middle"> Crée le
+                            <span wire:click="sortBy('services.created_at')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                            <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'services.created_at' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                            <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'services.created_at' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                        </span>
                         </th>
-
                         @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
                             <th class="align-middle" style="width: 10%" colspan="2">Actions  </th>
                         @endif
@@ -164,7 +157,6 @@
                             @endif
                             <td class="align-middle" scope="row">#{{ $service->id_service }}</td>
                             <td class="align-middle text-left">{{ $service->name }}</td>
-                            <td class="align-middle text-left d-none d-md-table-cell">{{ $service->description }}</td>
                             <td class="align-middle d-none d-md-table-cell">{{ formatPrice($service->cost_price) }}</td>
                             <td class="align-middle d-none d-md-table-cell">{{ formatPrice($service->selling_price) }}</td>
                             <td class="align-middle">{{ $service->getDurationWithUnit() }}</td>
@@ -175,8 +167,7 @@
                                     <span class="font-weight-bold badge text-white bg-secondary">Non</span>
                                 @endif
                             </td>
-                            <td class="align-middle text-left d-none d-md-table-cell">{{ $service->notes }}</td>
-
+                            <td class="align-middle">{{ formatDate($service->created_at) }}</td>
                             @if((Auth::user()->hasPermission('services-update')) || (Auth::user()->hasPermission('services-delete')))
                                 <td class="align-middle">
                                     <div class="btn-group btn-group-sm">
@@ -280,9 +271,14 @@
                                 <!-- Modal service cost price -->
                                 <div class="form-group">
                                     <label for="cost_price">Prix d'Achat</label>
-                                    <input type="number" min="1" tabindex="1" wire:model.defer="data.cost_price"
-                                           class="form-control @error('cost_price') is-invalid @enderror" id="cost_price"
-                                           aria-describedby="nameHelp" step="0.01">
+                                    <div class="input-group mb-3">
+                                        <input type="number" min="1" tabindex="1" wire:model.defer="data.cost_price"
+                                               class="form-control @error('cost_price') is-invalid @enderror" id="cost_price"
+                                               aria-describedby="nameHelp" step="0.01">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">.00 DA</span>
+                                        </div>
+                                    </div>
                                     @error('cost_price')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -296,9 +292,14 @@
                                 <!-- Modal service selling price -->
                                 <div class="form-group">
                                     <label for="selling_price">Prix de Vente</label>
-                                    <input type="number" min="1" tabindex="1" wire:model.defer="data.selling_price"
-                                           class="form-control @error('selling_price') is-invalid @enderror" id="selling_price"
-                                           aria-describedby="nameHelp"  step="0.01">
+                                    <div class="input-group mb-3">
+                                        <input type="number" min="1" tabindex="1" wire:model.defer="data.selling_price"
+                                               class="form-control @error('selling_price') is-invalid @enderror" id="selling_price"
+                                               aria-describedby="nameHelp"  step="0.01">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">.00 DA</span>
+                                        </div>
+                                    </div>
                                     @error('selling_price')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -391,7 +392,7 @@
 
                     <div class="modal-footer bg-light">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                class="mr-1 fa fa-times"></i> Cancel</button>
+                                class="mr-1 fa fa-times"></i> Annuler</button>
                         <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-save"></i>
                             @if ($showEditModal)
                                 <span>Sauvegarder les modifications</span>

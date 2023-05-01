@@ -69,7 +69,7 @@
             href="{{route("laratrust.roles-assignment.index", ['model' => $modelKey])}}"
             class="btn btn-red mr-4"
           >
-            Cancel
+            Annuler
           </a>
           <button class="btn btn-blue" type="submit">Save</button>
         </div>

@@ -75,7 +75,7 @@
             href="{{route("laratrust.{$type}s.index")}}"
             class="btn btn-red mr-4"
           >
-            Cancel
+            Annuler
           </a>
           <button class="btn btn-blue" type="submit">Save</button>
         </div>
