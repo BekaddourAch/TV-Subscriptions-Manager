@@ -180,6 +180,7 @@ return [
         App\Providers\JetstreamServiceProvider::class,
         // Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
 
+        Arcanedev\LaravelSettings\SettingsServiceProvider::class,
     ],
 
     /*

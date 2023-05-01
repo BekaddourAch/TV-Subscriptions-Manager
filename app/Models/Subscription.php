@@ -40,6 +40,7 @@ class Subscription extends Model
 
     public static function getSubscriptionsWithData($beginDate = null, $endDate = null, $idUser = 0,$idCustomer= 0,$idService= 0)
     {
+
         $query = $regions = DB::table('subscriptions')
             ->join('customers', 'customers.id_customer', '=', 'subscriptions.id_customer')
             ->join('services', 'services.id_service', '=', 'subscriptions.id_service')
@@ -58,7 +59,12 @@ class Subscription extends Model
             $query->where("subscriptions.id_service","=",$idService);
         }
         if($idCustomer==0 && $idService==0){
-            $query->whereRaw ("DATEDIFF(end_date, NOW()) < 30 && DATEDIFF(end_date, NOW())>0");
+            if(!settings()->has('dashboard_nb_subscriptions_days')){
+                settings()->set('dashboard_nb_subscriptions_days', 30);
+            }
+            $nbDays = settings()->get('dashboard_nb_subscriptions_days');
+
+            $query->whereRaw ("DATEDIFF(end_date, NOW()) <= ".$nbDays." && DATEDIFF(end_date, NOW())>0");
         }
         $result= $query->orderByRaw('DATEDIFF(end_date, NOW()) ASC')->get();
         $subs = $result->map(function ($item) {

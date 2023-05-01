@@ -138,7 +138,7 @@ class ListCustomers extends Component
         $this->showEditModal = false;
         $this->data['country']="Algérie";
         $this->data['state']="Alger";
-
+        $this->data["active"] = 1;
         $this->dispatchBrowserEvent('show-form');
             $this->dispatchBrowserEvent('post-show-modal');
 
