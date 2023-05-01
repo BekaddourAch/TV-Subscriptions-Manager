@@ -166,6 +166,8 @@ class ListSubsctiptions extends Component
 
             $validatedData['id_user']=auth()->id();
 
+           $validatedData['customer_name']=Customer::where('id_customer', $validatedData['id_customer'])->value('firstname') ." ".Customer::where('id_customer', $validatedData['id_customer'])->value('lastname');
+           $validatedData['service_name']=Service::where('id_service', $validatedData['id_service'])->value('name');
             $validatedData['total']=$validatedData['selling_price']*$validatedData['quantity'];
 
             Subscription::create($validatedData);

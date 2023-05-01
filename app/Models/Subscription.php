@@ -17,6 +17,8 @@ class Subscription extends Model
         'id_service',
         'id_customer',
         'id_user',
+        'customer_name',
+        'service_name',
         'cost_price',
         'quantity',
         'selling_price',

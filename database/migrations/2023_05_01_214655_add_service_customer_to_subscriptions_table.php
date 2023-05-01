@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
-
-            $table->string('country')->nullable()->after('address');
+        Schema::table('subscriptions', function (Blueprint $table) {
+            $table->string('customer_name')->nullable()->after('id_user');
+            $table->string('service_name')->nullable()->after('id_user');
         });
     }
 
@@ -26,8 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->dropColumn('country');
+        Schema::table('subscriptions', function (Blueprint $table) {
+            $table->dropColumn('customer_name');
+            $table->dropColumn('service_name');
         });
     }
 };

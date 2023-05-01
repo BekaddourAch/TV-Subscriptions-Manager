@@ -101,7 +101,7 @@
             <a class="nav-link {{ in_array($current_page,['admin.users','admin.roles','admin.permissions']) ? '' : 'collapsed' }}" href="#" data-toggle="collapse" {{ in_array($current_page,['admin.users','admin.roles','admin.permissions']) ? 'aria-expanded="true"' : 'aria-expanded="false"' }} data-target="#UsersUtilities"
                 aria-expanded="true" aria-controls="collapseUtilities">
                 <i class="fas fa-fw fa-users"></i>
-                <span>gestion des Utilisateurs</span>
+                <span>Gestion des Utilisateurs</span>
             </a>
             <div id="UsersUtilities" class="collapse {{ in_array($current_page,['admin.users','admin.roles','admin.permissions'])  ? 'show' : '' }}" aria-labelledby="headingUtilities"
                 data-parent="#accordionSidebar" style="z-index: 2">
