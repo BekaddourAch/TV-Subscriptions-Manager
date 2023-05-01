@@ -135,6 +135,10 @@ class ListServices extends Component
     {
         if (Auth::user()->hasPermission('services-create')) {
         $this->reset();
+        $this->data["selling_price"]=0.00;
+        $this->data["cost_price"]=0.00;
+        $this->data["duration"]=0;
+        $this->data["active"]=1;
         $this->showEditModal = false;
         $this->dispatchBrowserEvent('show-form');
         }
@@ -256,7 +260,7 @@ class ListServices extends Component
             ->where('name', 'like', '%'.$this->searchTerm.'%')
             ->orWhere('description', 'like', '%'.$this->searchTerm.'%')
             ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(15);
+            ->paginate(10)->onEachSide(0);
 
         return $services;
     }
@@ -364,7 +368,7 @@ class ListServices extends Component
         ])->layout('layouts.admin');
     }
 
-        
+
     // Sort By Column Name
 
     public function sortBy($columnName)

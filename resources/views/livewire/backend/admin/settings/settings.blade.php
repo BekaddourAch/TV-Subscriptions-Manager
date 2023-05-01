@@ -24,7 +24,7 @@
                             <tr>
                                 <td>{{ isset($frLang[$key]) ? $frLang[$key] :  $key }}</td>
                                 <td>
-                                    <input type="text" wire:model="settings.{{ $key }}"  wire:change="updateField('{{ $key }}', $event.target.value)" >
+                                    <input type="text" class="form-control" wire:model="settings.{{ $key }}"  wire:change="updateField('{{ $key }}', $event.target.value)" >
                                 </td>
                                 <td>
                                     <a class="btn btn-danger" href="#"  wire:click.prevent="confirmSettingRemoval('{{ $key }}')">

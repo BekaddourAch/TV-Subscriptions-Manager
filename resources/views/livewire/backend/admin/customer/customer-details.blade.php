@@ -296,7 +296,7 @@
                                 <td class="align-middle d-none d-md-table-cell">{{ formatDate($subscription["end_date"]) }}</td>
                                 <td class="align-middle">
                                     <div class="progress">
-                                        <div class="progress-bar @if($subscription["nb_days"]>20) bg-info @elseif($subscription["nb_days"]>10) bg-warning @else bg-danger @endif " role="progressbar" style="width: {{ formatTwoDecimal(100-($subscription["nb_days"]*100/30)) }}%;" aria-valuenow="{{ formatTwoDecimal(100-($subscription["nb_days"]*100/30))  }}" aria-valuemin="0" aria-valuemax="100">{{ $subscription["nb_days"]  }}</div>
+                                        <div class="progress-bar @if($subscription["nb_days"]>20) bg-info @elseif($subscription["nb_days"]>10) bg-warning @else bg-danger @endif " role="progressbar" style="width: {{ formatTwoDecimal(100-($subscription["nb_days"]*100/30)) }}%;" aria-valuenow="{{ formatTwoDecimal(100-($subscription["nb_days"]*100/30))  }}" aria-valuemin="0" aria-valuemax="100">{{ $subscription["nb_days"]>0  ? $subscription["nb_days"] :  "Expiré" }}</div>
                                     </div>
                                 </td>
 

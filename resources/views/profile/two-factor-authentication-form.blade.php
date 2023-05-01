@@ -107,7 +107,7 @@
                 @if ($showingConfirmation)
                     <x-jet-confirms-password wire:then="disableTwoFactorAuthentication">
                         <x-jet-secondary-button wire:loading.attr="disabled">
-                            {{ __('Cancel') }}
+                            {{ __('Annuler') }}
                         </x-jet-secondary-button>
                     </x-jet-confirms-password>
                 @else

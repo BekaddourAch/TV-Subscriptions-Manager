@@ -140,8 +140,7 @@ class ListCustomers extends Component
         $this->data['state']="Alger";
         $this->data["active"] = 1;
         $this->dispatchBrowserEvent('show-form');
-            $this->dispatchBrowserEvent('post-show-modal');
-
+        $this->dispatchBrowserEvent('post-show-modal');
         }
 
     }
@@ -197,7 +196,7 @@ if($validatedData['country']!='Algérie'){
 		$this->customer = $customer;
 
 		$this->dispatchBrowserEvent('show-form');
-            $this->dispatchBrowserEvent('post-show-modal');
+        $this->dispatchBrowserEvent('post-show-modal');
         }
     }
 
@@ -282,8 +281,8 @@ if($validatedData['country']!='Algérie'){
             ->orWhere('lastname', 'like', '%'.$this->searchTerm.'%')
             ->orWhere('phone1', 'like', '%'.$this->searchTerm.'%')
             ->orWhere('email', 'like', '%'.$this->searchTerm.'%')
-            ->orderBy($this->sortColumnName, $this->sortDirection)
-            ->paginate(15);
+            ->orderByRaw($this->sortColumnName .' '.$this->sortDirection)
+            ->paginate(10)->onEachSide(0);
         return $customers;
 	}
 

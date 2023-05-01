@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="mr-1 fa fa-times"></i> Annuler</button>
                     <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-open"></i> Open</button>
                 </div>
             </div>

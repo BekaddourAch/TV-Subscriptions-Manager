@@ -85,7 +85,7 @@ class ListUsers extends Component
             $users = User::whereRelation('roles', 'name', $this->roleFilter)
                 ->where('name', 'like', '%' . $this->searchTerm . '%')
                 ->orderBy($this->sortColumnName, $this->sortDirection)
-                ->paginate(15);
+                ->paginate(10)->onEachSide(0);
         } else {
             $users = User::query()
                 ->where('name', 'like', '%' . $this->searchTerm . '%')
@@ -93,7 +93,7 @@ class ListUsers extends Component
                 ->orWhere('email', 'like', '%' . $this->searchTerm . '%')
                 ->orWhere('mobile', 'like', '%' . $this->searchTerm . '%')
                 ->orderBy($this->sortColumnName, $this->sortDirection)
-                ->paginate(15);
+                ->paginate(10)->onEachSide(0);
         }
 
         return $users;
@@ -112,7 +112,7 @@ class ListUsers extends Component
             'iconColor' => 'green',
             'position' => 'center',
             'timer' => '1700',
-        ]); 
+        ]);
         $this->reset(['selectPageRows', 'selectedRows']);
     }
     }
@@ -121,7 +121,7 @@ class ListUsers extends Component
 
     public function setAllAsInActive()
     {
-        
+
         if (Auth::user()->hasPermission('users-update')) {
         User::whereIn('id', $this->selectedRows)->update(['status' => 0]);
 
@@ -271,7 +271,7 @@ class ListUsers extends Component
 
     public function edit(User $user)
     {
-        
+
         if (Auth::user()->hasPermission('users-update')) {
         $this->reset();
 
@@ -361,7 +361,7 @@ class ListUsers extends Component
     // Delete User
 
     public function deleteUser()
-    { 
+    {
         if (Auth::user()->hasPermission('users-delete')) {
 
             $user = User::findOrFail($this->userIdBeingRemoved);

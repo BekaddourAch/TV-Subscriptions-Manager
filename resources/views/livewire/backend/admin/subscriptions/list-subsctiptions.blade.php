@@ -51,11 +51,29 @@
             <div class="m-3 mw-100 justify-content-end">
                 <div class="btn-group">
                     <div data-toggle="buttons">
-                        <button wire:click="" class="btn btn-sm btn-warning btn-icon-split">
+                        <button wire:click="filterSubscriptionsByResellers()" class="btn btn-sm btn-warning btn-icon-split">
                             <span class="icon text-white-20">
                                 {{ $subscriptionsCount }}
                             </span>
                             <span class="text">Tous</span>
+                        </button>
+                        <button wire:click="filterSubscriptionsByResellers(1)" class="btn btn-sm btn-info btn-icon-split">
+                            <span class="icon text-white-20">
+                                {{ $resellersCustomersCount }}
+                            </span>
+                            <span class="text">Revendeurs</span>
+                        </button>
+                        <button wire:click="filterSubscriptionsByResellers(0)" class="btn btn-sm btn-primary btn-icon-split">
+                            <span class="icon text-white-20">
+                                {{ $subscriptionsCount-$resellersCustomersCount }}
+                            </span>
+                            <span class="text">Clients Réguliers</span>
+                        </button>
+                        <button wire:click="filterSubscriptionsByUnpaidAmount(1)" class="btn btn-sm btn-danger btn-icon-split">
+                            <span class="icon text-white-20">
+                                {{ formatPrice($totalUnpaidAmount) }}
+                            </span>
+                            <span class="text">Total à Collecter</span>
                         </button>
                     </div>
                 </div>
@@ -149,12 +167,6 @@
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.end_date' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Remarques
-                                <span wire:click="sortBy('subscriptions.notes')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'subscriptions.notes' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'subscriptions.notes' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                </span>
-                            </th>
 
                             @if (Auth::user()->hasPermission('subscription-update') || Auth::user()->hasPermission('subscription-delete'))
                                 <th class="align-middle" style="width: 10%" colspan="2">Actions </th>
@@ -165,7 +177,7 @@
                         @forelse($subscriptions as $index => $subscription)
                             <tr class="text-center">
                                 @if (Auth::user()->hasPermission('subscription-update') || Auth::user()->hasPermission('subscription-delete'))
-                                    <td class="align-middle" scope="col" wire:ignore>
+                                    <td class="align-middle" scope="col" >
                                         <div class="custom-control custom-checkbox small">
                                             <input type="checkbox" wire:model="selectedRows"
                                                 value="{{ $subscription->id_subscription }}"
@@ -181,18 +193,25 @@
                                         <a  class="text-primary" href="{{route("admin.services-details",$subscription->id_service)}}">{{ $subscription->Service->name }}</a>
                                 </td>
                                 <td class="align-middle text-left">
-                                    <a  class="text-primary" href="{{route("admin.customer-details",$subscription->id_customer)}}">{{ $subscription->Customer->firstname . ' ' . $subscription->Customer->lastname }}</a>
+                                    <a  class="text-primary" href="{{route("admin.customer-details",$subscription->id_customer)}}">{{ $subscription->firstname . ' ' . $subscription->lastname }}</a>
                                 </td>
-                                <td class="align-middle d-none d-md-table-cell">{{ $subscription->User->username }}</td>
+                                <td class="align-middle d-none d-md-table-cell">{{ $subscription->name }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription->total) }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ formatPrice($subscription->paid_amount) }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ formatDate($subscription->begin_date) }}</td>
                                 <td class="align-middle d-none d-md-table-cell">{{ formatDate($subscription->end_date) }}</td>
-                                <td class="align-middle text-left d-none d-md-table-cell">{{ $subscription->notes }}</td>
 
                                 @if (Auth::user()->hasPermission('subscription-update') || Auth::user()->hasPermission('subscription-delete'))
                                     <td class="align-middle">
                                         <div class="btn-group btn-group-sm">
+
+                                            @if (Auth::user()->hasPermission('subscription-create'))
+                                                <a href="#"
+                                                   wire:click.prevent="renew({{ $subscription->id_subscription }})"
+                                                   class="btn btn-success">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+                                            @endif
 
                                             @if (Auth::user()->hasPermission('subscription-update'))
                                                 <a href="#"
@@ -240,18 +259,20 @@
 
     <!-- Modal Create or Update subscription -->
 
-    <div class="modal fade" id="form" tabindex="-1" subscription="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="form" tabindex="-1"aria-labelledby="exampleModalLabel"
         aria-hidden="true" wire:ignore.self>
-        <div class="modal-dialog" subscription="document">
+        <div class="modal-dialog" >
             <form autocomplete="off"
-                wire:submit.prevent="{{ $showEditModal ? 'updateSubscription' : 'createSubscription' }}">
+                wire:submit.prevent="{{ $showEditModal }}">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
                         <h5 class="modal-title" id="exampleModalLabel">
-                            @if ($showEditModal)
+                            @if ($showEditModal=="updateSubscription")
                                 <span>Modifier l'Abonnement<span>
-                                    @else
-                                        <span>Ajouter un nouveau Abonnement</span>
+                            @elseif($showEditModal=="createSubscription")
+                                <span>Ajouter un nouveau Abonnement</span>
+                            @elseif($showEditModal=="renewSubscription")
+                                <span>Ajouter un nouveau Abonnement</span>
                             @endif
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -261,44 +282,35 @@
                     <div class="modal-body">
                         <div class="row h-100 justify-content-center align-items-center">
                             <div class="col-12">
-                                <!-- Modal subscription name -->
                                 <div class="form-group">
                                     <select class=" form-control  show-tick" wire:model.defer="data.id_customer"
                                         data-live-search="true" title="Selectionnez un client" id="customer_select">
                                         @foreach ($customers as $customer)
                                             <option value="{{ $customer->id_customer }}"
-                                                wire:key="{{ $customer->id_customer }}">
+                                                wire:key="customer_{{ $customer->id_customer }}">
                                                 {{ $customer->firstname . ' ' . $customer->lastname }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-12">
-                                <!-- Modal subscription description -->
                                 <div class="form-group">
-                                    <div class="form-group">
-                                        <select class=" form-control  show-tick" wire:model.defer="data.id_service"
-                                            data-live-search="true" onchange="onServicesChange(this)"
-                                            title="Selectionez un service" id="service_select">
-                                            @foreach ($services as $service)
-                                                <option value="{{ $service->id_service }}"
-                                                    wire:key="{{ $service->id_service }}"
-                                                    data-object="{{ base64_encode(json_encode(['cost_price' => $service->cost_price, 'selling_price' => $service->selling_price, 'duration_unit' => $service->duration_unit, 'duration' => $service->duration])) }}">
-                                                    {{ $service->name }}</option>
-                                            @endforeach
-                                        </select>
+                                    <select class=" form-control  show-tick" wire:model.defer="data.id_service"
+                                        data-live-search="true" onchange="onServicesChange(this)"
+                                        title="Selectionez un service" id="service_select">
+                                        @foreach ($services as $service)
+                                            <option value="{{ $service->id_service }}"
+                                                wire:key="service_{{ $service->id_service }}"
+                                                data-object="{{ base64_encode(json_encode(['cost_price' => $service->cost_price, 'selling_price' => $service->selling_price, 'duration_unit' => $service->duration_unit, 'duration' => $service->duration])) }}">
+                                                {{ $service->name }}</option>
+                                        @endforeach
+                                    </select>
 
-
-
-
-                                        @error('description')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                    {{-- ---------------------------------------------------- --}}
-
+                                    @error('id_service')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -308,10 +320,17 @@
                                 <!-- Modal subscription cost price -->
                                 <div class="form-group">
                                     <label for="cost_price">Prix d'Achat</label>
-                                    <input type="number" min="1" tabindex="1"
-                                        wire:model.defer="data.cost_price" value="" readonly
-                                        class="form-control @error('cost_price') is-invalid @enderror" id="cost_price"
-                                        aria-describedby="nameHelp">
+
+                                    <div class="input-group mb-3">
+                                        <input type="number" min="1" tabindex="1"
+                                               wire:model.defer="data.cost_price" value="" readonly
+                                               class="form-control @error('cost_price') is-invalid @enderror" id="cost_price"
+                                               aria-describedby="nameHelp">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">.00 DA</span>
+                                        </div>
+                                    </div>
+
                                     @error('cost_price')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -325,10 +344,15 @@
                                 <!-- Modal subscription selling price -->
                                 <div class="form-group">
                                     <label for="selling_price">Prix de Vente</label>
-                                    <input type="number" min="1" tabindex="1"
-                                        wire:model.defer="data.selling_price"
-                                        class="form-control @error('selling_price') is-invalid @enderror"
-                                        id="selling_price" aria-describedby="nameHelp">
+                                    <div class="input-group mb-3">
+                                        <input type="number" min="1" tabindex="1"
+                                               wire:model.defer="data.selling_price"
+                                               class="form-control @error('selling_price') is-invalid @enderror"
+                                               id="selling_price" aria-describedby="nameHelp">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">.00 DA</span>
+                                        </div>
+                                    </div>
                                     @error('selling_price')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -362,10 +386,15 @@
                                 <!-- Modal subscription quantity -->
                                 <div class="form-group">
                                     <label for="paid_amount">Montant Payé</label>
-                                    <input type="number" min="1" tabindex="1"
-                                        wire:model.defer="data.paid_amount"
-                                        class="form-control @error('paid_amount') is-invalid @enderror" id="paid_amount"
-                                        aria-describedby="nameHelp">
+                                    <div class="input-group mb-3">
+                                        <input type="number"  tabindex="1"
+                                               wire:model.defer="data.paid_amount"
+                                               class="form-control @error('paid_amount') is-invalid @enderror" id="paid_amount"
+                                               aria-describedby="nameHelp">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">.00 DA</span>
+                                        </div>
+                                    </div>
                                     @error('paid_amount')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -436,12 +465,14 @@
 
                         <div class="modal-footer bg-light">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                    class="mr-1 fa fa-times"></i> Cancel</button>
+                                    class="mr-1 fa fa-times"></i> Annuler</button>
                             <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-save"></i>
-                                @if ($showEditModal)
+                                @if ($showEditModal=="updateSubscription")
                                     <span>Sauvegarder les modifications</span>
-                                @else
+                                @elseif($showEditModal=="createSubscription")
                                     <span>Sauvegarder</span>
+                                @elseif($showEditModal=="renewSubscription")
+                                    <span>Renouveller</span>
                                 @endif
                             </button>
                         </div>
@@ -452,9 +483,9 @@
     </div>
 
     <!-- Modal Delete subscription -->
-    <div class="modal fade" id="confirmationModal" tabindex="-1" subscription="dialog"
+    <div class="modal fade" id="confirmationModal" tabindex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
-        <div class="modal-dialog" subscription="document">
+        <div class="modal-dialog" >
             <div class="modal-content">
                 <div class="modal-header bg-light">
                     <h5>Supprimer l'Abonnement</h5>
@@ -547,7 +578,6 @@
                 @this.set('data.selling_price', servc_json.selling_price, true);
 
 
-                console.log(increment_date('jour', 10));
 
                 $('#form .row #begin_date').val(dateToInput(new Date()));
                 @this.set('data.begin_date', dateToInput(new Date()), true);

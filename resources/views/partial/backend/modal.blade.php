@@ -11,7 +11,7 @@
             </div>
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer bg-light">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
                 <a href="javascript:void(0);" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                 <form method="POST" action="{{ route('logout') }}" id="logout-form" class="d-none">
                     @csrf

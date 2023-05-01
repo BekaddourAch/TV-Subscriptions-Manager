@@ -136,67 +136,48 @@
 
                             <th class="align-middle" scope="col">#</th>
 
-                            <th class="align-middle">Nom
-                                <span wire:click="sortBy('customers.firstname')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.firstname' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.firstname' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
+                            <th class="align-middle">Nom et Prénom
+                                <span wire:click="sortBy('concat(customers.firstname ,\' \', customers.lastname)')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
+                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'concat(customers.firstname ,\' \', customers.lastname)' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
+                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'concat(customers.firstname ,\' \', customers.lastname)' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Prénom
-                                <span wire:click="sortBy('customers.lastname')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.lastname' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.lastname' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                </span>
-                            </th>
-                            <th class="align-middle"> Téléphone 1
+                            <th class="align-middle d-none d-md-table-cell"> Téléphone 1
                                 <span wire:click="sortBy('customers.phone1')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.phone1' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.phone1' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Téléphone 2
+                            <th class="align-middle d-none d-md-table-cell"> Téléphone 2
                                 <span wire:click="sortBy('customers.phone2')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.phone2' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.phone2' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Email
+                            <th class="align-middle d-none d-md-table-cell"> Email
                                 <span wire:click="sortBy('customers.email')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.email' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.email' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Adresse
-                                <span wire:click="sortBy('customers.address')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                    <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.address' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                    <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.address' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                                </span>
-                            </th>
-                            <th class="align-middle"> Wilaya
+                            <th class="align-middle text-left d-none d-md-table-cell"> Wilaya
                                 <span wire:click="sortBy('customers.state')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.state' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.state' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                             </th>
-                            <th class="align-middle"> Commune
-                                <span wire:click="sortBy('customers.city')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
-                                <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.city' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
-                                <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.city' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
-                            </span>
-                            </th>
-                            <th class="align-middle"> Revendeur
+                            <th class="align-middle text-left d-none d-md-table-cell"> Revendeur
                                 <span wire:click="sortBy('customers.is_reseller')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                     <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.is_reseller' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                     <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.is_reseller' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                                 </span>
                         </th>
-                            <th class="align-middle"> Actif
+                            <th class="align-middle text-left d-none d-md-table-cell"> Actif
                                 <span wire:click="sortBy('customers.active')" class="text-sm float-sm-right" style="cursor: pointer;font-size:10px;">
                                 <i class="mr-1 fa fa-arrow-up" style="color:{{ $sortColumnName === 'customers.active' && $sortDirection === 'asc' ? '#90EE90' : '' }}"></i>
                                 <i class="fa fa-arrow-down" style="color : {{ $sortColumnName === 'customers.active' && $sortDirection === 'desc' ? '#90EE90' : '' }}"></i>
                             </span>
                             </th>
-                             <th class="align-middle"> Remarques </th>
                             @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
                                 <th class="align-middle" style="width: 10%" colspan="2">Actions
                                 </th>
@@ -218,31 +199,27 @@
                                     </td>
                                 @endif
                                 <td class="align-middle" scope="row"><a  class="text-primary" href="{{route("admin.customer-details",$customer->id_customer)}}">#{{ $customer->id_customer }}</a></td>
-                                <td class="align-middle text-left">{{ $customer->firstname }}</td>
-                                <td class="align-middle text-left">{{ $customer->lastname }}</td>
-                                <td class="align-middle">{{ $customer->phone1 }}</td>
-                                <td class="align-middle d-none d-md-table-cell">{{ $customer->phone2 }}</td>
-                                <td class="align-middle">{{ $customer->email }}</td>
-                                <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->address }}</td>
+                                <td class="align-middle text-left">{{ $customer->firstname }} {{ $customer->lastname }}</td>
+                                <td class="align-middle d-none d-md-table-cell" style="white-space: nowrap;"><a href="tel:{{ $customer->phone1 }}">{{ $customer->phone1 }}  <i class="fas fa-phone-alt"></i></a></td>
+                                <td class="align-middle d-none d-md-table-cell" style="white-space: nowrap;"><a href="tel:{{ $customer->phone2 }}">{{ $customer->phone2 }}  <i class="fas fa-phone-alt"></i></a></td>
+                                <td class="align-middle text-left d-none d-md-table-cell" style="white-space: nowrap;"><a href="mailto:{{ $customer->email }}">{{ $customer->email }}  <i class="fas fa-inbox"></i></a></td>
                                 <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->state }}</td>
-                                <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->city }}</td>
-                                <td class="align-middle">
+                                <td class="align-middle text-left d-none d-md-table-cell">
 
                                     @if ($customer->is_reseller ==1)
                                     <span class="font-weight-bold badge text-white bg-success">Oui</span>
                                     @else
                                     <span class="font-weight-bold badge text-white bg-secondary">Non</span>
                                     @endif
-                            </td>
-                                <td class="align-middle">
+                                </td>
+                                <td class="align-middle text-left d-none d-md-table-cell">
 
                                     @if ($customer->active ==1)
                                     <span class="font-weight-bold badge text-white bg-success">Oui</span>
                                     @else
                                     <span class="font-weight-bold badge text-white bg-secondary">Non</span>
                                     @endif
-                            </td>
-                                <td class="align-middle text-left d-none d-md-table-cell">{{ $customer->notes }}</td>
+                                </td>
 
                             @if((Auth::user()->hasPermission('customers-update')) || (Auth::user()->hasPermission('customers-delete')))
                                     <td class="align-middle">
@@ -577,7 +554,7 @@
 
                     <div class="modal-footer bg-light">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                class="mr-1 fa fa-times"></i> Cancel</button>
+                                class="mr-1 fa fa-times"></i> Annuler</button>
                         <button type="submit" class="btn btn-primary"><i class="mr-1 fa fa-save"></i>
                             @if ($showEditModal)
                                 <span>Sauvegarder les modifications</span>
@@ -630,9 +607,6 @@
                     window.addEventListener('post-show-modal', function (event) {
                         $('#country').selectpicker('render');
                         $('#state').on('load',function(){$('#state').selectpicker('render')});
-                    });
-
-                    window.addEventListener('edit-form-modal', function (event) {
                     });
 
                 });

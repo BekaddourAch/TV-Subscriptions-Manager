@@ -5,7 +5,8 @@ use App\Models\Customer;
 use App\Models\Service;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator; 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,13 +18,15 @@ class ListSubsctiptions extends Component
     use WithFileUploads;
 
     use WithPagination;
-    
+
     public $sortColumnName = 'id_subscription';
 
     public $selectPageRows = false;
 
 
     public $excelFile = Null;
+    public $resellerFilter = Null;
+    public $unpaidAmountFilter = Null;
 
     public $importTypevalue = 'addNew';
     public $selectedRows = [];
@@ -34,7 +37,7 @@ class ListSubsctiptions extends Component
 
     public $subscription;
 
-    public $showEditModal = false;
+    public $showEditModal = "createSubscription";
 
     public $subscriptionIdBeingRemoved = null;
 
@@ -133,7 +136,11 @@ class ListSubsctiptions extends Component
     {
         if (Auth::user()->hasPermission('subscription-create')) {
         $this->reset();
-        $this->showEditModal = false;
+        $this->data["selling_price"]=0.00;
+        $this->data["paid_amount"]=0.00;
+        $this->data["quantity"]=1;
+        $this->data["cost_price"]=0.00;
+        $this->showEditModal = "createSubscription";
          $this->dispatchBrowserEvent('post-show-form');
         $this->dispatchBrowserEvent('show-form');
         }
@@ -142,58 +149,7 @@ class ListSubsctiptions extends Component
     public function createSubscription()
     {
         if (Auth::user()->hasPermission('subscription-create')) {
-       
-        $validatedData = Validator::make($this->data, [
-            'id_customer' => 'required',
-            'id_service' => 'required',
-            'cost_price' => 'required',
-            'quantity' => 'required',
-            'selling_price' => 'required',
-            'begin_date' => 'required',
-            'end_date' => 'required',
-            'total' => '',
-            'paid_amount' => '',
-            'notes' => '',
-        ])->validate();
 
-
-        $validatedData['id_user']=auth()->id();
-        
-        $validatedData['total']=$validatedData['selling_price']*$validatedData['quantity'];
-
-        Subscription::create($validatedData);
-        $this->dispatchBrowserEvent('hide-form');
-
-        $this->dispatchBrowserEvent('swal', [
-            'title' => 'Service Added Successfully.',
-            'icon'=>'success',
-            'iconColor' => 'green',
-            'position' => 'center',
-            'timer' => '1700',
-        ]);
-        $this->dispatchBrowserEvent('post-show-form');
-    }
-    }
-
-    public function edit(Subscription $subscription)
-    {
-        if (Auth::user()->hasPermission('subscription-update')) {
-        $this->reset();
-
-        $this->showEditModal = true;
-
-        $this->data = $subscription->toArray();
-
-        $this->subscription = $subscription;
-
-        $this->dispatchBrowserEvent('post-show-form');
-        $this->dispatchBrowserEvent('show-form');
-        }
-    }
-    public function updateSubscription()
-    {
-        if (Auth::user()->hasPermission('subscription-update')) {
-        try {
             $validatedData = Validator::make($this->data, [
                 'id_customer' => 'required',
                 'id_service' => 'required',
@@ -209,25 +165,134 @@ class ListSubsctiptions extends Component
 
 
             $validatedData['id_user']=auth()->id();
-        
-            $validatedData['total']=$validatedData['selling_price']*$validatedData['quantity'];
-    
-            $this->subscription->update($validatedData);
 
+            $validatedData['total']=$validatedData['selling_price']*$validatedData['quantity'];
+
+            Subscription::create($validatedData);
             $this->dispatchBrowserEvent('hide-form');
 
             $this->dispatchBrowserEvent('swal', [
-                'title'         => 'Service updated Successfully.',
-                'icon'          =>'success',
-                'iconColor'     => 'green',
-                'position'      => 'center',
-                'timer'         => '1700',
+                'title' => 'Service Added Successfully.',
+                'icon'=>'success',
+                'iconColor' => 'green',
+                'position' => 'center',
+                'timer' => '1700',
             ]);
-
-        } catch (\Throwable $th) {
-            return $th->getMessage();
+            $this->dispatchBrowserEvent('post-show-form');
         }
     }
+
+    public function edit(Subscription $subscription)
+    {
+        if (Auth::user()->hasPermission('subscription-update')) {
+        $this->reset();
+
+        $this->showEditModal = "updateSubscription";
+
+        $this->data = $subscription->toArray();
+
+        $this->subscription = $subscription;
+
+        $this->dispatchBrowserEvent('post-show-form');
+        $this->dispatchBrowserEvent('show-form');
+        }
+    }
+
+    public function updateSubscription()
+    {
+        if (Auth::user()->hasPermission('subscription-update')) {
+            try {
+                $validatedData = Validator::make($this->data, [
+                    'id_customer' => 'required',
+                    'id_service' => 'required',
+                    'cost_price' => 'required',
+                    'quantity' => 'required',
+                    'selling_price' => 'required',
+                    'begin_date' => 'required',
+                    'end_date' => 'required',
+                    'total' => '',
+                    'paid_amount' => '',
+                    'notes' => '',
+                ])->validate();
+
+
+                $validatedData['id_user']=auth()->id();
+
+                $validatedData['total']=$validatedData['selling_price']*$validatedData['quantity'];
+
+                $this->subscription->update($validatedData);
+
+                $this->dispatchBrowserEvent('hide-form');
+
+                $this->dispatchBrowserEvent('swal', [
+                    'title'         => 'Service updated Successfully.',
+                    'icon'          =>'success',
+                    'iconColor'     => 'green',
+                    'position'      => 'center',
+                    'timer'         => '1700',
+                ]);
+
+            } catch (\Throwable $th) {
+                return $th->getMessage();
+            }
+        }
+    }
+
+    public function renew(Subscription $subscription)
+    {
+        if (Auth::user()->hasPermission('subscription-create')) {
+            $this->reset();
+
+            $this->showEditModal = "renewSubscription";
+
+            $this->data = $subscription->toArray();
+            $dateD= new \DateTime($this->data["begin_date"]);
+            $dateF = new \DateTime($this->data["end_date"]);
+            $interval = $dateF->diff($dateD);
+            $days = intval($interval->format('%a'));
+            $dateD->add(new \DateInterval('P'.($days+1).'D'));
+            $dateF->add(new \DateInterval('P'.($days+1).'D'));
+            $this->data["begin_date"] = $dateD->format('Y-m-d');
+            $this->data["end_date"] = $dateF->format('Y-m-d');
+            $this->data["paid_amount"] = 0;
+            $this->dispatchBrowserEvent('post-show-form');
+            $this->dispatchBrowserEvent('show-form');
+        }
+    }
+    public function renewSubscription()
+    {
+        if (Auth::user()->hasPermission('subscription-create')) {
+
+            $validatedData = Validator::make($this->data, [
+                'id_customer' => 'required',
+                'id_service' => 'required',
+                'cost_price' => 'required',
+                'quantity' => 'required',
+                'selling_price' => 'required',
+                'begin_date' => 'required',
+                'end_date' => 'required',
+                'total' => '',
+                'paid_amount' => '',
+                'notes' => '',
+            ])->validate();
+
+
+            $validatedData['id_user']=auth()->id();
+
+            $validatedData['total']=$validatedData['selling_price']*$validatedData['quantity'];
+
+            Subscription::create($validatedData);
+            $this->dispatchBrowserEvent('hide-form');
+
+            $this->dispatchBrowserEvent('swal', [
+                'title' => 'Service Added Successfully.',
+                'icon'=>'success',
+                'iconColor' => 'green',
+                'position' => 'center',
+                'timer' => '1700',
+            ]);
+            $this->dispatchBrowserEvent('post-show-form');
+        }
     }
 
 
@@ -262,24 +327,42 @@ class ListSubsctiptions extends Component
         ]);
     }
     }
+
+    public function filterSubscriptionsByResellers($resellerFilter = null)
+    {
+        $this->reset();
+        $this->resellerFilter = $resellerFilter;
+    }
+
+    public function filterSubscriptionsByUnpaidAmount($unpaidAmount = null)
+    {
+        $this->unpaidAmountFilter = $unpaidAmount;
+    }
+
     public function getSubscriptionsProperty()
     {
 
-        $subscriptions = Subscription::query()
+        $query = Subscription::query()
         ->join('services', 'services.id_service', '=', 'subscriptions.id_service')
         ->join('customers', 'customers.id_customer', '=', 'subscriptions.id_customer')
         ->join('users', 'users.id', '=', 'subscriptions.id_user')
-            ->select('subscriptions.*', 'services.name', 'customers.firstname', 'customers.lastname', 'users.*')
-            ->where('services.name', 'like', '%' . $this->searchTerm . '%')
-            ->orWhere('customers.firstname', 'like', '%' . $this->searchTerm . '%')
-            ->orWhere('customers.lastname', 'like', '%' . $this->searchTerm . '%')
-            ->orWhere('users.name', 'like', '%' . $this->searchTerm . '%')
-            // ->where('name', 'like', '%'.$this->searchTerm.'%')
-            // ->orWhere('description', 'like', '%'.$this->searchTerm.'%')
-            ->orderByRaw($this->sortColumnName .' '.$this->sortDirection)
-            
-            ->paginate(15);
-        return $subscriptions; 
+        ->select('subscriptions.*', 'services.name as service_name', 'customers.firstname', 'customers.lastname', 'users.*');
+
+        if($this->resellerFilter){
+            $query->Where('customers.is_reseller', '=',$this->resellerFilter);
+        }
+        if($this->searchTerm ){
+            $searchText = DB::connection()->getPdo()->quote($this->searchTerm);
+            $query->whereRaw('(services.name like "%' . $searchText. '%" '.
+                'or concat(customers.firstname," ",customers.lastname)  like "%' . $searchText . '%" '.
+                'or users.name like "%' . $searchText . '%" )');
+        }
+        if($this->unpaidAmountFilter){
+            $query->whereRaw('total - paid_amount > 0');
+        }
+        $subscriptions = $query->orderByRaw($this->sortColumnName .' '.$this->sortDirection)
+            ->paginate(10)->onEachSide(0);;
+       return $subscriptions;
     }
 
     // Export Excel File
@@ -377,10 +460,16 @@ class ListSubsctiptions extends Component
     public function render()
     {
         $subscriptionsCount= Subscription::count();
-        $subscriptions = $this->subscriptions; 
+        $resellersCustomersCount = Subscription::whereRelation('Customer', 'is_reseller', true)->count();
+        $totalUnpaidAmount = DB::table('subscriptions')
+            ->select(DB::raw('SUM(total - paid_amount) AS unpaid_amount'))
+            ->first()->unpaid_amount;
+        $subscriptions = $this->subscriptions;
         return view('livewire.backend.admin.subscriptions.list-subsctiptions',[
             'subscriptions' => $subscriptions,
             'subscriptionsCount' => $subscriptionsCount,
+            'resellersCustomersCount' => $resellersCustomersCount,
+            'totalUnpaidAmount' => $totalUnpaidAmount,
             'durationUnits' => Service::getDurationUnits(),
             'customers' => Customer::all(),
             'services' => Service::all(),
@@ -388,7 +477,7 @@ class ListSubsctiptions extends Component
     }
 
 
-    
+
     // Sort By Column Name
 
     public function sortBy($columnName)
