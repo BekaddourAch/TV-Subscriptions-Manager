@@ -136,7 +136,12 @@ class ListCustomers extends Component
         if (Auth::user()->hasPermission('customers-create')) {
               $this->reset();
         $this->showEditModal = false;
+        $this->data['country']="Algérie";
+        $this->data['state']="Alger";
+
         $this->dispatchBrowserEvent('show-form');
+            $this->dispatchBrowserEvent('post-show-modal');
+
         }
 
     }
@@ -149,11 +154,12 @@ class ListCustomers extends Component
         $validatedData = Validator::make($this->data, [
 			'firstname' => 'required',
 			'lastname' => 'required',
-			'phone1' => 'required|regex:/[0-9]{10}/',
+			'phone1' => 'required',
             'phone2' => '',
             'email' => 'email',
             'address' => '',
             'state' => '',
+            'country' => '',
             'city' => '',
             'active' => '',
             'is_reseller' => '',
@@ -161,11 +167,13 @@ class ListCustomers extends Component
 
 		])->validate();
 
-
+if($validatedData['country']!='Algérie'){
+    $validatedData['state']=null;
+}
 
         Customer::create($validatedData);
 
-        $this->dispatchBrowserEvent('hide-form');
+            $this->dispatchBrowserEvent('hide-form');
 
         $this->dispatchBrowserEvent('swal', [
             'title' => 'Client Added Successfully.',
@@ -189,6 +197,7 @@ class ListCustomers extends Component
 		$this->customer = $customer;
 
 		$this->dispatchBrowserEvent('show-form');
+            $this->dispatchBrowserEvent('post-show-modal');
         }
     }
 
@@ -203,6 +212,7 @@ class ListCustomers extends Component
                 'phone2' => '',
                 'email' => '',
                 'address' => '',
+                'country' => '',
                 'state' => '',
                 'city' => '',
                 'active' => '',
@@ -211,6 +221,9 @@ class ListCustomers extends Component
             ])->validate();
 
 
+            if($validatedData['country']!='Algérie'){
+                $validatedData['state']=null;
+            }
             $this->customer->update($validatedData);
 
             $this->dispatchBrowserEvent('hide-form');
@@ -380,7 +393,11 @@ class ListCustomers extends Component
 
         },'customer.pdf');
     }
+    public function mount(){
 
+        $this->data['country']="Algérie";
+        $this->data['state']="Alger";
+    }
     public function render()
     {
         $customersCount= Customer::count();

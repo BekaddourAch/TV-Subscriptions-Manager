@@ -1290,6 +1290,9 @@ select {
   white-space: nowrap;
   border-width: 0;
 }
+.visible {
+  visibility: visible;
+}
 .fixed {
   position: fixed;
 }
@@ -1460,6 +1463,9 @@ select {
 }
 .-mt-px {
   margin-top: -1px;
+}
+.mb-5 {
+  margin-bottom: 1.25rem;
 }
 .mb-1 {
   margin-bottom: 0.25rem;
@@ -2167,10 +2173,6 @@ select {
 .text-gray-300 {
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
-}
-.text-black {
-  --tw-text-opacity: 1;
-  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 .text-blue-700 {
   --tw-text-opacity: 1;
