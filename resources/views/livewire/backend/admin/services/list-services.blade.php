@@ -163,7 +163,7 @@
                                 </td>
                             @endif
                             <td class="align-middle" scope="row">#{{ $service->id_service }}</td>
-                            <td class="align-middle text-left">{{ $service->name }}</td>
+                            <td class="align-middle text-left"><a  class="text-primary" href="{{route("admin.services-details",$service->id_service)}}">{{ $service->name }}</a></td>
                             <td class="align-middle text-left d-none d-md-table-cell">{{ $service->description }}</td>
                             <td class="align-middle d-none d-md-table-cell">{{ formatPrice($service->cost_price) }}</td>
                             <td class="align-middle d-none d-md-table-cell">{{ formatPrice($service->selling_price) }}</td>

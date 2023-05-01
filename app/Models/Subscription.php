@@ -38,7 +38,7 @@ class Subscription extends Model
         return $this->belongsTo(User::class,'id_user');
     }
 
-    public static function getSubscriptionsWithData($beginDate = null, $endDate = null, $idUser = 0,$idCustomer= 0)
+    public static function getSubscriptionsWithData($beginDate = null, $endDate = null, $idUser = 0,$idCustomer= 0,$idService= 0)
     {
 
         $query = $regions = DB::table('subscriptions')
@@ -54,7 +54,11 @@ class Subscription extends Model
         }
         if($idCustomer>0){
             $query->where("subscriptions.id_customer","=",$idCustomer);
-        }else{
+        }
+        if($idService>0){
+            $query->where("subscriptions.id_service","=",$idService);
+        }
+        if($idCustomer==0 && $idService==0){
             if(!settings()->has('dashboard_nb_subscriptions_days')){
                 settings()->set('dashboard_nb_subscriptions_days', 30);
             }
